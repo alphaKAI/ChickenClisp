@@ -1,0 +1,5 @@
+(step
+  (def square (x) (* x x))
+  (def apply (f x) (f x))
+  
+  (println (apply square 100)))

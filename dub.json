@@ -1,0 +1,9 @@
+{
+	"name": "orelang_d",
+	"authors": [
+		"庄司明洋"
+	],
+	"description": "A minimal D application.",
+	"copyright": "Copyright © 2016, 庄司明洋",
+	"license": "proprietary"
+}
