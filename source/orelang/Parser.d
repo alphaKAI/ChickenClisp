@@ -101,7 +101,6 @@ class Parser {
               _out ~= new Value;
             } else {
               _out ~= new Value(new SymbolValue(tmp));
-//              _out ~= new Value(tmp);
             }
 
             i = j;

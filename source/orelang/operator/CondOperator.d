@@ -9,7 +9,7 @@ class CondOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     for (size_t i; i < args.length; ++i) {
-      Value[] state = args[i].getArray;//!(Value[]);
+      Value[] state = args[i].getArray;
       Value pred = state[0];
       Value expr = state[1];
 
