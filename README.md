@@ -1,6 +1,7 @@
-# Orelang\_D
+# ChickenClisp
 A minimal implementation of Orelang in D.  
 This program was translated from [Orelang\_TS](https://github.com/alphaKAI/Orelang_TS)  
+ChickenClisp means an interpreter of extended Orelang and the language itself.  
 
 # What's Orelang?
 Orelang is simple and minimal programming language declared at the article[プログラミング言語を作る。１時間で](http://qiita.com/shuetsu@github/items/ac21e597265d6bb906dc)  
@@ -31,7 +32,7 @@ Orelang provide only one grammer.
 This looks like lisp.  
 
 # Sample codes
-Some sample code can be found at samples/ and sample.d is sample code runner, you can see sample codes have only to run it, but I'll show you some sample codes of Orelang\_D here.  
+Some sample code can be found at samples/ and sample.d is sample code runner, you can see sample codes have only to run it, but I'll show you some sample codes of ChickenClisp here.  
 
 ## Sum 1 to 10
 ### Procedural impl:
@@ -64,7 +65,7 @@ You can define an function to square:
 (println (map square (cdr (seq 11))))
 ```
   
-As you can see, Function is a first-class Object in Orelang\_D!.  
+As you can see, Function is a first-class Object in ChickenClisp!.  
   
 ## Fibonacci
 ```scheme
@@ -106,14 +107,14 @@ More sample codes are wrote in `sample.d`.
 ## Commands
 
 ```zsh:
-$ git clone https://github.com/alphaKAI/Orelang_D
-$ cd Orelang_D
+$ git clone https://github.com/alphaKAI/ChickenClisp
+$ cd ChickenClisp
 $ dub build
-$ ./orelang_d
+$ ./ChickenClisp
 ```
 
 # License
-Orelang\_D is released under the MIT License.  
+ChickenClisp is released under the MIT License.  
 Please see `LICENSE` file for details.  
 
 Copyright (C) 2016 Akihiro Shoji

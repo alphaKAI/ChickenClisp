@@ -1,9 +1,9 @@
 {
-	"name": "orelang_d",
+	"name": "ChickenClisp",
 	"authors": [
-		"庄司明洋"
+		"Akihiro Shoji"
 	],
-	"description": "A minimal D application.",
-	"copyright": "Copyright © 2016, 庄司明洋",
-	"license": "proprietary"
+	"description": "An implementation of Orelang",
+	"copyright": "Copyright (C) 2016, Akihiro Shoji",
+	"license": "MIT"
 }
