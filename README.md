@@ -2,6 +2,7 @@
 A minimal implementation of Orelang in D.  
 This program was translated from [Orelang\_TS](https://github.com/alphaKAI/Orelang_TS)  
 ChickenClisp means an interpreter of extended Orelang and the language itself.  
+ChickenClisp is just like a Scheme like Lisp.  
 
 # What's Orelang?
 Orelang is simple and minimal programming language declared at the article[プログラミング言語を作る。１時間で](http://qiita.com/shuetsu@github/items/ac21e597265d6bb906dc)  
