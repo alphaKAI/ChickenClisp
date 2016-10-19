@@ -50,6 +50,7 @@ import orelang.operator.ConsOperator;
 import orelang.operator.WhenOperator;
 import orelang.operator.IsListOperator;
 import orelang.operator.HashMapOperators;
+import orelang.operator.DefineOperator;
 
 import std.exception;
 
@@ -112,6 +113,7 @@ class Engine {
     this.variables["make-hash"]   = new Value(cast(IOperator)(new MakeHashOperator));
     this.variables["set-value"]   = new Value(cast(IOperator)(new SetValueOperator));
     this.variables["get-value"]   = new Value(cast(IOperator)(new GetValueOperator));
+    this.variables["define"]      = new Value(cast(IOperator)(new DefineOperator));
   }
 
   /*
