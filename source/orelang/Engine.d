@@ -63,31 +63,31 @@ class Engine {
   Value[string] variables;
 
   this() {
-    this.variables["+"] = new Value(cast(IOperator)(new AddOperator));
-    this.variables["-"]  = new Value(cast(IOperator)(new SubOperator));
-    this.variables["*"]  = new Value(cast(IOperator)(new MulOperator));
-    this.variables["/"]  = new Value(cast(IOperator)(new DivOperator));
-    this.variables["%"]  = new Value(cast(IOperator)(new ModOperator));
-    this.variables["="]  = new Value(cast(IOperator)(new EqualOperator));
-    this.variables["<"]  = new Value(cast(IOperator)(new LessOperator));
-    this.variables[">"]  = new Value(cast(IOperator)(new GreatOperator));
-    this.variables["<="]   = new Value(cast(IOperator)(new LEqOperator));
-    this.variables[">="]   = new Value(cast(IOperator)(new GEqOperator));
-    this.variables["set"]  = new Value(cast(IOperator)(new SetOperator));
-    this.variables["get"]  = new Value(cast(IOperator)(new GetOperator));
-    this.variables["until"]  = new Value(cast(IOperator)(new UntilOperator));
-    this.variables["step"]   = new Value(cast(IOperator)(new StepOperator));
-    this.variables["if"]  = new Value(cast(IOperator)(new IfOperator));
-    this.variables["!"]   = new Value(cast(IOperator)(new NotOperator));
-    this.variables["not"] = this.variables["!"];
-    this.variables["&&"]   = new Value(cast(IOperator)(new AndOperator));
-    this.variables["and"] = this.variables["&&"];
-    this.variables["||"]   = new Value(cast(IOperator)(new OrOperator));
-    this.variables["or"]  = this.variables["||"];
-    this.variables["print"]  = new Value(cast(IOperator)(new PrintOperator));
+    this.variables["+"]        = new Value(cast(IOperator)(new AddOperator));
+    this.variables["-"]        = new Value(cast(IOperator)(new SubOperator));
+    this.variables["*"]        = new Value(cast(IOperator)(new MulOperator));
+    this.variables["/"]        = new Value(cast(IOperator)(new DivOperator));
+    this.variables["%"]        = new Value(cast(IOperator)(new ModOperator));
+    this.variables["="]        = new Value(cast(IOperator)(new EqualOperator));
+    this.variables["<"]        = new Value(cast(IOperator)(new LessOperator));
+    this.variables[">"]        = new Value(cast(IOperator)(new GreatOperator));
+    this.variables["<="]       = new Value(cast(IOperator)(new LEqOperator));
+    this.variables[">="]       = new Value(cast(IOperator)(new GEqOperator));
+    this.variables["set"]      = new Value(cast(IOperator)(new SetOperator));
+    this.variables["get"]      = new Value(cast(IOperator)(new GetOperator));
+    this.variables["until"]    = new Value(cast(IOperator)(new UntilOperator));
+    this.variables["step"]     = new Value(cast(IOperator)(new StepOperator));
+    this.variables["if"]       = new Value(cast(IOperator)(new IfOperator));
+    this.variables["!"]        = new Value(cast(IOperator)(new NotOperator));
+    this.variables["not"]      = this.variables["!"];
+    this.variables["&&"]       = new Value(cast(IOperator)(new AndOperator));
+    this.variables["and"]      = this.variables["&&"];
+    this.variables["||"]       = new Value(cast(IOperator)(new OrOperator));
+    this.variables["or"]       = this.variables["||"];
+    this.variables["print"]    = new Value(cast(IOperator)(new PrintOperator));
     this.variables["println"]  = new Value(cast(IOperator)(new PrintlnOperator));
-    this.variables["def"]    = new Value(cast(IOperator)(new DeffunOperator));
-    this.variables["while"]  = new Value(cast(IOperator)(new WhileOperator));
+    this.variables["def"]      = new Value(cast(IOperator)(new DeffunOperator));
+    this.variables["while"]    = new Value(cast(IOperator)(new WhileOperator));
     this.variables["get-fun"]  = new Value(cast(IOperator)(new GetfunOperator));
     this.variables["lambda"]   = new Value(cast(IOperator)(new LambdaOperator));
     this.variables["map"]      = new Value(cast(IOperator)(new MapOperator));
@@ -103,11 +103,11 @@ class Engine {
     this.variables["cond"]     = new Value(cast(IOperator)(new CondOperator));
     this.variables["alias"]    = new Value(cast(IOperator)(new AliasOperator));
     this.variables["let"]      = new Value(cast(IOperator)(new LetOperator));
-    this.variables["for-each"]  = new Value(cast(IOperator)(new ForeachOperator));
-    this.variables["remove"]    = new Value(cast(IOperator)(new RemoveOperator));
-    this.variables["cons"]    = new Value(cast(IOperator)(new ConsOperator));
-    this.variables["when"]    = new Value(cast(IOperator)(new WhenOperator));
-    this.variables["list?"]   = new Value(cast(IOperator)(new IsListOperator));
+    this.variables["for-each"] = new Value(cast(IOperator)(new ForeachOperator));
+    this.variables["remove"]   = new Value(cast(IOperator)(new RemoveOperator));
+    this.variables["cons"]     = new Value(cast(IOperator)(new ConsOperator));
+    this.variables["when"]     = new Value(cast(IOperator)(new WhenOperator));
+    this.variables["list?"]    = new Value(cast(IOperator)(new IsListOperator));
   }
 
   /*
