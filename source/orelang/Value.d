@@ -54,7 +54,6 @@ class Value {
     this.init;
     this.sym_value = value;
     this.type      = ValueType.SymbolValue; }
-  // this.opAssign(value); }
   this(IExpression value)    { this.opAssign(value); }
   this(IOperator value)      { this.opAssign(value); }
   this(Closure value)        { this.opAssign(value); }
@@ -70,13 +69,13 @@ class Value {
                          return this.array_value; }
   ImmediateValue getImmediateValue() { enforce(this.type == ValueType.ImmediateValue);
                                        return this.imv_value; }
-  SymbolValue getSymbolValue() { enforce(this.type == ValueType.SymbolValue);
-                                 return this.sym_value; }
-  IExpression getIExpression()       { enforce(this.type == ValueType.IExpression);
+  SymbolValue    getSymbolValue()    { enforce(this.type == ValueType.SymbolValue);
+                                       return this.sym_value; }
+  IExpression    getIExpression()    { enforce(this.type == ValueType.IExpression);
                                        return this.ie_value; }
-  IOperator getIOperator()           { enforce(this.type == ValueType.IOperator);
+  IOperator      getIOperator()      { enforce(this.type == ValueType.IOperator);
                                        return this.io_value; }
-  Closure getClosure()               { enforce(this.type == ValueType.Closure);
+  Closure        getClosure()        { enforce(this.type == ValueType.Closure);
                                        return this.closure_value; }
 
   void opAssign(T)(T value) if (isNumeric!T) {
@@ -106,18 +105,11 @@ class Value {
   void opAssign(T)(T[] value) if (!is(T == Value) && !is(T == immutable(char))) {
     this.init;
     this.array_value = [];
-    foreach (e; value) {
-      this.array_value ~= new Value(e);
-    }
+
+    foreach (e; value) this.array_value ~= new Value(e);
+
     this.type        = ValueType.Array;
   }
-/*
-  void opAssign(ImmediateValue value) {
-    this.init;
-    this.imv_value = value;
-    this.type      = ValueType.ImmediateValue;
-  }
-  */
 
   void opAssign(IExpression value) {
     this.init;
@@ -145,10 +137,10 @@ class Value {
       case Null:    return "null";
       case Array:   return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
       case ImmediateValue: return this.imv_value.toString;
-      case SymbolValue: return this.sym_value.value;
-      case IExpression: return this.ie_value.stringof;
-      case IOperator: return this.io_value.stringof;
-      case Closure: return this.closure_value.stringof;
+      case SymbolValue:    return this.sym_value.value;
+      case IExpression:    return this.ie_value.stringof;
+      case IOperator:      return this.io_value.stringof;
+      case Closure:        return this.closure_value.stringof;
     }
   }
 
@@ -209,7 +201,7 @@ class Value {
       if (this.type == ValueType.String)  { this.string_value  = ""; }
       if (this.type == ValueType.Array)   { this.array_value   = []; }
       if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
-      if (this.type == ValueType.SymbolValue) { this.sym_value = null; }
+      if (this.type == ValueType.SymbolValue)    { this.sym_value = null; }
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
       if (this.type == ValueType.IOperator)      { this.io_value  = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
@@ -305,13 +297,15 @@ class Value {
       case Numeric:
         auto c = this.numeric_value,
              d = value.numeric_value;
-        if (c == d) { return 0; }
+
+        if (c == d) { return 0;  }
         if (c < d)  { return -1; }
         return 1;
       case String:
         auto c = this.string_value,
              d = value.string_value;
-        if (c == d) { return 0; }
+
+        if (c == d) { return 0;  }
         if (c < d)  { return -1; }
         return 1;
       case Bool:
