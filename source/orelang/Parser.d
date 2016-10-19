@@ -2,8 +2,7 @@ module orelang.Parser;
 import orelang.expression.ImmediateValue,
        orelang.expression.SymbolValue,
        orelang.Value;
-import std.variant,
-       std.regex,
+import std.regex,
        std.conv;
 
 auto nrgx = ctRegex!"[0-9]";

@@ -2,7 +2,6 @@ module orelang.Closure;
 import orelang.operator.IOperator,
        orelang.Engine,
        orelang.Value;
-import std.variant;
 
 class Closure {
   public {
