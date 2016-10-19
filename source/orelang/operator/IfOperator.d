@@ -10,11 +10,6 @@ class IfOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     Value ret;
 
-/*    import std.stdio;
-
-    writeln("[IfOperator] args -> ", args);
-    writeln("[IfOperator] args.length -> ", args.length);*/
-
     if (engine.eval(args[0]).getBool) {
       ret = engine.eval(args[1]);
     } else {
