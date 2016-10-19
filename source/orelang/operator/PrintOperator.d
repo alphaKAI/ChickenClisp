@@ -15,7 +15,7 @@ class PrintOperator : IOperator {
     foreach (arg; args) {
       Value item = engine.eval(arg);
 
-      if (!((arg.type == ValueType.SymbolValue && (item.type == ValueType.Numeric || item.type == ValueType.String || item.type == ValueType.Bool || item.type == ValueType.Array)))) {
+      if (arg.type == ValueType.String || (arg.type == ValueType.SymbolValue && (item.type == ValueType.IExpression || item.type == ValueType.ImmediateValue || item.type == ValueType.IOperator))) {
         item = arg;
       }
 
@@ -40,7 +40,7 @@ class PrintlnOperator : IOperator {
     foreach (arg; args) {
       Value item = engine.eval(arg);
 
-      if (!((arg.type == ValueType.SymbolValue && (item.type == ValueType.Numeric || item.type == ValueType.String || item.type == ValueType.Bool || item.type == ValueType.Array)))) {
+      if (arg.type == ValueType.String || (arg.type == ValueType.SymbolValue && (item.type == ValueType.IExpression || item.type == ValueType.ImmediateValue || item.type == ValueType.IOperator))) {
         item = arg;
       }
 
