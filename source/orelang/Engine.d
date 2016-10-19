@@ -43,9 +43,6 @@ import orelang.operator.CdrOperator;
 import orelang.operator.LoadOperator;
 import orelang.operator.CondOperator;
 import orelang.operator.AliasOperator;
-/+
-import {TimeOperator} from "orelang.operator.TimeOperator;
-+/
 import orelang.operator.LetOperator;
 import orelang.operator.ForeachOperator;
 import orelang.operator.RemoveOperator;
@@ -56,7 +53,7 @@ import orelang.operator.IsListOperator;
 import std.exception;
 
 /**
- * Script Engine of Orelang_D
+ * Script Engine of ChickenClisp
  */
 class Engine {
   /**
@@ -105,9 +102,6 @@ class Engine {
     this.variables["load"]     = new Value(cast(IOperator)(new LoadOperator));
     this.variables["cond"]     = new Value(cast(IOperator)(new CondOperator));
     this.variables["alias"]    = new Value(cast(IOperator)(new AliasOperator));
-    /*
-    this.variables["time"]    = new TimeOperator();
-    */
     this.variables["let"]      = new Value(cast(IOperator)(new LetOperator));
     this.variables["for-each"]  = new Value(cast(IOperator)(new ForeachOperator));
     this.variables["remove"]    = new Value(cast(IOperator)(new RemoveOperator));
@@ -192,18 +186,6 @@ class Engine {
    */
   import std.stdio;
   public IExpression getExpression(Value script) {
-    //writeln("[getExpression] script -> ", script);
-    /*
-    bool k = true;
-    foreach (key, value; this.variables) {
-      if (value.type != ValueType.IOperator) {
-        if (k) {
-          writeln("<Variables>");
-          k = false;
-        }
-        writeln(key, " - ", value);
-      }
-    }*/
 
     if (script.type == ValueType.ImmediateValue) {
       return script.getImmediateValue;
