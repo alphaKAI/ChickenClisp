@@ -8,15 +8,8 @@ class ConsOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-/*    import std.stdio;
-    writeln("[ConsOperator]");
-    writeln("args -> ", args);*/
     Value car = engine.eval(args[0]);
     Value cdr = engine.eval(args[1]);
-/*
-    writeln("car -> ", car);
-    writeln("cdr -> ", cdr);
-    writeln("[car, cdr... -> ", [car, cdr]);*/
 
     Value[] ret = [car];
 
