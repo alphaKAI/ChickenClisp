@@ -1,5 +1,6 @@
 module orelang.Value;
 import orelang.expression.ImmediateValue,
+       orelang.expression.SymbolValue,
        orelang.operator.DynamicOperator,
        orelang.expression.IExpression,
        orelang.operator.IOperator,
@@ -13,6 +14,7 @@ import std.algorithm,
 
 enum ValueType {
   ImmediateValue,
+  SymbolValue,
   IExpression,
   IOperator,
   Closure,
@@ -32,6 +34,7 @@ class Value {
     bool    bool_value;
     Value[] array_value;
     ImmediateValue imv_value;
+    SymbolValue sym_value;
     IExpression ie_value;
     IOperator io_value;
     Closure closure_value;
@@ -47,6 +50,10 @@ class Value {
     this.init;
     this.imv_value = value;
     this.type      = ValueType.ImmediateValue; }
+  this(SymbolValue value) {
+    this.init;
+    this.sym_value = value;
+    this.type      = ValueType.SymbolValue; }
   // this.opAssign(value); }
   this(IExpression value)    { this.opAssign(value); }
   this(IOperator value)      { this.opAssign(value); }
@@ -54,15 +61,17 @@ class Value {
 
   double  getNumeric() { enforce(this.type == ValueType.Numeric);
                          return this.numeric_value; }
-  string  getString()  { enforce(this.type == ValueType.String);
-                         return this.string_value; }
+  string  getString()  { enforce(this.type == ValueType.String || this.type == ValueType.SymbolValue);
+                         return this.type == ValueType.String ? this.string_value : this.sym_value.value; }
   bool    getBool()    { enforce(this.type == ValueType.Bool);
                          return this.bool_value; }
   auto    getNull()    { throw new Error("Can't get from NULL value"); }
   Value[] getArray()   { enforce(this.type == ValueType.Array);
                          return this.array_value; }
   ImmediateValue getImmediateValue() { enforce(this.type == ValueType.ImmediateValue);
-                                       return cast(ImmediateValue)this.imv_value; }
+                                       return this.imv_value; }
+  SymbolValue getSymbolValue() { enforce(this.type == ValueType.SymbolValue);
+                                 return this.sym_value; }
   IExpression getIExpression()       { enforce(this.type == ValueType.IExpression);
                                        return this.ie_value; }
   IOperator getIOperator()           { enforce(this.type == ValueType.IOperator);
@@ -136,6 +145,7 @@ class Value {
       case Null:    return "null";
       case Array:   return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
       case ImmediateValue: return this.imv_value.toString;
+      case SymbolValue: return this.sym_value.value;
       case IExpression: return this.ie_value.stringof;
       case IOperator: return this.io_value.stringof;
       case Closure: return this.closure_value.stringof;
@@ -199,6 +209,7 @@ class Value {
       if (this.type == ValueType.String)  { this.string_value  = ""; }
       if (this.type == ValueType.Array)   { this.array_value   = []; }
       if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
+      if (this.type == ValueType.SymbolValue) { this.sym_value = null; }
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
       if (this.type == ValueType.IOperator)      { this.io_value  = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
@@ -233,6 +244,8 @@ class Value {
     final switch(this.type) with (ValueType) {
       case ImmediateValue:
         throw new Error("Can't compare with ImmediateValue");
+      case SymbolValue:
+        return this.sym_value.value == value.getSymbolValue.value;
       case IExpression:
         throw new Error("Can't compare with IExpression");
       case IOperator:
@@ -277,6 +290,12 @@ class Value {
     final switch(this.type) with (ValueType) {
       case ImmediateValue:
         throw new Error("Can't compare with ImmediateValue");
+      case SymbolValue:
+        auto c = this.sym_value.value,
+             d = value.getSymbolValue.value;
+        if (c == d) { return 0; }
+        if (c < d)  { return -1; }
+        return 1;
       case IExpression:
         throw new Error("Can't compare with IExpression");
       case IOperator:
@@ -319,6 +338,8 @@ class Value {
     final switch (this.type) with (ValueType) {
       case ImmediateValue:
         return new Value(this.imv_value);
+      case SymbolValue:
+        return new Value(this.sym_value);
       case IExpression:
         return new Value(this.ie_value);
       case IOperator:

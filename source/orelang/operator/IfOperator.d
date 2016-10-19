@@ -8,12 +8,21 @@ class IfOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    Value ret = null;
+    Value ret;
+
+/*    import std.stdio;
+
+    writeln("[IfOperator] args -> ", args);
+    writeln("[IfOperator] args.length -> ", args.length);*/
 
     if (engine.eval(args[0]).getBool) {
       ret = engine.eval(args[1]);
     } else {
-      ret = engine.eval(args[2]);
+      if (args.length != 3) {
+        ret = new Value;
+      } else {
+        ret = engine.eval(args[2]);
+      }
     }
 
     return ret;

@@ -9,12 +9,12 @@ class CarOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    import std.stdio;
+/*    import std.stdio;
     writeln("[CarOperator]");
-    writeln("args -> ", args);
+    writeln("args -> ", args);*/
     Value obj = engine.eval(args[0]);
-    writeln("obj -> ", obj);
-    writeln("obj.type -> ", obj.type);
+/*    writeln("obj -> ", obj);
+    writeln("obj.type -> ", obj.type);*/
 
     if (obj.type == ValueType.Array) {
       Value[] obx = obj.getArray;

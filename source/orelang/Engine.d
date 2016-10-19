@@ -192,8 +192,8 @@ class Engine {
    */
   import std.stdio;
   public IExpression getExpression(Value script) {
+    //writeln("[getExpression] script -> ", script);
     /*
-    writeln("[getExpression] script -> ", script);
     bool k = true;
     foreach (key, value; this.variables) {
       if (value.type != ValueType.IOperator) {
@@ -211,6 +211,7 @@ class Engine {
 
     if (script.type == ValueType.Array) {
       Value[] scriptList = script.getArray;
+
       if (scriptList[0].type == ValueType.Array) {
         CallOperator ret = new CallOperator(this.variables[scriptList[0][0].getString].getIOperator, scriptList[0].getArray[1..$]);
         Value tmp = ret.eval(this);
@@ -231,8 +232,9 @@ class Engine {
         return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
       }
     } else {
-      if (script.type == ValueType.String) {
-        Value tmp = this.getVariable(script.getString).dup;
+      if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {
+        Value tmp;
+        tmp = this.getVariable(script.getString).dup;
 
         if (tmp.type != ValueType.Null) {
           return new ImmediateValue(tmp);

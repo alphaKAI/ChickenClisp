@@ -38,9 +38,9 @@ class Interpreter {
 
     void e(char val) {
       if (checkBracket(val.to!string) && (buf.length != 0)) {
-        writeln("buf -> ", buf);
+//        writeln("buf -> ", buf);
         auto transpiled = Transpiler.transpile(buf);
-        writeln("transpiled -> ", transpiled);
+//        writeln("transpiled -> ", transpiled);
         writeln(engine.eval(transpiled));
         buf = [];
       }

@@ -1,5 +1,6 @@
 module orelang.Parser;
 import orelang.expression.ImmediateValue,
+       orelang.expression.SymbolValue,
        orelang.Value;
 import std.variant,
        std.regex,
@@ -99,7 +100,8 @@ class Parser {
             } else if (tmp == "null") {
               _out ~= new Value;
             } else {
-              _out ~= new Value(tmp);
+              _out ~= new Value(new SymbolValue(tmp));
+//              _out ~= new Value(tmp);
             }
 
             i = j;

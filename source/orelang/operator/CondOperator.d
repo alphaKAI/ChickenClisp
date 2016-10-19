@@ -15,7 +15,7 @@ class CondOperator : IOperator {
 
       Value epred = engine.eval(pred);
 
-      if ((epred.type == ValueType.Bool && epred.getBool) || (pred.type == ValueType.String && pred.getString == "else")) {
+      if ((epred.type == ValueType.Bool && epred.getBool) || ((pred.type == ValueType.SymbolValue || pred.type == ValueType.String) && pred.getString == "else")) {
         return engine.eval(expr);
       }
     }

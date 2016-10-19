@@ -8,15 +8,15 @@ class ConsOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    import std.stdio;
+/*    import std.stdio;
     writeln("[ConsOperator]");
-    writeln("args -> ", args);
+    writeln("args -> ", args);*/
     Value car = engine.eval(args[0]);
     Value cdr = engine.eval(args[1]);
-
+/*
     writeln("car -> ", car);
     writeln("cdr -> ", cdr);
-    writeln("[car, cdr... -> ", [car, cdr]);
+    writeln("[car, cdr... -> ", [car, cdr]);*/
 
     Value[] ret = [car];
 
@@ -28,9 +28,6 @@ class ConsOperator : IOperator {
       ret ~= cdr;
     }
 
-    auto r = new Value(ret);
-    writeln("r -> ", r);
-    writeln("r.type -> ", r.type);
-    return r;
+    return new Value(ret);
   }
 }
