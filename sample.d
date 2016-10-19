@@ -6,8 +6,9 @@ void main() {
   /**
  * sum of 1 to 10
  */
-/*
-  Value x = engine.eval(
+
+  enum codeINE = `
+    (new Engine).eval(
     new Value([new Value("step"),
       new Value([new Value("set"), new Value("i"), new Value(10.0)]),
       new Value([new Value("set"), new Value("sum"), new Value(0.0)]),
@@ -18,7 +19,13 @@ void main() {
       ])]),
       new Value([new Value("get"), new Value("sum")])
     ])
-  );*/
+  )`;
+  Value x = mixin(codeINE);
+  writeln("A sample code which written in Internal Expression, sum of 1 to 10)");
+  write("Code: ");
+  writeln(codeINE);
+  writeln("result -> ", x.getNumeric);
+  writeln("\n");
 
   /**
    * S Expression
@@ -34,7 +41,7 @@ void main() {
      (set x 1)
      (while (< x 11)
       (step
-       (print x)
+       (println x)
        (set x (+ x 1))))
      (println (square 10)))
     `;
