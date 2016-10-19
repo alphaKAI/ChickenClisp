@@ -18,6 +18,7 @@ enum ValueType {
   IExpression,
   IOperator,
   Closure,
+  HashMap,
   Numeric,
   String,
   Bool,
@@ -38,6 +39,7 @@ class Value {
     IExpression ie_value;
     IOperator io_value;
     Closure closure_value;
+    Value[string] hashmap_value;
   }
 
   this()               { this.type = ValueType.Null; }
@@ -57,6 +59,7 @@ class Value {
   this(IExpression value)    { this.opAssign(value); }
   this(IOperator value)      { this.opAssign(value); }
   this(Closure value)        { this.opAssign(value); }
+  this(Value[string] value)        { this.opAssign(value); }
 
   double  getNumeric() { enforce(this.type == ValueType.Numeric);
                          return this.numeric_value; }
@@ -77,6 +80,8 @@ class Value {
                                        return this.io_value; }
   Closure        getClosure()        { enforce(this.type == ValueType.Closure);
                                        return this.closure_value; }
+  Value[string]   getHashMap()        { enforce(this.type == ValueType.HashMap);
+                                       return this.hashmap_value; }
 
   void opAssign(T)(T value) if (isNumeric!T) {
     this.init;
@@ -129,6 +134,12 @@ class Value {
     this.type          = ValueType.Closure;
   }
 
+  void opAssign(Value[string] value) {
+    this.init;
+    this.hashmap_value = value;
+    this.type          = ValueType.HashMap; 
+  }
+
   override string toString() {
     final switch(this.type) with (ValueType) {
       case Numeric: return this.numeric_value.to!string;
@@ -136,6 +147,7 @@ class Value {
       case Bool:    return this.bool_value.to!string;
       case Null:    return "null";
       case Array:   return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
+      case HashMap: return this.hashmap_value.to!string;
       case ImmediateValue: return this.imv_value.toString;
       case SymbolValue:    return this.sym_value.value;
       case IExpression:    return this.ie_value.stringof;
@@ -205,6 +217,7 @@ class Value {
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
       if (this.type == ValueType.IOperator)      { this.io_value  = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
+      if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
 
       this.type = ValueType.Null;
     }
@@ -217,9 +230,23 @@ class Value {
   }
 
   Value opIndex(size_t idx) {
-    enforce(this.type == ValueType.Array && idx < this.array_value.length);
+    enforce(this.type == ValueType.Array);
+
+    if (!(idx < this.array_value.length)) {
+      throw new Error("Out of index of the Array, orded - " ~ idx.to!string ~ " but length of the array is " ~ this.array_value.length.to!string);
+    }
 
     return this.array_value[idx];
+  }
+
+  Value opIndex(Value value) {
+    enforce(this.type == ValueType.HashMap);
+
+    if (value.getString !in this.hashmap_value) {
+      throw new Error("No such a key in the hash, key - " ~ value.toString ~ ", hash - " ~ this.hashmap_value.stringof);
+    }
+
+    return this.hashmap_value[value.getString];
   }
 
   override bool opEquals(Object _value) {
@@ -244,6 +271,8 @@ class Value {
         throw new Error("Can't compare with IOperator");
       case Closure:
         throw new Error("Can't compare with Closure");
+      case HashMap:
+        throw new Error("Can't compare with HashMap");
       case Numeric:
         return this.numeric_value == value.numeric_value;
       case String:
@@ -294,6 +323,8 @@ class Value {
         throw new Error("Can't compare with IOperator");
       case Closure:
         throw new Error("Can't compare with Closure");
+      case HashMap:
+        throw new Error("Can't compare with HashMap");
       case Numeric:
         auto c = this.numeric_value,
              d = value.numeric_value;
@@ -340,6 +371,8 @@ class Value {
         return new Value(this.io_value);
       case Closure:
         return new Value(this.closure_value);
+      case HashMap:
+        return new Value(this.hashmap_value);
       case Numeric:
         return new Value(this.numeric_value);
       case String:

@@ -49,6 +49,7 @@ import orelang.operator.RemoveOperator;
 import orelang.operator.ConsOperator;
 import orelang.operator.WhenOperator;
 import orelang.operator.IsListOperator;
+import orelang.operator.HashMapOperators;
 
 import std.exception;
 
@@ -108,6 +109,9 @@ class Engine {
     this.variables["cons"]     = new Value(cast(IOperator)(new ConsOperator));
     this.variables["when"]     = new Value(cast(IOperator)(new WhenOperator));
     this.variables["list?"]    = new Value(cast(IOperator)(new IsListOperator));
+    this.variables["make-hash"]   = new Value(cast(IOperator)(new MakeHashOperator));
+    this.variables["set-value"]   = new Value(cast(IOperator)(new SetValueOperator));
+    this.variables["get-value"]   = new Value(cast(IOperator)(new GetValueOperator));
   }
 
   /*
