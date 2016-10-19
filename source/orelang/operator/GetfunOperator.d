@@ -8,6 +8,6 @@ class GetfunOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return engine.variables[args[0].get!string];
+    return engine.variables[args[0].getString];
   }
 }

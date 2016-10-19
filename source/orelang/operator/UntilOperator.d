@@ -10,7 +10,7 @@ class UntilOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     Value ret = null;
 
-    while (!engine.eval(args[0]).get!bool) {
+    while (!engine.eval(args[0]).getBool) {
       ret = engine.eval(args[1]);
     }
 

@@ -3,24 +3,22 @@ import orelang.Transpiler,
        orelang.Value;
 import std.stdio;
 void main() {
-  Engine engine = new Engine();
-
   /**
  * sum of 1 to 10
  */
-
+/*
   Value x = engine.eval(
-    Value([Value("step"),
-      Value([Value("set"), Value("i"), Value(10.0)]),
-      Value([Value("set"), Value("sum"), Value(0.0)]),
-      Value([Value("until"), Value([Value("="), Value([Value("get"), Value("i")]), Value(0.0)]), Value([
-        Value("step"),
-        Value([Value("set"), Value("sum"), Value([Value("+"), Value([Value("get"), Value("sum")]), Value([Value("get"), Value("i")])])]),
-        Value([Value("set"), Value("i"), Value([Value("+"), Value([Value("get"), Value("i")]), Value(-1.0)])])
+    new Value([new Value("step"),
+      new Value([new Value("set"), new Value("i"), new Value(10.0)]),
+      new Value([new Value("set"), new Value("sum"), new Value(0.0)]),
+      new Value([new Value("until"), new Value([new Value("="), new Value([new Value("get"), new Value("i")]), new Value(0.0)]), new Value([
+        new Value("step"),
+        new Value([new Value("set"), new Value("sum"), new Value([new Value("+"), new Value([new Value("get"), new Value("sum")]), new Value([new Value("get"), new Value("i")])])]),
+        new Value([new Value("set"), new Value("i"), new Value([new Value("+"), new Value([new Value("get"), new Value("i")]), new Value(-1.0)])])
       ])]),
-      Value([Value("get"), Value("sum")])
+      new Value([new Value("get"), new Value("sum")])
     ])
-  );
+  );*/
 
   /**
    * S Expression
@@ -125,6 +123,7 @@ void main() {
   size_t idx;
 
   foreach (code; codes) {
+    Engine engine = new Engine();
     writeln("Sample code", idx++, " :");
     writeln("CODE----------------------------------------");
     writeln(code);

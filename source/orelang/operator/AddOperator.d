@@ -8,11 +8,11 @@ class AddOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    Value ret = 0L;
+    Value ret = new Value(0.0);
 
     foreach (arg; args) {
       Value v = engine.eval(arg);
-      ret += v;
+      ret.addTo(v);
     }
 
     return ret;

@@ -14,9 +14,9 @@ class LetOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    if (!(args[0].convertsTo!(Value[]))) {
-      string  name   = args[0].get!string;
-      Value[] binds  = args[1].get!(Value[]);
+    if (!(args[0].type == ValueType.Array)) {
+      string  name   = args[0].getString;
+      Value[] binds  = args[1].getArray;
       Value  _body   = args[2];
       Engine _engine = engine.clone();
 
@@ -24,30 +24,29 @@ class LetOperator : IOperator {
       Value[] vars;
 
       foreach (bind; binds) {
-        string bname = bind.get!(Value[])[0].get!string;
-        Value  val   = bind.get!(Value[])[1];
+        string bname = bind.getArray[0].getString;
+        Value  val   = bind.getArray[1];
 
         names ~= bname;
         vars  ~= val;
       }
 
-      _engine.defineVariable(name, Value(new DynamicOperator(names, _body)));
-      Value ret = (_engine.getVariable(name).get!IOperator).call(_engine, vars);
+      _engine.defineVariable(name, new Value(new DynamicOperator(names, _body)));
+      Value ret = (_engine.getVariable(name).getIOperator).call(_engine, vars);
 
-//      if (ret is null) {
-      if (ret.hasValue) {
-        return Value(0L);
+      if (ret.type == ValueType.Null) {
+        return new Value(0.0);
       } else {
         return ret;
       }
     } else {
-      Value[] binds  = args[0].get!(Value[]);
+      Value[] binds  = args[0].getArray;
       Value  _body   = args[1];
       Engine _engine = engine.clone();
 
       foreach (bind; binds) {
-        string name = bind.get!(Value[])[0].get!string;
-        Value  val  = engine.eval(bind.get!(Value[])[1]);
+        string name = bind.getArray[0].getString;
+        Value  val  = engine.eval(bind.getArray[1]);
 
         _engine.defineVariable(name, val);
       }

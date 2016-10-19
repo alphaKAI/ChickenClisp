@@ -8,7 +8,7 @@ class WhenOperator : IOperator {
    * Loop while the condition is true.
    */
   public Value call(Engine engine, Value[] args) {
-    if (engine.eval(args[0]).get!bool) {
+    if (engine.eval(args[0]).getBool) {
       Value ret = null;
 
       foreach (arg; args[1..$]) {
@@ -17,7 +17,7 @@ class WhenOperator : IOperator {
 
       return ret;
     } else {
-      return Value(null);
+      return new Value;
     }
   }
 }

@@ -12,7 +12,7 @@ class ModOperator : IOperator {
 
     foreach (arg; args[1..$]) {
       Value v = engine.eval(arg);
-      ret %= v;
+      ret.modTo(v);
     }
 
     return ret;

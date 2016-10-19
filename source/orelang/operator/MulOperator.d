@@ -8,11 +8,11 @@ class MulOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    Value ret = 1L;
+    Value ret = new Value(1.0);
 
     foreach (arg; args) {
       Value v = engine.eval(arg);
-      ret *= v;
+      ret.mulTo(v);
     }
 
     return ret;

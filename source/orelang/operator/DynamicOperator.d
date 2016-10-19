@@ -20,7 +20,7 @@ class DynamicOperator : IOperator {
 
   public Value call(Engine engine, Value[] args) {
     size_t i = 0;
-    Engine _engine = engine.clone();
+    Engine _engine = engine.clone;
 
     foreach (arg; this.funcArgs) {
       _engine.defineVariable(arg, engine.eval(args[i++]));

@@ -12,7 +12,7 @@ class DivOperator : IOperator {
 
     foreach (arg; args[1..$]) {
       Value v = engine.eval(arg);
-      ret /= v;
+      ret.divTo(v);
     }
 
     return ret;

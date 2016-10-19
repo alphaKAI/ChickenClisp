@@ -8,8 +8,8 @@ class AliasOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    string _new = args[0].get!string;
-    string base = args[1].get!string;
+    string _new = args[0].getString;
+    string base = args[1].getString;
 
     if (base in engine.variables) {
       Value v = engine.variables[base];

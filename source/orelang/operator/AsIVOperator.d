@@ -9,6 +9,6 @@ class AsIVOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return Value(new ImmediateValue(engine.eval(args[0])));
+    return new Value(new ImmediateValue(engine.eval(args[0])));
   }
 }

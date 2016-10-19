@@ -2,6 +2,7 @@ module orelang.operator.CdrOperator;
 import orelang.operator.IOperator,
        orelang.Engine,
        orelang.Value;
+import std.conv;
 
 class CdrOperator : IOperator {
   /**
@@ -10,19 +11,19 @@ class CdrOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     Value obj = engine.eval(args[0]);
 
-    if (obj.convertsTo!(Value[])) {
-      Value[] obx = obj.get!(Value[])[0].get!(Value[]);
+    if (obj.type == ValueType.Array) {
+      Value[] obx = obj.getArray;//!(Value[])[0].get!(Value[]);
 
       if (obx.length == 1) {
-        typeof(obx[0])[] arr;
-        return Value(arr);
+        Value[] arr;
+        return new Value(arr);
       } else if (obx.length > 1) {
-        return Value(obx[1..$]);
+        return new Value(obx[1..$]);
       } else {
         throw new Error("pair required, but got ()");
       }
     } else {
-      throw new Error("pair required, but got invalid data, the type of which is " ~ obj.type.toString);
+      throw new Error("pair required, but got invalid data, the type of which is " ~ obj.type.to!string);
     }
   }
 }

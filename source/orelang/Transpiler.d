@@ -5,6 +5,6 @@ import std.regex;
 
 class Transpiler {
   static Value transpile(string code) {
-    return Parser.parse(code.replaceAll(ctRegex!".*;.*", "").replaceAll(ctRegex!"\n", "")).get!(Value[])[0];
+    return Parser.parse(code.replaceAll(ctRegex!".*;.*", "").replaceAll(ctRegex!"\n", ""))[0];
   }
 }

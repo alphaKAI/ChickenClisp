@@ -5,13 +5,13 @@ import orelang.operator.IOperator,
 
 class IsListOperator : IOperator {
   /**
-   * Loop while the condition is true.
+   * call
    */
   public Value call(Engine engine, Value[] args) {
-    if (engine.eval(args[0]).convertsTo!(Value[])) {
-      return Value(true);
+    if (engine.eval(args[0]).type == ValueType.Array) {
+      return new Value(true);
     } else {
-      return Value(false);
+      return new Value(false);
     }
   }
 }

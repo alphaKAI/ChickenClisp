@@ -8,7 +8,7 @@ class NotOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return Value(!engine.eval(args[0]).get!bool);
+    return new Value(!engine.eval(args[0]).getBool);
   }
 }
 
@@ -17,7 +17,7 @@ class AndOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return Value(engine.eval(args[0]).get!bool && engine.eval(args[1]).get!bool);
+    return new Value(engine.eval(args[0]).getBool && engine.eval(args[1]).getBool);
   }
 }
 
@@ -26,6 +26,6 @@ class OrOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return Value(engine.eval(args[0]).get!bool || engine.eval(args[1]).get!bool);
+    return new Value(engine.eval(args[0]).getBool || engine.eval(args[1]).getBool);
   }
 }

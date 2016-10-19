@@ -9,13 +9,13 @@ class SeqOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    long n = engine.eval(args[0]).get!double.to!long;
-    Value[] array = new Value[n];
+    long n = engine.eval(args[0]).getNumeric.to!long;
+    Value[] array;
 
     for (long i; i < n; ++i) {
-      array[i] = i;
+      array ~= new Value(i.to!double);
     }
 
-    return Value(array);
+    return new Value(array);
   }
 }

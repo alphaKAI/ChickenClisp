@@ -11,10 +11,10 @@ class DeffunOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    string funcName   = *args[0].peek!string;
-    string[] funcArgs = (*args[1].peek!(Value[])).map!(value => *value.peek!string).array;
+    string funcName   = args[0].getString;
+    string[] funcArgs = args[1].getArray.map!(value => value.getString).array;
     Value funcBody    = args[2];
 
-    return engine.defineVariable(funcName, Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody))));
+    return engine.defineVariable(funcName, new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody))));
   }
 }

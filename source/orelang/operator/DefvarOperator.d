@@ -8,6 +8,6 @@ class DefvarOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return engine.defineVariable(*args[0].peek!string, engine.eval(args[1]));
+    return engine.defineVariable(args[0].getString, engine.eval(args[1]));
   }
 }

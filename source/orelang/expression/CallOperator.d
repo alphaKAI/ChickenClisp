@@ -4,7 +4,6 @@ import orelang.expression.IExpression,
        orelang.Closure,
        orelang.Engine,
        orelang.Value;
-import std.variant;
 
 class CallOperator : IExpression {
   private {
@@ -21,7 +20,8 @@ class CallOperator : IExpression {
    * eval
    */
   public Value eval(Engine engine) {
-    Closure closure = engine.eval(Value(this.operator)).get!Closure;
+    Closure closure = engine.eval(new Value(this.operator)).getClosure;
+
     return closure.eval(this.args);
   }
 }

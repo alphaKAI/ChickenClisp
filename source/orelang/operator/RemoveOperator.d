@@ -14,16 +14,16 @@ class RemoveOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     Value efunc = engine.eval(args[0]);
-    Value[] eargs1 = engine.eval(args[1]).get!(Value[]);
+    Value[] eargs1 = engine.eval(args[1]).getArray;
     Value[] ret;
 
     foreach (elem; eargs1) {
       bool cnd;
 
-      if (efunc.convertsTo!Closure) {
-        cnd = (efunc.get!Closure).eval([elem]).get!bool;
+      if (efunc.type == ValueType.Closure) {
+        cnd = efunc.getClosure.eval([elem]).getBool;
       } else {
-        cnd = (efunc.get!IOperator).call(engine, [elem]).get!bool;
+        cnd = efunc.getIOperator.call(engine, [elem]).getBool;
       }
 
       if (!cnd) {
@@ -31,6 +31,6 @@ class RemoveOperator : IOperator {
       }
     }
 
-    return Value(ret);
+    return new Value(ret);
   }
 }

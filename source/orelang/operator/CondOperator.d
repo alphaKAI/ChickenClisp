@@ -9,17 +9,17 @@ class CondOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     for (size_t i; i < args.length; ++i) {
-      Value[] state = args[i].get!(Value[]);
+      Value[] state = args[i].getArray;//!(Value[]);
       Value pred = state[0];
       Value expr = state[1];
 
       Value epred = engine.eval(pred);
 
-      if ((epred.peek!bool !is null && *epred.peek!bool) || pred == "else") {
+      if ((epred.type == ValueType.Bool && epred.getBool) || (pred.type == ValueType.String && pred.getString == "else")) {
         return engine.eval(expr);
       }
     }
 
-    return Value(0L);
+    return new Value(0.0);
   }
 }

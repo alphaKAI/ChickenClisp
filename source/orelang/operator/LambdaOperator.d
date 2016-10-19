@@ -11,9 +11,9 @@ class LambdaOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    string[] funcArgs = args[0].get!(Value[]).map!(value => value.get!string).array;
-    Value funcBody = args[1];
+    string[] funcArgs = args[0].getArray.map!(value => value.getString).array;
+    Value funcBody    = args[1];
 
-    return Value(new DynamicOperator(funcArgs, funcBody));
+    return new Value(new DynamicOperator(funcArgs, funcBody));
   }
 }

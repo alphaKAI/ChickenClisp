@@ -15,11 +15,11 @@ class LoadOperator : IOperator {
     string[] loaded;
     Value eargs0 = engine.eval(args[0]);
 
-    if (eargs0.convertsTo!(Value[])) {
-      args = eargs0.get!(Value[]);
+    if (eargs0.type == ValueType.Array) {
+      args = eargs0.getArray;
     }
 
-    string[] fpaths = args.map!(arg => (engine.eval(arg)).get!string ~ ".ore").array;
+    string[] fpaths = args.map!(arg => (engine.eval(arg)).getString ~ ".ore").array;
 
     foreach (fpath; fpaths) {
       if (!exists(fpath)) {
@@ -30,6 +30,12 @@ class LoadOperator : IOperator {
       }
     }
 
-    return Value(loaded.map!(load => Value(load)).array);
+    Value[] ret;
+
+    foreach (load; loaded) {
+      ret ~= new Value(load);
+    }
+
+    return new Value(ret);
   }
 }

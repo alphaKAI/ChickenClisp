@@ -2,8 +2,7 @@ module orelang.expression.ImmediateValue;
 import orelang.expression.IExpression,
        orelang.Engine,
        orelang.Value;
-import std.variant,
-       std.string,
+import std.string,
        std.conv;
 
 class ImmediateValue : IExpression {
@@ -18,19 +17,19 @@ class ImmediateValue : IExpression {
   }
 
   override string toString() {
-    string base = "orelang.expression.ImmediateValue.ImmediateValue {";
+    string base = "ImmediateValue {";
     string _body;
 
-    if (value.convertsTo!(Value[])) {
+    if (value.type == ValueType.Array) {
       string[] elems;
 
-      foreach (elem; value.get!(Value[])) {
-        elems ~= elem.to!string;
+      foreach (elem; value.getArray) {
+        elems ~= elem.toString;
       }
 
       _body = "[" ~ elems.join(", ") ~ "]"; 
     } else {
-      _body = value.to!string;
+      _body = value.toString;
     }
 
     return base ~ _body ~ "}";

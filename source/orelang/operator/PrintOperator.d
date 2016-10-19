@@ -15,38 +15,37 @@ class PrintOperator : IOperator {
     foreach (arg; args) {
       Value item = engine.eval(arg);
 
-      if (item.convertsTo!IOperator) {
+      if (item.type == ValueType.IOperator) {
         item = arg;
       }
 
-      if (item.convertsTo!(Value[])) {
+      if (item.type == ValueType.Array) {
         write("(");
-        write((*item.peek!(Value[])).map!(e => e.to!string).join(" "));
+        write(item.getArray.map!(e => e.toString).join(" "));
         write(")");
       } else {
         write(item.toString());
       }
     }
 
-    return Value(0L);
+    return new Value(0.0);
   }
 }
 
-export class PrintlnOperator : IOperator {
+class PrintlnOperator : IOperator {
   /**
    * call
    */
   public Value call(Engine engine, Value[] args) {
     foreach (arg; args) {
       Value item = engine.eval(arg);
-
-      if (item.convertsTo!IOperator) {
+      if (item.type == ValueType.IOperator) {
         item = arg;
       }
 
-      if (item.convertsTo!(Value[])) {
+      if (item.type == ValueType.Array) {
         write("(");
-        write((*item.peek!(Value[])).map!(e => e.to!string).join(" "));
+        write(item.getArray.map!(e => e.toString).join(" "));
         write(")");
       } else {
         write(item.toString());
@@ -55,6 +54,6 @@ export class PrintlnOperator : IOperator {
 
     writeln;
 
-    return Value(0L);
+    return new Value(0.0);
   }
 }

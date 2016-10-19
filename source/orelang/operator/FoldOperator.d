@@ -14,36 +14,37 @@ class FoldOperator : IOperator {
     Value tmp   = args[1];
     Value eargs = engine.eval(args[2]);
 
-  if (eargs.convertsTo!(Value[])) {
-    Value[] array = eargs.get!(Value[]);
-    Value efunc = engine.eval(Value(func));
+  //if (eargs.convertsTo!(Value[])) {
+  if (eargs.type == ValueType.Array) {
+    Value[] array = eargs.getArray;
+    Value efunc = engine.eval(func);
 
-    if (efunc.convertsTo!Closure) {
+    if (efunc.type == ValueType.Closure) {
       foreach (elem; array) {
-        tmp = efunc.get!Closure.eval([tmp, elem]);
+        tmp = efunc.getClosure.eval([tmp, elem]);
       }
-    } else if (efunc.convertsTo!IOperator) {
+    } else if (efunc.type == ValueType.IOperator) {
       foreach (elem; array) {
-        tmp = efunc.get!IOperator.call(engine, [tmp, elem]);
+        tmp = efunc.getIOperator.call(engine, [tmp, elem]);
       }
     }
 
     return tmp;
   } else {
-      if (!(eargs.convertsTo!ImmediateValue) && !(eargs.get!ImmediateValue.value.convertsTo!(Value[]))) {
+      if (!(eargs.type == ValueType.ImmediateValue) && !(eargs.getImmediateValue.value.type == ValueType.Array)) {
         throw new Error("Fold requires array and function as a Operator");
       }
 
-      Value[] array = eargs.get!ImmediateValue.value.get!(Value[]);
-      Value efunc = engine.eval(Value(func));
+      Value[] array = eargs.getImmediateValue.value.getArray;
+      Value efunc = engine.eval(func);
 
-      if (efunc.convertsTo!Closure) {
+      if (efunc.type == ValueType.Closure) {
         foreach (elem; array) {
-          tmp = efunc.get!Closure.eval([tmp, elem]);
+          tmp = efunc.getClosure.eval([tmp, elem]);
         }
       } else {
               foreach (elem; array) {
-        tmp = efunc.get!IOperator.call(engine, [tmp, elem]);
+        tmp = efunc.getIOperator.call(engine, [tmp, elem]);
       }
       }
 

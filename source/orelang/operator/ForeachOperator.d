@@ -17,26 +17,49 @@ class ForeachOperator : IOperator {
     Value efunc  = engine.eval(args[0]);
     Value eargs1 = engine.eval(args[1]);
 
-    if (eargs1.convertsTo!(Value[])) {
-      Value[] array = eargs1.get!(Value[]);
+    if (eargs1.type == ValueType.Array) {
+      Value[] array = eargs1.getArray;
 
-      if (efunc.convertsTo!Closure) {
-        return Value(array.map!(elem => efunc.get!Closure.eval([Value(elem)])).array);
+      if (efunc.type == ValueType.Closure) {
+        Value[] ret;
+
+        foreach (elem; array) {
+          ret ~= efunc.getClosure.eval([elem]);
+        }
+
+        return new Value(ret);
       } else {
-        return Value(array.map!(elem => efunc.get!IOperator.call(engine, [Value(elem)])).array);
+        Value[] ret;
+
+        foreach (elem; array) {
+          ret ~= efunc.getIOperator.call(engine, [elem]);
+        }
+
+        return new Value(ret);
       }
     } else {
-        if (!(eargs1.convertsTo!ImmediateValue) && !((*eargs1.peek!ImmediateValue).value.convertsTo!(Value[]))) {
+        if (!(eargs1.type == ValueType.ImmediateValue) && !(eargs1.getImmediateValue.value.type == ValueType.Array)) {
           throw new Error("for-each requires array and function as a Operator");
         }
 
-        //Value[] array = *((*(*eargs1.peek!ImmediateValue).value.peek!(Value[]))[0]).peek!(Value[]);
-        Value[] array = (eargs1.get!ImmediateValue).value.get!(Value[])[0].get!(Value[]);
+        Value[] array = eargs1.getImmediateValue.value.getArray;
 
-        if (efunc.convertsTo!Closure) {
-          return Value(array.map!(elem => efunc.get!Closure.eval([Value(elem)])).array);
+        if (efunc.type == ValueType.Closure) {
+          Value[] ret;
+
+          foreach (elem; array) {
+            ret ~= efunc.getClosure.eval([elem]);
+          }
+
+          return new Value(ret);
         } else {
-          return Value(array.map!(elem => efunc.get!IOperator.call(engine, [Value(elem)])).array);
+          Value[] ret;
+
+          foreach (elem; array) {
+            ret ~= efunc.getIOperator.call(engine, [elem]);
+          }
+
+          return new Value(ret);
         }
       }
   }

@@ -10,7 +10,7 @@ class IfOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     Value ret = null;
 
-    if (engine.eval(args[0]).get!bool) {
+    if (engine.eval(args[0]).getBool) {
       ret = engine.eval(args[1]);
     } else {
       ret = engine.eval(args[2]);
