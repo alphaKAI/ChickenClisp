@@ -40,7 +40,7 @@ class Parser {
         } else if (ch == ')') {
           return _out;
         } else {
-          if (ch.to!string.match(nrgx)) {
+          if (ch.to!string.match(nrgx) || (i + 1 < code.length && ch == '-' && code[i + 1].to!string.match(nrgx))) {
             string tmp;
             size_t j = i;
 
