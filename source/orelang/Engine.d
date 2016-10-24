@@ -51,6 +51,8 @@ import orelang.operator.WhenOperator;
 import orelang.operator.IsListOperator;
 import orelang.operator.HashMapOperators;
 import orelang.operator.DefineOperator;
+import orelang.operator.TranspileOperator;
+import orelang.operator.EvalOperator;
 
 import std.exception;
 
@@ -114,6 +116,8 @@ class Engine {
     this.variables["set-value"]   = new Value(cast(IOperator)(new SetValueOperator));
     this.variables["get-value"]   = new Value(cast(IOperator)(new GetValueOperator));
     this.variables["define"]      = new Value(cast(IOperator)(new DefineOperator));
+    this.variables["transpile"]   = new Value(cast(IOperator)(new TranspileOperator));
+    this.variables["eval"]        = new Value(cast(IOperator)(new EvalOperator)); 
   }
 
   /*
