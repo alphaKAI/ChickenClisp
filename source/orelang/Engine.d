@@ -53,6 +53,7 @@ import orelang.operator.HashMapOperators;
 import orelang.operator.DefineOperator;
 import orelang.operator.TranspileOperator;
 import orelang.operator.EvalOperator;
+import orelang.operator.StringOperators;
 
 import std.exception;
 
@@ -117,7 +118,10 @@ class Engine {
     this.variables["get-value"]   = new Value(cast(IOperator)(new GetValueOperator));
     this.variables["define"]      = new Value(cast(IOperator)(new DefineOperator));
     this.variables["transpile"]   = new Value(cast(IOperator)(new TranspileOperator));
-    this.variables["eval"]        = new Value(cast(IOperator)(new EvalOperator)); 
+    this.variables["eval"]        = new Value(cast(IOperator)(new EvalOperator));
+    this.variables["string-concat"] = new Value(cast(IOperator)(new StringConcatOperator));
+    this.variables["string-join"]   = new Value(cast(IOperator)(new StringJoinOperator));
+    this.variables["string-split"]  = new Value(cast(IOperator)(new StringSplitOperator)); 
   }
 
   /*
