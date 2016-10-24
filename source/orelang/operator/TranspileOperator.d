@@ -6,7 +6,7 @@ import orelang.operator.IOperator,
 
 class TranspileOperator : IOperator {
   /**
-   * Loop while the condition is false
+   * call
    */
   public Value call(Engine engine, Value[] args) {
     string code = args[0].getString;
