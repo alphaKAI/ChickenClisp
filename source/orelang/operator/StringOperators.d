@@ -36,8 +36,9 @@ class StringConcatOperator : IOperator {
         );
     } else {
       return new Value(
-        args.map!(arg => engine.eval(arg).getString)
-        .join
+        args
+          .map!(arg => engine.eval(arg).getString)
+          .join
       );
     }
   }
@@ -66,8 +67,8 @@ class StringJoinOperator : IOperator {
     } else {
       return new Value(
         args[0..$-1]
-        .map!(arg => engine.eval(arg).getString)
-        .join(engine.eval(args[$-1]).getString)
+          .map!(arg => engine.eval(arg).getString)
+          .join(engine.eval(args[$-1]).getString)
       );
     }
   }
