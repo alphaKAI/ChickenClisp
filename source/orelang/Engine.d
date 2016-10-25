@@ -113,7 +113,7 @@ class LazedAssocArray(T) {
    * Make an alias of the key
    */
   void link(string alternative, string key) {
-    bool flag = called[key];
+    const flag = called[key];
     called[alternative] = flag;
 
     if (flag) {
@@ -223,7 +223,7 @@ class Engine {
     this.variables.insert!("eval",        q{new Value(cast(IOperator)(new EvalOperator))});
     this.variables.insert!("string-concat", q{new Value(cast(IOperator)(new StringConcatOperator))});
     this.variables.insert!("string-join",   q{new Value(cast(IOperator)(new StringJoinOperator))});
-    this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))}); 
+    this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
   }
 
   /**
@@ -330,7 +330,10 @@ class Engine {
       Value[] scriptList = script.getArray;
 
       if (scriptList[0].type == ValueType.Array) {
-        CallOperator ret = new CallOperator(this.variables[scriptList[0][0].getString].getIOperator, scriptList[0].getArray[1..$]);
+        CallOperator ret = new CallOperator(
+                              this.variables[scriptList[0][0].getString].getIOperator,
+                              scriptList[0].getArray[1..$]
+                            );
         Value tmp = ret.eval(this);
 
         if (tmp.type == ValueType.Closure) {
