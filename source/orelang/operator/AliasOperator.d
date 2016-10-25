@@ -14,7 +14,7 @@ class AliasOperator : IOperator {
     if (base in engine.variables) {
       Value v = engine.variables[base];
 
-      engine.variables[_new] = v;
+      engine.variables.set(_new, v);
 
       return v;
     } else {
