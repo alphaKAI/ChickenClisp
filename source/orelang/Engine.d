@@ -186,11 +186,8 @@ class Engine {
     this.variables.insert!("step",     q{new Value(cast(IOperator)(new StepOperator))});
     this.variables.insert!("if",       q{new Value(cast(IOperator)(new IfOperator))});
     this.variables.insert!("!",        q{new Value(cast(IOperator)(new NotOperator))});
-    this.variables.link("not", "!");
     this.variables.insert!("&&",       q{new Value(cast(IOperator)(new AndOperator))});
-    this.variables.link("and", "&&");
     this.variables.insert!("||",       q{new Value(cast(IOperator)(new OrOperator))});
-    this.variables.link("or", "||");
     this.variables.insert!("print",    q{new Value(cast(IOperator)(new PrintOperator))});
     this.variables.insert!("println",  q{new Value(cast(IOperator)(new PrintlnOperator))});
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
@@ -215,15 +212,18 @@ class Engine {
     this.variables.insert!("cons",     q{new Value(cast(IOperator)(new ConsOperator))});
     this.variables.insert!("when",     q{new Value(cast(IOperator)(new WhenOperator))});
     this.variables.insert!("list?",    q{new Value(cast(IOperator)(new IsListOperator))});
-    this.variables.insert!("make-hash",   q{new Value(cast(IOperator)(new MakeHashOperator))});
-    this.variables.insert!("set-value",   q{new Value(cast(IOperator)(new SetValueOperator))});
-    this.variables.insert!("get-value",   q{new Value(cast(IOperator)(new GetValueOperator))});
-    this.variables.insert!("define",      q{new Value(cast(IOperator)(new DefineOperator))});
-    this.variables.insert!("transpile",   q{new Value(cast(IOperator)(new TranspileOperator))});
-    this.variables.insert!("eval",        q{new Value(cast(IOperator)(new EvalOperator))});
+    this.variables.insert!("make-hash",     q{new Value(cast(IOperator)(new MakeHashOperator))});
+    this.variables.insert!("set-value",     q{new Value(cast(IOperator)(new SetValueOperator))});
+    this.variables.insert!("get-value",     q{new Value(cast(IOperator)(new GetValueOperator))});
+    this.variables.insert!("define",        q{new Value(cast(IOperator)(new DefineOperator))});
+    this.variables.insert!("transpile",     q{new Value(cast(IOperator)(new TranspileOperator))});
+    this.variables.insert!("eval",          q{new Value(cast(IOperator)(new EvalOperator))});
     this.variables.insert!("string-concat", q{new Value(cast(IOperator)(new StringConcatOperator))});
     this.variables.insert!("string-join",   q{new Value(cast(IOperator)(new StringJoinOperator))});
     this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
+    this.variables.link("not", "!");
+    this.variables.link("and", "&&");
+    this.variables.link("or", "||");
   }
 
   /**
