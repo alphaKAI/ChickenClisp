@@ -18,6 +18,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.DynamicOperator,
        orelang.operator.ForeachOperator,
        orelang.operator.StringOperators,
+       orelang.operator.ArrayOperators,
        orelang.operator.DeffunOperator,
        orelang.operator.DefineOperator,
        orelang.operator.DefvarOperator,
@@ -28,6 +29,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.RemoveOperator,
        orelang.operator.SetIdxOperator,
        orelang.operator.AliasOperator,
+       orelang.operator.ConvOperators,
        orelang.operator.EqualOperator,
        orelang.operator.LogicOperator,
        orelang.operator.PrintOperator,
@@ -221,6 +223,10 @@ class Engine {
     this.variables.insert!("string-concat", q{new Value(cast(IOperator)(new StringConcatOperator))});
     this.variables.insert!("string-join",   q{new Value(cast(IOperator)(new StringJoinOperator))});
     this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
+    this.variables.insert!("number-to-string",  q{new Value(cast(IOperator)(new numberToStringOperator))});
+    this.variables.insert!("array-reverse", q{new Value(cast(IOperator)(new ArrayReverseOperator))});
+    this.variables.insert!("array-set-n", q{new Value(cast(IOperator)(new ArraySetNOperator))});
+    this.variables.insert!("array-get-n", q{new Value(cast(IOperator)(new ArrayGetNOperator))});
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
     this.variables.link("or", "||");
