@@ -12,6 +12,7 @@ import std.algorithm,
  *  - string-concat
  *  - string-join
  *  - string-split
+ *  - string-length
  */
 
 /**
@@ -89,5 +90,24 @@ class StringSplitOperator : IOperator {
     }
 
     return new Value(rets);
+  }
+}
+
+/**
+ * return a length of the string
+ */ 
+class StringLengthOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    import std.conv;
+    if (args[0].type == ValueType.SymbolValue) {
+      return new Value(engine.eval(args[0]).getString.length.to!double);
+    } else if (args[0].type == ValueType.String) {
+      return new Value(args[0].getString.length.to!double);
+    } else {
+      throw new Error("[string-length] Invalid argument was given");
+    }
   }
 }

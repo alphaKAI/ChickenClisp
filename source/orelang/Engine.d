@@ -223,6 +223,7 @@ class Engine {
     this.variables.insert!("string-concat", q{new Value(cast(IOperator)(new StringConcatOperator))});
     this.variables.insert!("string-join",   q{new Value(cast(IOperator)(new StringJoinOperator))});
     this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
+    this.variables.insert!("string-length",  q{new Value(cast(IOperator)(new StringLengthOperator))});
     this.variables.insert!("number-to-string",  q{new Value(cast(IOperator)(new numberToStringOperator))});
     this.variables.insert!("array-reverse", q{new Value(cast(IOperator)(new ArrayReverseOperator))});
     this.variables.insert!("array-set-n", q{new Value(cast(IOperator)(new ArraySetNOperator))});
@@ -328,6 +329,7 @@ class Engine {
    * Build Script Tree
    */
   public IExpression getExpression(Value script) {
+    import std.stdio; writeln("[getExpression] script -> ", script);
     if (script.type == ValueType.ImmediateValue) {
       return script.getImmediateValue;
     }
