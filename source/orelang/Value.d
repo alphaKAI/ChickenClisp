@@ -59,7 +59,7 @@ class Value {
   this(IExpression value)    { this.opAssign(value); }
   this(IOperator value)      { this.opAssign(value); }
   this(Closure value)        { this.opAssign(value); }
-  this(Value[string] value)        { this.opAssign(value); }
+  this(Value[string] value)  { this.opAssign(value); }
 
   double  getNumeric() { enforce(this.type == ValueType.Numeric);
                          return this.numeric_value; }
