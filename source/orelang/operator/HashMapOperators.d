@@ -37,7 +37,7 @@ class SetValueOperator : IOperator {
       if (obj.type == ValueType.HashMap) {
         Value[string] hash = obj.getHashMap;
         
-        hash[args[1].getString] = args[2];
+        hash[engine.eval(args[1]).getString] = engine.eval(args[2]);
         ret = new Value(hash);
       
         engine.setVariable(args[0].getString, ret);
@@ -47,14 +47,11 @@ class SetValueOperator : IOperator {
     } else if (args[0].type == ValueType.HashMap) {
       Value[string] hash = args[0].getHashMap;
 
-      hash[args[1].getString] = args[2];
+      hash[engine.eval(args[1]).getString] = engine.eval(args[2]);
       ret = new Value(hash);
 
       engine.setVariable(args[0].getString, ret);
     } else {
-      import std.stdio;
-      writeln("args -> ", args);
-      writeln("args[0].type -> ", args[0].type);
       throw new Error("set-value accepts (HashName Key Value) or (HashValue Key Value) only");
     }
 
@@ -70,19 +67,21 @@ class GetValueOperator : IOperator {
     (get-value hash key)
   */
   public Value call(Engine engine, Value[] args) {
-    if (args[0].type == ValueType.SymbolValue) {
-      Value obj = engine.getVariable(args[0].getString);
+    Value eargs0 = engine.eval(args[0]);
+
+    if (eargs0.type == ValueType.SymbolValue) {
+      Value obj = engine.getVariable(eargs0.getString);
 
       if (obj.type == ValueType.HashMap) {
         Value[string] hash = obj.getHashMap;
-        return hash[args[1].getString];
+        return hash[engine.eval(args[1]).getString];
       } else {
-        throw new Error("No such a HashMap - " ~ args[0].getString);
+        throw new Error("No such a HashMap - " ~ eargs0.getString);
       }
-    } else if (args[0].type == ValueType.HashMap) {
-      Value[string] hash = args[0].getHashMap;
+    } else if (eargs0.type == ValueType.HashMap) {
+      Value[string] hash = eargs0.getHashMap;
 
-      return hash[args[1].getString];
+      return hash[engine.eval(args[1]).getString];
     } else {
       throw new Error("get-value accepts (HashName Key Value) or (HashValue Key Value) only");
     }
