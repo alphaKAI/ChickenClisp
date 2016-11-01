@@ -91,3 +91,28 @@ class ArrayGetNOperator : IOperator {
     }
   }
 }
+
+/**
+ * Append a value from the order of the array
+ */
+class ArrayAppendOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] arr;
+    Value eargs0 = engine.eval(args[0]);
+
+    if (eargs0.type == ValueType.ImmediateValue) {
+      arr = eargs0.getImmediateValue.value.getArray;
+    } else {
+      arr = eargs0.getArray;
+    }
+    
+    foreach (arg; args[1..$]) {
+      arr ~= engine.eval(arg);
+    }
+
+    return new Value(arr);
+  }
+}

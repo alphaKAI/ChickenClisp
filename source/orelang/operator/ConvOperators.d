@@ -8,7 +8,7 @@ import std.algorithm,
        std.conv;
 
 /**
- * convert value into string(number to string) 
+ * convert number into string 
  */
 class numberToStringOperator : IOperator {
   /**
@@ -16,5 +16,29 @@ class numberToStringOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     return new Value(engine.eval(args[0]).getNumeric.to!string);
+  }
+}
+
+/**
+ * convert string into number 
+ */
+class stringToNumberOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    return new Value(engine.eval(args[0]).getString.to!double);
+  }
+}
+
+/**
+ * convert float into integer 
+ */
+class floatToIntegerOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    return new Value(engine.eval(args[0]).getNumeric.to!long.to!double);
   }
 }

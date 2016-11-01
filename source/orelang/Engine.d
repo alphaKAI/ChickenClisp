@@ -225,9 +225,12 @@ class Engine {
     this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
     this.variables.insert!("string-length",  q{new Value(cast(IOperator)(new StringLengthOperator))});
     this.variables.insert!("number-to-string",  q{new Value(cast(IOperator)(new numberToStringOperator))});
+    this.variables.insert!("string-to-number",  q{new Value(cast(IOperator)(new numberToStringOperator))});
+    this.variables.insert!("float-to-integer",  q{new Value(cast(IOperator)(new floatToIntegerOperator))});
     this.variables.insert!("array-reverse", q{new Value(cast(IOperator)(new ArrayReverseOperator))});
     this.variables.insert!("array-set-n", q{new Value(cast(IOperator)(new ArraySetNOperator))});
     this.variables.insert!("array-get-n", q{new Value(cast(IOperator)(new ArrayGetNOperator))});
+    this.variables.insert!("array-append", q{new Value(cast(IOperator)(new ArrayAppendOperator))});
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
     this.variables.link("or", "||");
