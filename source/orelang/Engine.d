@@ -332,7 +332,6 @@ class Engine {
    * Build Script Tree
    */
   public IExpression getExpression(Value script) {
-    import std.stdio; writeln("[getExpression] script -> ", script);
     if (script.type == ValueType.ImmediateValue) {
       return script.getImmediateValue;
     }
