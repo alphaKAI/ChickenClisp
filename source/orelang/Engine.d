@@ -215,8 +215,8 @@ class Engine {
     this.variables.insert!("when",     q{new Value(cast(IOperator)(new WhenOperator))});
     this.variables.insert!("list?",    q{new Value(cast(IOperator)(new IsListOperator))});
     this.variables.insert!("make-hash",     q{new Value(cast(IOperator)(new MakeHashOperator))});
-    this.variables.insert!("set-value",     q{new Value(cast(IOperator)(new SetValueOperator))});
-    this.variables.insert!("get-value",     q{new Value(cast(IOperator)(new GetValueOperator))});
+    this.variables.insert!("hash-set-value",     q{new Value(cast(IOperator)(new HashSetValueOperator))});
+    this.variables.insert!("hash-get-value",     q{new Value(cast(IOperator)(new HashGetValueOperator))});
     this.variables.insert!("define",        q{new Value(cast(IOperator)(new DefineOperator))});
     this.variables.insert!("transpile",     q{new Value(cast(IOperator)(new TranspileOperator))});
     this.variables.insert!("eval",          q{new Value(cast(IOperator)(new EvalOperator))});
