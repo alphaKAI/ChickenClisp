@@ -21,12 +21,12 @@ class MakeHashOperator : IOperator {
   }
 }
 
-class SetValueOperator : IOperator {
+class HashSetValueOperator : IOperator {
   /**
    * call
    */
   /*
-    (set-value hash key value)
+    (hash-set-value hash key value)
   */
   public Value call(Engine engine, Value[] args) {
     Value ret;
@@ -59,12 +59,12 @@ class SetValueOperator : IOperator {
   }
 }
 
-class GetValueOperator : IOperator {
+class HashGetValueOperator : IOperator {
   /**
    * call
    */
   /*
-    (get-value hash key)
+    (hash-get-value hash key)
   */
   public Value call(Engine engine, Value[] args) {
     Value eargs0 = engine.eval(args[0]);
