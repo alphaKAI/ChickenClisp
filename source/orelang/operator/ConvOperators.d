@@ -20,14 +20,14 @@ class numberToStringOperator : IOperator {
 }
 
 /**
- * convert string into number 
+ * convert char into number 
  */
-class stringToNumberOperator : IOperator {
+class charToNumberOperator : IOperator {
   /**
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    return new Value(engine.eval(args[0]).getString.to!double);
+    return new Value(engine.eval(args[0]).getString[0].to!double);
   }
 }
 

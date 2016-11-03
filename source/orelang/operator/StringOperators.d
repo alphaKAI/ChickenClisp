@@ -1,5 +1,6 @@
 module orelang.operator.StringOperators;
-import orelang.operator.IOperator,
+import orelang.expression.ImmediateValue,
+       orelang.operator.IOperator,
        orelang.Engine,
        orelang.Value;
 import std.algorithm,
@@ -26,7 +27,7 @@ class StringConcatOperator : IOperator {
     if (args[0].type == ValueType.Array && args.length == 1) {
       return new Value(
         engine.eval(args[0]).getArray
-          .map!(arg => engine.eval(arg).getString)
+          .map!(arg => (arg.type == ValueType.SymbolValue ? engine.eval(arg) : arg).getString)
           .join
         );
     } else if (args[0].type == ValueType.ImmediateValue && args[0].getImmediateValue.value.type == ValueType.Array && args.length == 1) {
@@ -109,5 +110,68 @@ class StringLengthOperator : IOperator {
     } else {
       throw new Error("[string-length] Invalid argument was given");
     }
+  }
+}
+
+/**
+ * Tak a slice from the range of the string
+ */
+class StringSliceOperator : IOperator {
+  /**
+   * call
+   */
+  import std.conv;
+  public Value call(Engine engine, Value[] args) {
+    string str;
+    Value eargs0 = engine.eval(args[0]);
+    str = eargs0.getString;
+    
+    long slice1  = engine.eval(args[1]).getNumeric.to!long,
+         slice2  = engine.eval(args[2]).getNumeric.to!long;
+
+    if ((0 <= slice1 && 0 <= slice2) && (slice1 <= str.length && slice2 <= str.length)) {
+      return new Value(str[slice1..slice2]);
+    } else {
+      throw new Error("[string-slice] Invalid");
+    }
+  }
+}
+
+class AsStringOperator : IOperator {
+  /**
+   * call
+   */
+  import std.conv;
+  public Value call(Engine engine, Value[] args) {
+    return new Value(new ImmediateValue(new Value((args[0].type == ValueType.SymbolValue ? engine.eval(args[0]) : args[0]).toString)));
+  }
+}
+
+class StringRepeatOperator : IOperator {
+  /**
+   * call
+   */
+  import std.algorithm,
+         std.string,
+         std.array,
+         std.range,
+         std.conv;
+  public Value call(Engine engine, Value[] args) {
+    string pattern;
+    long n;
+
+    if (args[0].type == ValueType.SymbolValue) {
+      pattern = engine.eval(args[0]).getString;
+    } else if (args[0].type == ValueType.String) {
+      pattern = args[0].getString;
+    } 
+
+    if (args[1].type == ValueType.Numeric) {
+      n = args[1].getNumeric.to!long;
+    } else {
+      n = engine.eval(args[1]).getNumeric.to!long;
+    }
+
+    return new Value(n.iota.map!(i => pattern).array.join);
   }
 }

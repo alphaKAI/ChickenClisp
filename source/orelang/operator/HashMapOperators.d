@@ -67,19 +67,17 @@ class HashGetValueOperator : IOperator {
     (hash-get-value hash key)
   */
   public Value call(Engine engine, Value[] args) {
-    Value eargs0 = engine.eval(args[0]);
-
-    if (eargs0.type == ValueType.SymbolValue) {
-      Value obj = engine.getVariable(eargs0.getString);
+    if (args[0].type == ValueType.SymbolValue) {
+      Value obj = engine.getVariable(args[0].getString);
 
       if (obj.type == ValueType.HashMap) {
         Value[string] hash = obj.getHashMap;
         return hash[engine.eval(args[1]).getString];
       } else {
-        throw new Error("No such a HashMap - " ~ eargs0.getString);
+        throw new Error("No such a HashMap - " ~ args[0].getString);
       }
-    } else if (eargs0.type == ValueType.HashMap) {
-      Value[string] hash = eargs0.getHashMap;
+    } else if (engine.eval(args[0]).type == ValueType.HashMap) {
+      Value[string] hash = engine.eval(args[0]).getHashMap;
 
       return hash[engine.eval(args[1]).getString];
     } else {

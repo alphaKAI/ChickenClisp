@@ -116,3 +116,127 @@ class ArrayAppendOperator : IOperator {
     return new Value(arr);
   }
 }
+
+/**
+ * Tak a slice from the range of the array
+ */
+class ArraySliceOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] arr;
+    Value eargs0 = engine.eval(args[0]);
+
+    if (eargs0.type == ValueType.ImmediateValue) {
+      arr = eargs0.getImmediateValue.value.getArray;
+    } else {
+      arr = eargs0.getArray;
+    }
+    
+    long slice1  = engine.eval(args[1]).getNumeric.to!long,
+         slice2  = engine.eval(args[2]).getNumeric.to!long;
+
+    if ((0 <= slice1 && 0 <= slice2) && (slice1 <= arr.length && slice2 <= arr.length)) {
+      return new Value(arr[slice1..slice2]);
+    } else {
+      throw new Error("[get] Invalid");
+    }
+  }
+}
+
+/**
+ * concat arrays
+ */
+class ArrayConcatOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] arr;
+
+    foreach (arg; args) {
+      Value earg = engine.eval(arg);
+      Value[] tarr;
+
+      if (earg.type == ValueType.ImmediateValue) {
+        tarr = earg.getImmediateValue.value.getArray;
+      } else {
+        tarr = earg.getArray;
+      }
+
+      foreach (t; tarr) {
+        arr ~= t;
+      }
+    }
+
+    return new Value(arr);
+  }
+}
+
+/**
+ * return the length of the array
+ */
+class ArrayLengthOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] arr;
+    Value eargs0 = engine.eval(args[0]);
+
+    if (eargs0.type == ValueType.ImmediateValue) {
+      arr = eargs0.getImmediateValue.value.getArray;
+    } else {
+      arr = eargs0.getArray;
+    }
+
+    return new Value(arr.length.to!double);
+  }
+}
+
+/**
+ * make a new array 
+ */
+class ArrayNewOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] ret;
+
+    foreach (arg; args) {
+      ret ~= engine.eval(arg);
+    }
+
+    return new Value(ret);
+  }
+}
+
+/**
+ * return flattend array of the given array 
+ */
+class ArrayFlattenOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] ret;
+
+    foreach (arg; args) {
+      if (arg.type == ValueType.Array) {
+        foreach (elem; engine.eval(arg).getArray) {
+          foreach (ee; elem.getArray) {
+            ret ~= ee;
+          }
+        }
+      } else {
+        Value earg = engine.eval(arg);
+        import std.stdio; writeln("EARG!!!!!!!");
+        ret ~= earg;
+      }
+    }
+
+    return new Value(ret);
+  }
+}

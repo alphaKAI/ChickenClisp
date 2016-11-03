@@ -42,6 +42,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.FoldOperator,
        orelang.operator.LoadOperator,
        orelang.operator.StepOperator,
+       orelang.operator.TypeOperator,
        orelang.operator.WhenOperator,
        orelang.operator.AddOperator,
        orelang.operator.CarOperator,
@@ -224,13 +225,22 @@ class Engine {
     this.variables.insert!("string-join",   q{new Value(cast(IOperator)(new StringJoinOperator))});
     this.variables.insert!("string-split",  q{new Value(cast(IOperator)(new StringSplitOperator))});
     this.variables.insert!("string-length",  q{new Value(cast(IOperator)(new StringLengthOperator))});
+    this.variables.insert!("string-slice",  q{new Value(cast(IOperator)(new StringSliceOperator))});
+    this.variables.insert!("as-string",  q{new Value(cast(IOperator)(new AsStringOperator))});
+    this.variables.insert!("string-repeat",  q{new Value(cast(IOperator)(new StringRepeatOperator))});
     this.variables.insert!("number-to-string",  q{new Value(cast(IOperator)(new numberToStringOperator))});
-    this.variables.insert!("string-to-number",  q{new Value(cast(IOperator)(new numberToStringOperator))});
+    this.variables.insert!("char-to-number",  q{new Value(cast(IOperator)(new charToNumberOperator))});
     this.variables.insert!("float-to-integer",  q{new Value(cast(IOperator)(new floatToIntegerOperator))});
     this.variables.insert!("array-reverse", q{new Value(cast(IOperator)(new ArrayReverseOperator))});
     this.variables.insert!("array-set-n", q{new Value(cast(IOperator)(new ArraySetNOperator))});
     this.variables.insert!("array-get-n", q{new Value(cast(IOperator)(new ArrayGetNOperator))});
     this.variables.insert!("array-append", q{new Value(cast(IOperator)(new ArrayAppendOperator))});
+    this.variables.insert!("array-slice", q{new Value(cast(IOperator)(new ArraySliceOperator))});
+    this.variables.insert!("array-concat", q{new Value(cast(IOperator)(new ArrayConcatOperator))});
+    this.variables.insert!("array-length", q{new Value(cast(IOperator)(new ArrayLengthOperator))});
+    this.variables.insert!("array-new", q{new Value(cast(IOperator)(new ArrayNewOperator))});
+    this.variables.insert!("array-flatten", q{new Value(cast(IOperator)(new ArrayFlattenOperator))});
+    this.variables.insert!("type", q{new Value(cast(IOperator)(new TypeOperator))});
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
     this.variables.link("or", "||");
@@ -363,11 +373,15 @@ class Engine {
       }
     } else {
       if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {
-        Value tmp;
-        tmp = this.getVariable(script.getString).dup;
+        if (script.type == ValueType.SymbolValue) {
+          Value tmp;
+          tmp = this.getVariable(script.getString).dup;
 
-        if (tmp.type != ValueType.Null) {
-          return new ImmediateValue(tmp);
+          if (tmp.type != ValueType.Null) {
+            return new ImmediateValue(tmp);
+          }
+        } else {
+          return new ImmediateValue(new Value(script.getString));
         }
       }
 
