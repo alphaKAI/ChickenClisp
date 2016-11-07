@@ -14,6 +14,9 @@ import std.algorithm,
  *  - string-join
  *  - string-split
  *  - string-length
+ *  - string-slice
+ *  - as-string
+ *  - string-repeat
  */
 
 /**
