@@ -103,12 +103,17 @@ class StringLengthOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     import std.conv;
-    if (args[0].type == ValueType.SymbolValue) {
-      return new Value(engine.eval(args[0]).getString.length.to!double);
-    } else if (args[0].type == ValueType.String) {
+    
+    if (args[0].type == ValueType.String) {
       return new Value(args[0].getString.length.to!double);
     } else {
-      throw new Error("[string-length] Invalid argument was given");
+      Value eargs0 = engine.eval(args[0]);
+
+      if (eargs0.type == ValueType.String) {
+        return new Value(eargs0.getString.length.to!double);
+      } else {
+        throw new Error("[string-length] Invalid argument was given");
+      }
     }
   }
 }
