@@ -33,6 +33,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.EqualOperator,
        orelang.operator.LogicOperator,
        orelang.operator.PrintOperator,
+       orelang.operator.TimesOperator,
        orelang.operator.UntilOperator,
        orelang.operator.WhileOperator,
        orelang.operator.AsIVOperator,
@@ -173,54 +174,72 @@ class Engine {
   this() {
     this.variables = new LazedAssocArray!Value;
 
+    // Arithmetic operations
     this.variables.insert!("+",        q{new Value(cast(IOperator)(new AddOperator))});
     this.variables.insert!("-",        q{new Value(cast(IOperator)(new SubOperator))});
     this.variables.insert!("*",        q{new Value(cast(IOperator)(new MulOperator))});
     this.variables.insert!("/",        q{new Value(cast(IOperator)(new DivOperator))});
     this.variables.insert!("%",        q{new Value(cast(IOperator)(new ModOperator))});
+
+    // Comparison operators
     this.variables.insert!("=",        q{new Value(cast(IOperator)(new EqualOperator))});
     this.variables.insert!("<",        q{new Value(cast(IOperator)(new LessOperator))});
     this.variables.insert!(">",        q{new Value(cast(IOperator)(new GreatOperator))});
     this.variables.insert!("<=",       q{new Value(cast(IOperator)(new LEqOperator))});
     this.variables.insert!(">=",       q{new Value(cast(IOperator)(new GEqOperator))});
+
+    // Varibale/Function operators
+    this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
     this.variables.insert!("get",      q{new Value(cast(IOperator)(new GetOperator))});
-    this.variables.insert!("until",    q{new Value(cast(IOperator)(new UntilOperator))});
+    this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
+    this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
+    this.variables.insert!("define",   q{new Value(cast(IOperator)(new DefineOperator))});
+    this.variables.insert!("def-var",  q{new Value(cast(IOperator)(new DefvarOperator))});
+    this.variables.insert!("get-fun",  q{new Value(cast(IOperator)(new GetfunOperator))});
+    this.variables.insert!("set-idx",  q{new Value(cast(IOperator)(new SetIdxOperator))});
+
+    // Loop operators
     this.variables.insert!("step",     q{new Value(cast(IOperator)(new StepOperator))});
-    this.variables.insert!("if",       q{new Value(cast(IOperator)(new IfOperator))});
+    this.variables.insert!("times",    q{new Value(cast(IOperator)(new TimesOperator))});
+    this.variables.insert!("until",    q{new Value(cast(IOperator)(new UntilOperator))});
+    this.variables.insert!("while",    q{new Value(cast(IOperator)(new WhileOperator))});
+
+    // Logic operators
     this.variables.insert!("!",        q{new Value(cast(IOperator)(new NotOperator))});
     this.variables.insert!("&&",       q{new Value(cast(IOperator)(new AndOperator))});
     this.variables.insert!("||",       q{new Value(cast(IOperator)(new OrOperator))});
+
+    // I/O operators
     this.variables.insert!("print",    q{new Value(cast(IOperator)(new PrintOperator))});
     this.variables.insert!("println",  q{new Value(cast(IOperator)(new PrintlnOperator))});
-    this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
-    this.variables.insert!("while",    q{new Value(cast(IOperator)(new WhileOperator))});
-    this.variables.insert!("get-fun",  q{new Value(cast(IOperator)(new GetfunOperator))});
+    
+    // Condition operators
+    this.variables.insert!("if",       q{new Value(cast(IOperator)(new IfOperator))});
+    this.variables.insert!("cond",     q{new Value(cast(IOperator)(new CondOperator))});
+    this.variables.insert!("when",     q{new Value(cast(IOperator)(new WhenOperator))});
+    
+    // Functional operators
     this.variables.insert!("lambda",   q{new Value(cast(IOperator)(new LambdaOperator))});
     this.variables.insert!("map",      q{new Value(cast(IOperator)(new MapOperator))});
-    this.variables.insert!("set-idx",  q{new Value(cast(IOperator)(new SetIdxOperator))});
-    this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
-    this.variables.insert!("def-var",  q{new Value(cast(IOperator)(new DefvarOperator))});
-    this.variables.insert!("seq",      q{new Value(cast(IOperator)(new SeqOperator))});
+    this.variables.insert!("for-each", q{new Value(cast(IOperator)(new ForeachOperator))});
     this.variables.insert!("fold",     q{new Value(cast(IOperator)(new FoldOperator))});
-    this.variables.insert!("length",   q{new Value(cast(IOperator)(new LengthOperator))});
+
+    // List operators
     this.variables.insert!("car",      q{new Value(cast(IOperator)(new CarOperator))});
     this.variables.insert!("cdr",      q{new Value(cast(IOperator)(new CdrOperator))});
-    this.variables.insert!("load",     q{new Value(cast(IOperator)(new LoadOperator))});
-    this.variables.insert!("cond",     q{new Value(cast(IOperator)(new CondOperator))});
-    this.variables.insert!("alias",    q{new Value(cast(IOperator)(new AliasOperator))});
-    this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
-    this.variables.insert!("for-each", q{new Value(cast(IOperator)(new ForeachOperator))});
-    this.variables.insert!("remove",   q{new Value(cast(IOperator)(new RemoveOperator))});
+    this.variables.insert!("seq",      q{new Value(cast(IOperator)(new SeqOperator))});
     this.variables.insert!("cons",     q{new Value(cast(IOperator)(new ConsOperator))});
-    this.variables.insert!("when",     q{new Value(cast(IOperator)(new WhenOperator))});
     this.variables.insert!("list?",    q{new Value(cast(IOperator)(new IsListOperator))});
+    this.variables.insert!("remove",   q{new Value(cast(IOperator)(new RemoveOperator))});
+    this.variables.insert!("length",   q{new Value(cast(IOperator)(new LengthOperator))});
+
+    // HashMap operators
     this.variables.insert!("make-hash",        q{new Value(cast(IOperator)(new MakeHashOperator))});
     this.variables.insert!("hash-set-value",   q{new Value(cast(IOperator)(new HashSetValueOperator))});
     this.variables.insert!("hash-get-value",   q{new Value(cast(IOperator)(new HashGetValueOperator))});
-    this.variables.insert!("define",           q{new Value(cast(IOperator)(new DefineOperator))});
-    this.variables.insert!("transpile",        q{new Value(cast(IOperator)(new TranspileOperator))});
-    this.variables.insert!("eval",             q{new Value(cast(IOperator)(new EvalOperator))});
+
+    // String operators
     this.variables.insert!("string-concat",    q{new Value(cast(IOperator)(new StringConcatOperator))});
     this.variables.insert!("string-join",      q{new Value(cast(IOperator)(new StringJoinOperator))});
     this.variables.insert!("string-split",     q{new Value(cast(IOperator)(new StringSplitOperator))});
@@ -228,20 +247,31 @@ class Engine {
     this.variables.insert!("string-slice",     q{new Value(cast(IOperator)(new StringSliceOperator))});
     this.variables.insert!("as-string",        q{new Value(cast(IOperator)(new AsStringOperator))});
     this.variables.insert!("string-repeat",    q{new Value(cast(IOperator)(new StringRepeatOperator))});
+
+    // Conversion operators
     this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new numberToStringOperator))});
     this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new charToNumberOperator))});
     this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new floatToIntegerOperator))});
-    this.variables.insert!("array-reverse",    q{new Value(cast(IOperator)(new ArrayReverseOperator))});
-    this.variables.insert!("array-set-n",      q{new Value(cast(IOperator)(new ArraySetNOperator))});
+    
+    // Array Operators
+    this.variables.insert!("array-new",        q{new Value(cast(IOperator)(new ArrayNewOperator))});
     this.variables.insert!("array-get-n",      q{new Value(cast(IOperator)(new ArrayGetNOperator))});
-    this.variables.insert!("array-append",     q{new Value(cast(IOperator)(new ArrayAppendOperator))});
+    this.variables.insert!("array-set-n",      q{new Value(cast(IOperator)(new ArraySetNOperator))});
     this.variables.insert!("array-slice",      q{new Value(cast(IOperator)(new ArraySliceOperator))});
+    this.variables.insert!("array-append",     q{new Value(cast(IOperator)(new ArrayAppendOperator))});
     this.variables.insert!("array-concat",     q{new Value(cast(IOperator)(new ArrayConcatOperator))});
     this.variables.insert!("array-length",     q{new Value(cast(IOperator)(new ArrayLengthOperator))});
-    this.variables.insert!("array-new",        q{new Value(cast(IOperator)(new ArrayNewOperator))});
     this.variables.insert!("array-flatten",    q{new Value(cast(IOperator)(new ArrayFlattenOperator))});
-    this.variables.insert!("type",             q{new Value(cast(IOperator)(new TypeOperator))});
+    this.variables.insert!("array-reverse",    q{new Value(cast(IOperator)(new ArrayReverseOperator))});
 
+    // Utility operators
+    this.variables.insert!("eval",      q{new Value(cast(IOperator)(new EvalOperator))});
+    this.variables.insert!("load",      q{new Value(cast(IOperator)(new LoadOperator))});
+    this.variables.insert!("type",      q{new Value(cast(IOperator)(new TypeOperator))});
+    this.variables.insert!("alias",     q{new Value(cast(IOperator)(new AliasOperator))});
+    this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
+
+    // Aliases
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
     this.variables.link("or",  "||");
