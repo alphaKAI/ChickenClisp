@@ -275,6 +275,7 @@ class Engine {
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
     this.variables.link("or",  "||");
+    this.variables.link("begin", "step");
   }
 
   /**
