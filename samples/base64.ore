@@ -62,7 +62,9 @@
                     (array-append quotients (step
                                               (set $ (string-length binaries))
                                               (set remainds (string-slice binaries (- $ (% bLen 6)) $))
-                                              (string-concat remainds (repeat "0" (- 6 (string-length remainds)))))))))
+                                              (set remainds (string-concat remainds (repeat "0" (- 6 (string-length remainds)))))
+                                              (println "remainds - " remainds)
+                                              remainds)))))
 
          (def makeQuotients (prepared)
               (step
