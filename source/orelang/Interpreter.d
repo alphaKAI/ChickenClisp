@@ -1,19 +1,21 @@
 module orelang.Interpreter;
 import orelang.Transpiler,
        orelang.Engine;
-import std.conv,
+import std.string,
        std.stdio,
-       std.string;
+       std.conv;
+
+// TODO: Need to implement exit operator
 
 class Interpreter {
   private {
-    Engine engine;
+    Engine     engine;
     Transpiler transpiler;
-    long bracketState;
+    long       bracketState;
   }
 
   this() {
-    this.engine     = new Engine();
+    this.engine       = new Engine();
     this.bracketState = 0;
   }
 
@@ -66,6 +68,33 @@ class Interpreter {
         write("=");
       }
       write("> ");
+    }
+  }
+
+  void executer(string code) {
+    string buf;
+
+    void e(char val) {
+      if (checkBracket(val.to!string) && (buf.length != 0)) {
+        auto transpiled = Transpiler.transpile(buf);
+        engine.eval(transpiled);
+        buf = [];
+      }
+    }
+
+    foreach(input; code.split("\n")) {
+      if (input == "exit" || input == "(exit)") {
+        break;
+      }
+
+      foreach (char val; input) {
+        if ('\n' == val) {
+          e(val);
+        } else {
+          buf ~= val;
+          e(val);
+        }
+      }
     }
   }
 }

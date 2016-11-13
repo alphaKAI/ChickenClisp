@@ -11,8 +11,10 @@ void main(string[] args) {
     if (!exists(fpath)) {
       writeln("No such file - ", fpath);
     } else {
-      Engine engine = new Engine();
-      engine.eval(Transpiler.transpile(readText(fpath)));
+      //Engine engine = new Engine();
+      //engine.eval(Transpiler.transpile(readText(fpath)));
+      Interpreter itpr = new Interpreter();
+      itpr.executer(readText(fpath));
     }
   } else if (args.length == 1) {
     Interpreter itpr = new Interpreter();
