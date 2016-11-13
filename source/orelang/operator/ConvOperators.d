@@ -42,3 +42,22 @@ class floatToIntegerOperator : IOperator {
     return new Value(engine.eval(args[0]).getNumeric.to!long.to!double);
   }
 }
+
+/**
+ * convert ubytes into string 
+ */
+class ubytesToStringOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] array = engine.eval(args[0]).getArray;
+    ubyte[] ubytes;
+
+    foreach (elem; array) {
+      ubytes ~= elem.getUbyte;
+    }
+
+    return new Value(cast(string)ubytes);
+  }
+}
