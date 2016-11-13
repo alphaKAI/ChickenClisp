@@ -30,6 +30,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.SetIdxOperator,
        orelang.operator.AliasOperator,
        orelang.operator.ConvOperators,
+       orelang.operator.CurlOperators,
        orelang.operator.EqualOperator,
        orelang.operator.LogicOperator,
        orelang.operator.PrintOperator,
@@ -252,6 +253,7 @@ class Engine {
     this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new numberToStringOperator))});
     this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new charToNumberOperator))});
     this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new floatToIntegerOperator))});
+    this.variables.insert!("ubytes-to-string", q{new Value(cast(IOperator)(new ubytesToStringOperator))});
     
     // Array Operators
     this.variables.insert!("array-new",        q{new Value(cast(IOperator)(new ArrayNewOperator))});
@@ -270,6 +272,12 @@ class Engine {
     this.variables.insert!("type",      q{new Value(cast(IOperator)(new TypeOperator))});
     this.variables.insert!("alias",     q{new Value(cast(IOperator)(new AliasOperator))});
     this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
+
+    // Curl Operators
+    this.variables.insert!("curl-download", q{new Value(cast(IOperator)(new CurlDownloadOperator))});
+    this.variables.insert!("curl-upload",   q{new Value(cast(IOperator)(new CurlUploadOperator))});
+    this.variables.insert!("curl-get",      q{new Value(cast(IOperator)(new CurlGetOperator))});
+    this.variables.insert!("curl-get-string",      q{new Value(cast(IOperator)(new CurlGetStringOperator))});
 
     // Aliases
     this.variables.link("not", "!");
