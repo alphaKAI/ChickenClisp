@@ -429,9 +429,8 @@ class Engine {
       if (scriptList[0].type == ValueType.Array) {
         CallOperator ret = new CallOperator(
                               this.variables[scriptList[0][0].getString].getIOperator,
-                              scriptList[0].getArray[1..$]
-                            );
-        Value tmp = ret.eval(this);
+                              scriptList[0].getArray[1..$]);
+        Value        tmp = ret.eval(this);
 
         if (tmp.type == ValueType.Closure) {
           return new ImmediateValue(tmp.getClosure.eval(scriptList[1..$]));
