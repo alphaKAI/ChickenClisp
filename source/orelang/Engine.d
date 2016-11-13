@@ -201,7 +201,7 @@ class Engine {
     // Varibale/Function operators
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
-    this.variables.insert!("get",      q{new Value(cast(IOperator)(new GetOperator))});
+    this.variables.set("get",          new Value(cast(IOperator)(new GetOperator)));
     this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
     this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
     this.variables.insert!("define",   q{new Value(cast(IOperator)(new DefineOperator))});
@@ -427,15 +427,32 @@ class Engine {
       Value[] scriptList = script.getArray;
 
       if (scriptList[0].type == ValueType.Array) {
-        CallOperator ret = new CallOperator(
-                              this.variables[scriptList[0][0].getString].getIOperator,
-                              scriptList[0].getArray[1..$]);
-        Value        tmp = ret.eval(this);
+        Value op = this.variables[scriptList[0][0].getString];
+        if (op.type == ValueType.Closure) {
+          Closure   closure  = op.getClosure;
+          Engine    engine   = closure.engine;
+          IOperator operator = closure.operator;
 
-        if (tmp.type == ValueType.Closure) {
-          return new ImmediateValue(tmp.getClosure.eval(scriptList[1..$]));
-        } else if (tmp.type == ValueType.IOperator) {
-          return new ImmediateValue(tmp.getIOperator.call(this, scriptList[1..$]));
+          Closure cls = operator.call(engine, scriptList[0].getArray[1..$]).getClosure;
+
+          if (scriptList.length == 2) {
+            return new ImmediateValue(cls.eval(scriptList[1..$]));
+          } else {
+            return new ImmediateValue(cls.eval([]));
+          }
+        } else if (op.type == ValueType.IOperator) {
+          CallOperator ret = new CallOperator(
+                                this.variables[scriptList[0][0].getString].getIOperator,
+                                scriptList[0].getArray[1..$]);
+          Value        tmp = ret.eval(this);
+
+          if (tmp.type == ValueType.Closure) {
+            return new ImmediateValue(tmp.getClosure.eval(scriptList[1..$]));
+          } else if (tmp.type == ValueType.IOperator) {
+            return new ImmediateValue(tmp.getIOperator.call(this, scriptList[1..$]));
+          }
+        } else {
+          throw new Error("Invalid Operator was given!");
         }
       }
 
