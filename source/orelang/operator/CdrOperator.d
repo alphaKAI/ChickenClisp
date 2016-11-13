@@ -12,7 +12,7 @@ class CdrOperator : IOperator {
     Value obj = engine.eval(args[0]);
 
     if (obj.type == ValueType.Array) {
-      Value[] obx = obj.getArray;//!(Value[])[0].get!(Value[]);
+      Value[] obx = obj.getArray;
 
       if (obx.length == 1) {
         Value[] arr;
