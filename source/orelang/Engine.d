@@ -13,7 +13,8 @@ import orelang.expression.ImmediateValue,
 /**
  * variables
  */
-import orelang.operator.TranspileOperator,
+import orelang.operator.DatetimeOperators,
+       orelang.operator.TranspileOperator,
        orelang.operator.HashMapOperators,
        orelang.operator.DynamicOperator,
        orelang.operator.ForeachOperator,
@@ -24,6 +25,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.DefvarOperator,
        orelang.operator.GetfunOperator,
        orelang.operator.IsListOperator,
+       orelang.operator.IsNullOperator,
        orelang.operator.LambdaOperator,
        orelang.operator.LengthOperator,
        orelang.operator.RemoveOperator,
@@ -278,6 +280,7 @@ class Engine {
     this.variables.insert!("load",      q{new Value(cast(IOperator)(new LoadOperator))});
     this.variables.insert!("type",      q{new Value(cast(IOperator)(new TypeOperator))});
     this.variables.insert!("alias",     q{new Value(cast(IOperator)(new AliasOperator))});
+    this.variables.insert!("is-null?",  q{new Value(cast(IOperator)(new IsNullOperator))});
     this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
 
     // Curl Operators
@@ -293,6 +296,9 @@ class Engine {
 
     // UUID Operators
     this.variables.insert!("random-uuid", q{new Value(cast(IOperator)(new RandomUUIDOperator))});
+
+    // Datetime Operators
+    this.variables.insert!("get-current-unixtime", q{new Value(cast(IOperator)(new GetCurrentUNIXTime))});
 
     // Aliases
     this.variables.link("not", "!");
