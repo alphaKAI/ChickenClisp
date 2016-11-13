@@ -47,6 +47,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.EvalOperator,
        orelang.operator.FoldOperator,
        orelang.operator.LoadOperator,
+       orelang.operator.SortOperator,
        orelang.operator.StepOperator,
        orelang.operator.TypeOperator,
        orelang.operator.UriOperators,
@@ -238,6 +239,7 @@ class Engine {
     this.variables.insert!("cdr",      q{new Value(cast(IOperator)(new CdrOperator))});
     this.variables.insert!("seq",      q{new Value(cast(IOperator)(new SeqOperator))});
     this.variables.insert!("cons",     q{new Value(cast(IOperator)(new ConsOperator))});
+    this.variables.insert!("sort",     q{new Value(cast(IOperator)(new SortOperator))});
     this.variables.insert!("list?",    q{new Value(cast(IOperator)(new IsListOperator))});
     this.variables.insert!("remove",   q{new Value(cast(IOperator)(new RemoveOperator))});
     this.variables.insert!("length",   q{new Value(cast(IOperator)(new LengthOperator))});
