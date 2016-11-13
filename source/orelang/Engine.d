@@ -36,6 +36,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.PrintOperator,
        orelang.operator.TimesOperator,
        orelang.operator.UntilOperator,
+       orelang.operator.UUIDOperators,
        orelang.operator.WhileOperator,
        orelang.operator.AsIVOperator,
        orelang.operator.CondOperator,
@@ -287,6 +288,9 @@ class Engine {
 
     // Uri Operators
     this.variables.insert!("url-encode-component", q{new Value(cast(IOperator)(new UrlEncodeComponentOperator))});
+
+    // UUID Operators
+    this.variables.insert!("random-uuid", q{new Value(cast(IOperator)(new RandomUUIDOperator))});
 
     // Aliases
     this.variables.link("not", "!");
