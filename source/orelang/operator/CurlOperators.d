@@ -44,9 +44,6 @@ class CurlGetOperator : IOperator {
   /**
    * call
    */
-  import std.algorithm,
-         std.array,
-         std.conv;
   public Value call(Engine engine, Value[] args) {
     string url = engine.eval(args[0]).getString;
 
@@ -67,9 +64,6 @@ class CurlGetStringOperator : IOperator {
   /**
    * call
    */
-  import std.algorithm,
-         std.array,
-         std.conv;
   public Value call(Engine engine, Value[] args) {
     string url = engine.eval(args[0]).getString;
 
@@ -81,4 +75,3 @@ class CurlGetStringOperator : IOperator {
     }
   }
 }
-
