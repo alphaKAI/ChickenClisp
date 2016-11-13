@@ -123,13 +123,11 @@
     (set params (if adp-is-null
                     params
                     (begin
-                      (for-each (lambda (key)
-                                        (hash-set-value params key (hash-get-value additionalParam key)))
-                              (hash-get-keys additionalParam))
+                      (for-each (lambda (key) (hash-set-value params key (hash-get-value additionalParam key)))
+                                (hash-get-keys additionalParam))
                       params)))
 
-    (for-each (lambda (key)
-                (hash-set-value params key (url-encode-component (hash-get-value params key))))
+    (for-each (lambda (key) (hash-set-value params key (url-encode-component (hash-get-value params key))))
               (hash-get-keys params))
 
     params))
@@ -137,9 +135,10 @@
 (def signature (method url params)
   (begin
     (def-var query (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) (sort (hash-get-keys params))) "&"))
-    (def-var key (string-join (map (lambda (x) (url-encode-component x)) '(consumerSecret accessTokenSecret)) "&"))
-    (def-var base (string-join (map (lambda (x) (url-encode-component x)) '(method url query)) "&"))
+    (def-var key   (string-join (map (lambda (x) (url-encode-component x)) '(consumerSecret accessTokenSecret)) "&"))
+    (def-var base  (string-join (map (lambda (x) (url-encode-component x)) '(method url query)) "&"))
     (def-var oauthSignature (url-encode-component (base64encode (ubytes-to-integers (hmac-sha1 key base)))))
+
     oauthSignature))
 
 (def request (type endPoint paramsArgument)
@@ -148,19 +147,22 @@
       (if (|| (= type "GET") (= type "get"))
         "GET"
         "POST"))
+
     (def-var params (buildParams paramsArgument))
-    (def-var url (string-concat baseUrl endPoint))
+    (def-var url    (string-concat baseUrl endPoint))
     (def-var oauthSignature (signature method url params))
     (hash-set-value params "oauth_signature" oauthSignature)
-    (def-var authorize (string-concat "OAuth " (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) authorizeKeys) ",")))
-    (def-var path (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) (hash-get-keys params)) "&"))
+
+    (def-var authorize (string-concat "OAuth " 
+                                      (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k)))
+                                                        authorizeKeys)
+                                                   ",")))
+    (def-var path      (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k)))
+                                         (hash-get-keys params))
+                                    "&"))
 
     (def-var header (new-hash))
     (hash-set-value header "Authorization" authorize)
-
-    (println "url - " url)
-    (println "path - " path)
-    (println "header - " header)
 
     (if (= method "GET")
       (curl-get-string (string-concat url "?" path) header)
