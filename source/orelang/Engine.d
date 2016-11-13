@@ -23,6 +23,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.StringOperators,
        orelang.operator.ArrayOperators,
        orelang.operator.DebugOperators,
+       orelang.operator.ClassOperators,
        orelang.operator.DeffunOperator,
        orelang.operator.DefineOperator,
        orelang.operator.DefvarOperator,
@@ -315,6 +316,10 @@ class Engine {
     this.variables.insert!("peek-closure", q{new Value(cast(IOperator)(new PeekClosureOperator))});
     this.variables.insert!("call-closure", q{new Value(cast(IOperator)(new CallClosureOperator))});
 
+    // Class Operators
+    this.variables.insert!("class",     q{new Value(cast(IOperator)(new ClassOperator))});
+    this.variables.insert!("new",     q{new Value(cast(IOperator)(new NewOperator))});
+
     // Aliases
     this.variables.link("not", "!");
     this.variables.link("and", "&&");
@@ -467,8 +472,16 @@ class Engine {
       if (tmp.type == ValueType.IOperator) {
         IOperator op = tmp.getIOperator;
         return new CallOperator(op, scriptList[1..$]);
-      } else {
+      } else if (tmp.type == ValueType.Closure) {
         return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
+      } else if (tmp.type == ValueType.ClassType) {
+        //import std.stdio; writeln("ClassType!");
+        //writeln("scriptList -> ", scriptList);
+        import orelang.operator.ClassType;
+        ClassType cls = tmp.getClassType;
+        return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+      } else {
+        throw new Error("Invalid Operator was given!");
       }
     } else {
       if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {

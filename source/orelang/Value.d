@@ -3,6 +3,7 @@ import orelang.expression.ImmediateValue,
        orelang.expression.SymbolValue,
        orelang.operator.DynamicOperator,
        orelang.expression.IExpression,
+       orelang.operator.ClassType,
        orelang.operator.IOperator,
        orelang.Closure;
 import std.algorithm,
@@ -16,6 +17,7 @@ enum ValueType {
   ImmediateValue,
   SymbolValue,
   IExpression,
+  ClassType,
   IOperator,
   Closure,
   HashMap,
@@ -39,6 +41,7 @@ class Value {
     ImmediateValue imv_value;
     SymbolValue sym_value;
     IExpression ie_value;
+    ClassType class_value;
     IOperator io_value;
     Closure closure_value;
     Value[string] hashmap_value;
@@ -64,6 +67,7 @@ class Value {
     this.sym_value = value;
     this.type      = ValueType.SymbolValue; }
   this(IExpression value)    { this.opAssign(value); }
+  this(ClassType value)      { this.opAssign(value); }
   this(IOperator value)      { this.opAssign(value); }
   this(Closure value)        { this.opAssign(value); }
   this(Value[string] value)  { this.opAssign(value); }
@@ -85,6 +89,8 @@ class Value {
                                        return this.sym_value; }
   IExpression    getIExpression()    { enforce(this.type == ValueType.IExpression);
                                        return this.ie_value; }
+  ClassType      getClassType()      { enforce(this.type == ValueType.ClassType);
+                                       return this.class_value; }
   IOperator      getIOperator()      { enforce(this.type == ValueType.IOperator);
                                        return this.io_value; }
   Closure        getClosure()        { enforce(this.type == ValueType.Closure);
@@ -131,6 +137,12 @@ class Value {
     this.type     = ValueType.IExpression;
   }
 
+  void opAssign(ClassType value) {
+    this.init;
+    this.class_value = value;
+    this.type        = ValueType.ClassType;
+  }
+
   void opAssign(IOperator value) {
     this.init;
     this.io_value = value;
@@ -161,6 +173,7 @@ class Value {
       case ImmediateValue: return this.imv_value.toString;
       case SymbolValue:    return this.sym_value.value;
       case IExpression:    return this.ie_value.stringof;
+      case ClassType:      return this.class_value.stringof;
       case IOperator:      return this.io_value.stringof;
       case Closure:        return this.closure_value.stringof;
     }
@@ -227,6 +240,7 @@ class Value {
       if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
       if (this.type == ValueType.SymbolValue)    { this.sym_value = null; }
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
+      if (this.type == ValueType.ClassType)      { this.class_value  = null; }
       if (this.type == ValueType.IOperator)      { this.io_value  = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
       if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
@@ -279,6 +293,8 @@ class Value {
         return this.sym_value.value == value.getSymbolValue.value;
       case IExpression:
         throw new Error("Can't compare with IExpression");
+      case ClassType:
+        throw new Error("Can't compare with ClassType");
       case IOperator:
         throw new Error("Can't compare with IOperator");
       case Closure:
@@ -333,6 +349,8 @@ class Value {
         return 1;
       case IExpression:
         throw new Error("Can't compare with IExpression");
+      case ClassType:
+        throw new Error("Can't compare with ClassType");
       case IOperator:
         throw new Error("Can't compare with IOperator");
       case Closure:
@@ -388,6 +406,8 @@ class Value {
         return new Value(this.sym_value);
       case IExpression:
         return new Value(this.ie_value);
+      case ClassType:
+        return new Value(this.class_value);
       case IOperator:
         return new Value(this.io_value);
       case Closure:
