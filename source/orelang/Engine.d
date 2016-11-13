@@ -171,6 +171,8 @@ class Engine {
    */
   LazedAssocArray!Value variables;
 
+  bool sync_storage;
+
   /**
    * Default Constructor
    */
@@ -318,9 +320,16 @@ class Engine {
     newEngine._super = this;
 
     newEngine.variables = new LazedAssocArray!Value;
-    newEngine.variables.called       = this.variables.called.dup;
-    newEngine.variables.constructors = this.variables.constructors;
-    newEngine.variables.storage      = this.variables.storage.dup;
+
+    if (!sync_storage) {
+      newEngine.variables.called       = this.variables.called.dup;
+      newEngine.variables.constructors = this.variables.constructors;
+      newEngine.variables.storage      = this.variables.storage.dup;
+    } else {
+      newEngine.variables.called       = this.variables.called;
+      newEngine.variables.constructors = this.variables.constructors;
+      newEngine.variables.storage      = this.variables.storage;
+    }
 
     return newEngine;
   }
