@@ -21,6 +21,7 @@ enum ValueType {
   HashMap,
   Numeric,
   String,
+  Ubyte,
   Bool,
   Null,
   Array
@@ -33,6 +34,7 @@ class Value {
     double  numeric_value;
     string  string_value;
     bool    bool_value;
+    ubyte   ubyte_value;
     Value[] array_value;
     ImmediateValue imv_value;
     SymbolValue sym_value;
@@ -47,6 +49,11 @@ class Value {
   this(T)(T value) if (isNumeric!T) { this.opAssign(value); }
   this(string value)  { this.opAssign(value); }
   this(bool value)    { this.opAssign(value); }
+  this(ubyte value)   {
+    this.init;
+    this.ubyte_value = value;
+    this.type        = ValueType.Ubyte;
+  }
   this(Value[] value) { this.opAssign(value); }
   this(ImmediateValue value) {
     this.init;
@@ -67,6 +74,8 @@ class Value {
                          return this.type == ValueType.String ? this.string_value : this.sym_value.value; }
   bool    getBool()    { enforce(this.type == ValueType.Bool);
                          return this.bool_value; }
+  ubyte   getUbyte()  { enforce(this.type == ValueType.Ubyte);
+                         return this.ubyte_value; }
   auto    getNull()    { throw new Error("Can't get from NULL value"); }
   Value[] getArray()   { enforce(this.type == ValueType.Array);
                          return this.array_value; }
@@ -145,6 +154,7 @@ class Value {
       case Numeric: return this.numeric_value.to!string;
       case String:  return this.string_value;
       case Bool:    return this.bool_value.to!string;
+      case Ubyte:   return this.ubyte_value.to!string;
       case Null:    return "null";
       case Array:   return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
       case HashMap: return this.hashmap_value.to!string;
@@ -212,6 +222,8 @@ class Value {
       if (this.type == ValueType.Numeric) { this.numeric_value = 0;  }
       if (this.type == ValueType.String)  { this.string_value  = ""; }
       if (this.type == ValueType.Array)   { this.array_value   = []; }
+      if (this.type == ValueType.Bool)    { this.bool_value    = false; }
+      if (this.type == ValueType.Ubyte)   { this.ubyte_value   = 0;  }
       if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
       if (this.type == ValueType.SymbolValue)    { this.sym_value = null; }
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
@@ -279,6 +291,8 @@ class Value {
         return this.string_value == value.string_value;
       case Bool:
         return this.bool_value == value.bool_value;
+      case Ubyte:
+        return this.ubyte_value == value.ubyte_value;
       case Null:
         throw new Error("Can't compare with Null");
       case Array:
@@ -339,6 +353,13 @@ class Value {
         if (c == d) { return 0;  }
         if (c < d)  { return -1; }
         return 1;
+      case Ubyte:
+        auto c = this.ubyte_value,
+             d = value.ubyte_value;
+
+        if (c == d) { return 0;  }
+        if (c < d)  { return -1; }
+        return 1;
       case Bool:
         throw new Error("Can't compare with Bool");
       case Null:
@@ -379,6 +400,8 @@ class Value {
         return new Value(this.string_value);
       case Bool:
         return new Value(this.bool_value);
+      case Ubyte:
+        return new Value(this.ubyte_value);
       case Null:
         return new Value;
       case Array:
