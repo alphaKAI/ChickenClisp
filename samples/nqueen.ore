@@ -1,76 +1,75 @@
-(step
-  (def null? (ls) (= (length ls) 0))
-  (def pair? (ls) (and (list? ls) (> (length ls) 0)))
+(def null? (ls) (= (length ls) 0))
+(def pair? (ls) (and (list? ls) (> (length ls) 0)))
 
-  (def print-board (board)
-    (step
-      (def print-line (q size)
-        (step
-          (print "| ")
-          (let loop ((x 0))
-            (when (< x size)
-              (if (= x q)
-                (print "Q ")
-                (print ". "))
-              (loop (+ x 1))))
-          (println "|")))
-
-      (def print-waku (size)
-        (step
-          (print "*-")
-          (let loop ((x 0))
-            (when (< x size)
-              (print "--")
-              (loop (+ x 1))))
-          (println "*")))
-
-      (let ((size (length board)))
-        (step
-          (print-waku size)
-          (let loop ((ls board))
-            (when (pair? ls)
-              (print-line (car ls) size)
-              (loop (cdr ls))))
-          (print-waku size)
-          (println)))))
-
-  (def conflict? (column line board)
-    (let loop ((x (- column 1)) (ls board))
-        (cond ((null? ls) false)
-              ((or (= (- column line) (- x (car ls)))
-                   (= (+ column line) (+ x (car ls))))
-                true)
-              (else
-                (loop (- x 1) (cdr ls))))))
-
-  (def safe? (line board)
-    (cond ((null? board) true)
-      ((conflict? (length board) line board) false)
-      (else (safe? (car board) (cdr board)))))
-
-  (def queen (ls board)
-    (cond ((null? ls)
-      (if (safe? (car board) (cdr board))
-      (print-board board)))
-      (else
-        (for-each
-          (lambda (n)
-            (queen (remove (lambda (x) (= x n)) ls)
-                   (cons n board)))
-          ls))))
-
-  (def queen-fast (ls board)
-    (if (null? ls)
+(def print-board (board)
+  (step
+    (def print-line (q size)
       (step
-        (println board)
-        (print-board board))
+        (print "| ")
+        (let loop ((x 0))
+          (when (< x size)
+            (if (= x q)
+              (print "Q ")
+              (print ". "))
+            (loop (+ x 1))))
+        (println "|")))
+
+    (def print-waku (size)
+      (step
+        (print "*-")
+        (let loop ((x 0))
+          (when (< x size)
+            (print "--")
+            (loop (+ x 1))))
+        (println "*")))
+
+    (let ((size (length board)))
+      (step
+        (print-waku size)
+        (let loop ((ls board))
+          (when (pair? ls)
+            (print-line (car ls) size)
+            (loop (cdr ls))))
+        (print-waku size)
+        (println)))))
+
+(def conflict? (column line board)
+  (let loop ((x (- column 1)) (ls board))
+      (cond ((null? ls) false)
+            ((or (= (- column line) (- x (car ls)))
+                  (= (+ column line) (+ x (car ls))))
+              true)
+            (else
+              (loop (- x 1) (cdr ls))))))
+
+(def safe? (line board)
+  (cond ((null? board) true)
+    ((conflict? (length board) line board) false)
+    (else (safe? (car board) (cdr board)))))
+
+(def queen (ls board)
+  (cond ((null? ls)
+    (if (safe? (car board) (cdr board))
+    (print-board board)))
+    (else
       (for-each
         (lambda (n)
-          (if (not (conflict? (length board) n board))
-            (queen-fast
-              (remove (lambda (x) (= x n)) ls)
-              (cons n board))))
-        ls)))
+          (queen (remove (lambda (x) (= x n)) ls)
+                  (cons n board)))
+        ls))))
 
-  (set n 8)
-  (queen-fast (seq n) '()))
+(def queen-fast (ls board)
+  (if (null? ls)
+    (step
+      (println board)
+      (print-board board))
+    (for-each
+      (lambda (n)
+        (if (not (conflict? (length board) n board))
+          (queen-fast
+            (remove (lambda (x) (= x n)) ls)
+            (cons n board))))
+      ls)))
+
+(set n 8)
+(queen-fast (seq n) '())
