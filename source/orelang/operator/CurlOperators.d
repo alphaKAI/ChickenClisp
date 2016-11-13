@@ -39,3 +39,46 @@ class CurlUploadOperator : IOperator {
     }
   }
 }
+
+class CurlGetOperator : IOperator {
+  /**
+   * call
+   */
+  import std.algorithm,
+         std.array,
+         std.conv;
+  public Value call(Engine engine, Value[] args) {
+    string url = engine.eval(args[0]).getString;
+
+    try {
+      auto contents = get(url);
+      Value[] ret;
+      foreach (elem; contents) {
+        ret ~= new Value(elem);
+      }
+      return new Value(ret);
+    } catch(CurlException e) {
+      return new Value;
+    }
+  }
+}
+
+class CurlGetStringOperator : IOperator {
+  /**
+   * call
+   */
+  import std.algorithm,
+         std.array,
+         std.conv;
+  public Value call(Engine engine, Value[] args) {
+    string url = engine.eval(args[0]).getString;
+
+    try {
+      auto contents = get(url);
+      return new Value(cast(string)contents);
+    } catch(CurlException e) {
+      return new Value;
+    }
+  }
+}
+
