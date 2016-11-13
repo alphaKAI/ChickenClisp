@@ -1,0 +1,10 @@
+(load "samples/twitter")
+
+(def-var consumerKey       "")
+(def-var consumerSecret    "")
+(def-var accessToken       "")
+(def-var accessTokenSecret "")
+
+(make-hash args)
+(hash-set-value args "status" "Hello World!")
+(request "POST" "statuses/update.json" args)
