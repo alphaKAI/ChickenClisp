@@ -1,5 +1,6 @@
 module orelang.operator.LoadOperator;
 import orelang.operator.IOperator,
+       orelang.Interpreter,
        orelang.Transpiler,
        orelang.Engine,
        orelang.Value;
@@ -14,6 +15,7 @@ class LoadOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     string[] loaded;
     Value eargs0 = engine.eval(args[0]);
+    Interpreter itpr = new Interpreter(engine);
 
     if (eargs0.type == ValueType.Array) {
       args = eargs0.getArray;
@@ -25,7 +27,7 @@ class LoadOperator : IOperator {
       if (!exists(fpath)) {
         throw new Error("No such file - " ~ fpath);
       } else {
-        engine.eval(Transpiler.transpile(readText(fpath)));
+        itpr.executer(readText(fpath));
         loaded ~= fpath;
       }
     }

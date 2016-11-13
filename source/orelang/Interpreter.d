@@ -19,6 +19,11 @@ class Interpreter {
     this.bracketState = 0;
   }
 
+  this(Engine engine) {
+    this.engine       = engine;
+    this.bracketState = 0;
+  }
+
   bool checkBracket(string code) {
     for (size_t i; i < code.length; ++i) {
       char ch = code[i];
