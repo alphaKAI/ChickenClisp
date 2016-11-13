@@ -45,6 +45,7 @@ import orelang.operator.TranspileOperator,
        orelang.operator.LoadOperator,
        orelang.operator.StepOperator,
        orelang.operator.TypeOperator,
+       orelang.operator.UriOperators,
        orelang.operator.WhenOperator,
        orelang.operator.AddOperator,
        orelang.operator.CarOperator,
@@ -236,9 +237,12 @@ class Engine {
     this.variables.insert!("length",   q{new Value(cast(IOperator)(new LengthOperator))});
 
     // HashMap operators
+    this.variables.insert!("new-hash",        q{new Value(cast(IOperator)(new NewHashOperator))});
     this.variables.insert!("make-hash",        q{new Value(cast(IOperator)(new MakeHashOperator))});
     this.variables.insert!("hash-set-value",   q{new Value(cast(IOperator)(new HashSetValueOperator))});
     this.variables.insert!("hash-get-value",   q{new Value(cast(IOperator)(new HashGetValueOperator))});
+    this.variables.insert!("hash-get-keys",    q{new Value(cast(IOperator)(new HashGetKeysOperator))});
+    this.variables.insert!("hash-get-values",    q{new Value(cast(IOperator)(new HashGetValuesOperator))});
 
     // String operators
     this.variables.insert!("string-concat",    q{new Value(cast(IOperator)(new StringConcatOperator))});
@@ -274,10 +278,15 @@ class Engine {
     this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
 
     // Curl Operators
-    this.variables.insert!("curl-download", q{new Value(cast(IOperator)(new CurlDownloadOperator))});
-    this.variables.insert!("curl-upload",   q{new Value(cast(IOperator)(new CurlUploadOperator))});
-    this.variables.insert!("curl-get",      q{new Value(cast(IOperator)(new CurlGetOperator))});
-    this.variables.insert!("curl-get-string",      q{new Value(cast(IOperator)(new CurlGetStringOperator))});
+    this.variables.insert!("curl-download",    q{new Value(cast(IOperator)(new CurlDownloadOperator))});
+    this.variables.insert!("curl-upload",      q{new Value(cast(IOperator)(new CurlUploadOperator))});
+    this.variables.insert!("curl-get",         q{new Value(cast(IOperator)(new CurlGetOperator))});
+    this.variables.insert!("curl-get-string",  q{new Value(cast(IOperator)(new CurlGetStringOperator))});
+    this.variables.insert!("curl-post",        q{new Value(cast(IOperator)(new CurlPostOperator))});
+    this.variables.insert!("curl-post-string", q{new Value(cast(IOperator)(new CurlPostStringOperator))});
+
+    // Uri Operators
+    this.variables.insert!("url-encode-component", q{new Value(cast(IOperator)(new UrlEncodeComponentOperator))});
 
     // Aliases
     this.variables.link("not", "!");
