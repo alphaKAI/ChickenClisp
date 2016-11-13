@@ -266,6 +266,7 @@ class Engine {
     this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new charToNumberOperator))});
     this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new floatToIntegerOperator))});
     this.variables.insert!("ubytes-to-string", q{new Value(cast(IOperator)(new ubytesToStringOperator))});
+    this.variables.insert!("ubytes-to-integers", q{new Value(cast(IOperator)(new ubytesToIntegersOperator))});
     
     // Array Operators
     this.variables.insert!("array-new",        q{new Value(cast(IOperator)(new ArrayNewOperator))});

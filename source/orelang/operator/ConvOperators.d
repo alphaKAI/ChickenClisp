@@ -61,3 +61,23 @@ class ubytesToStringOperator : IOperator {
     return new Value(cast(string)ubytes);
   }
 }
+
+/**
+ * convert ubytes into string 
+ */
+class ubytesToIntegersOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    Value[] array = engine.eval(args[0]).getArray;
+    Value[] ret;
+
+
+    foreach (elem; array) {
+      ret ~= new Value(elem.getUbyte.to!double);
+    }
+
+    return new Value(ret);
+  }
+}
