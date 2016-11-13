@@ -22,6 +22,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.ForeachOperator,
        orelang.operator.StringOperators,
        orelang.operator.ArrayOperators,
+       orelang.operator.DebugOperators,
        orelang.operator.DeffunOperator,
        orelang.operator.DefineOperator,
        orelang.operator.DefvarOperator,
@@ -308,6 +309,11 @@ class Engine {
 
     // Digest Operators
     this.variables.insert!("hmac-sha1", q{new Value(cast(IOperator)(new HMACSHA1Operator))});
+
+    // Debug Operators
+    this.variables.insert!("dump-variables", q{new Value(cast(IOperator)(new DumpVaribalesOperator))});
+    this.variables.insert!("peek-closure", q{new Value(cast(IOperator)(new PeekClosureOperator))});
+    this.variables.insert!("call-closure", q{new Value(cast(IOperator)(new CallClosureOperator))});
 
     // Aliases
     this.variables.link("not", "!");
