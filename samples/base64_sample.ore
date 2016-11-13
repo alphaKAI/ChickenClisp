@@ -1,0 +1,13 @@
+(load "samples/base64")
+(def string-into-numbers (str)
+  (map (lambda (e) (char-to-number e)) (string-split str)))
+
+(def str2b64 (str)
+  (base64encode (string-into-numbers str)))
+
+
+(def-var from "abcdefghijklmnopqrstuvwxyz")
+(def-var dst (str2b64 from))
+(println "from - " from)
+(println "dst - " dst)
+(println "valid? - " (if (= "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo=" dst) "yes" "no"))
