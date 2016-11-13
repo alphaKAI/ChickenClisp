@@ -1,0 +1,12 @@
+(def _fizzbuzz (n)
+  (cond
+    ((= (% n 15) 0) (println "FizzBuzz"))
+    ((= (% n 5) 0) (println "Fizz"))
+    ((= (% n 3) 0) (println "Buzz"))
+    (else (println n))
+  ))
+(def fizzbuzz (n)
+  (for-each (lambda (i) (_fizzbuzz i)) (seq n)))
+
+(def-var n 30)
+(fizzbuzz n)
