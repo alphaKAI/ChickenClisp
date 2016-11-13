@@ -14,6 +14,7 @@ import orelang.expression.ImmediateValue,
  * variables
  */
 import orelang.operator.DatetimeOperators,
+       orelang.operator.IsHashMapOperator,
        orelang.operator.TranspileOperator,
        orelang.operator.HashMapOperators,
        orelang.operator.DynamicOperator,
@@ -281,6 +282,7 @@ class Engine {
     this.variables.insert!("type",      q{new Value(cast(IOperator)(new TypeOperator))});
     this.variables.insert!("alias",     q{new Value(cast(IOperator)(new AliasOperator))});
     this.variables.insert!("is-null?",  q{new Value(cast(IOperator)(new IsNullOperator))});
+    this.variables.insert!("is-hash?",  q{new Value(cast(IOperator)(new IsHashMapOperator))});
     this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
 
     // Curl Operators
