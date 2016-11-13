@@ -1,101 +1,110 @@
-(step
-  (def repeat (pattern n)
-       (step
-         (string-concat (map (lambda () pattern)
-                             (seq n)))))
+(def zip (arr1 arr2)
+      (map (lambda (i) (as-iv (cons (array-get-n arr1 i) (array-get-n arr2 i))))
+          (seq (length arr1))))
 
-  (def zip (arr1 arr2)
-       (map (lambda (i) (step (as-iv (cons (array-get-n arr1 i) (array-get-n arr2 i)))))
-            (seq (length arr1))))
-
-  (def assocArray (zipped)
-       (step
-         (make-hash hashmap)
-         (set idx 0)
-         (while (< idx (length zipped)) (step
-                                          (set tuple (array-get-n zipped idx))
-                                          (set key (array-get-n tuple 0))
-                                          (set value (array-get-n tuple 1))
-                                          (hash-set-value hashmap key value)
-                                          (set idx (+ idx 1))))
-         hashmap))
-
-  (def convb (N base)
-       (step
-         (def _convb (N tmp stack base)
-              (if (not (= tmp 0))
-                  (_convb N (float-to-integer (/ tmp base)) (array-append stack (% tmp base)) base)
-                  (string-join (map (lambda (n) (number-to-string n)) (array-reverse stack)))))
-         (_convb N N '() base)))
-
-  (def createTable ()
-       (step
-         (set charset (string-split "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
-         (set ziparg (map (lambda (i) (step
-                                        (set e1 (convb i 2))
-                                        (if (= (string-length e1) 6)
-                                            e1
-                                            (while (< (string-length e1) 6) (set e1 (string-concat "0" e1))))))
-                          (seq (length charset))))
-         (assocArray (zip ziparg charset))))
-
-  (def convertDataInto8Bits (data)
-       (map (lambda (i)
-                    ((lambda (e2)
-                             (if (= (string-length e2) 8)
-                                 e2
-                                 (while (< (string-length e2) 8) (set e2 (string-concat "0" e2)))))
-                     (convb i 2)))
-            data))
-
-  (set table (createTable))
-
-  (def base64encode (data)
-       (step
-         (def makePrepared (binaries)
+(def assocArray (zipped)
+      (step
+        (make-hash hashmap)
+        (def-var idx 0)
+        (while (< idx (length zipped))
               (step
-                (set bLen (string-length binaries))
-                (set quotients (map (lambda (i) (string-slice binaries (* i 6) (* (+ i 1) 6)))
-                                    (seq (float-to-integer (/ bLen 6)))))
-                (if (= (% bLen 6) 0)
-                    quotients
-                    (array-append quotients (step
-                                              (set $ (string-length binaries))
-                                              (set remainds (string-slice binaries (- $ (% bLen 6)) $))
-                                              (set remainds (string-concat remainds (repeat "0" (- 6 (string-length remainds)))))
-                                              (println "remainds - " remainds)
-                                              remainds)))))
+                (def-var tuple (array-get-n zipped idx))
+                (def-var key   (array-get-n tuple 0))
+                (def-var value (array-get-n tuple 1))
+                (hash-set-value hashmap key value)
+                (set idx (+ idx 1))))
+        hashmap))
 
-         (def makeQuotients (prepared)
-              (step
-                (set pLen (array-length prepared))
-                (map (lambda (i)
-                             (as-iv (step
-                                      (set j (* i 4))
-                                      (map (lambda (k)
-                                                   (hash-get-value table (array-get-n prepared (+ j k))))
-                                           (seq 4)))))
-                     (seq (float-to-integer (/ pLen 4))))))
+(def convb (N base)
+      (step
+        (def _convb (N tmp stack base)
+            (if (not (= tmp 0))
+                (_convb N (float-to-integer (/ tmp base)) (array-append stack (% tmp base)) base)
+                (string-join (map (lambda (n) (number-to-string n)) (array-reverse stack)))))
+        (_convb N N '() base)))
 
-         (def finallize (prepared quotients)
-              (step
-                (set pLen (array-length prepared))
-                (if (= (% (array-length prepared) 4) 0)
-                    quotients
-                    (array-append quotients (step
-                                              (set $ (array-length prepared))
-                                              (set remainds (array-slice prepared (- $ (% pLen 4)) $))
-                                              (set fst (map (lambda (remaind) (hash-get-value table remaind)) remainds))
-                                              (set snd (string-repeat "=" (- 4 (% (array-length fst) 4))))
-                                              (as-iv (array-append fst snd)))))))
+(def createTable ()
+      (step
+        (def-var charset (string-split "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
+        (def-var ziparg (map (lambda (i)
+                                    (step
+                                      (def-var e (convb i 2))
+                                      (if (= (string-length e) 6)
+                                          e
+                                          (while (< (string-length e) 6)
+                                                  (set e (string-concat "0" e))))))
+                        (seq (length charset))))
+        (assocArray (zip ziparg charset))))
 
-         (set binaries (string-join (convertDataInto8Bits data)))
-         (set prepared (makePrepared binaries))
-         (set quotients (makeQuotients prepared))
-         (string-concat (array-flatten (map (lambda (x) x) (finallize prepared quotients))))))
+(def convertDataInto8Bits (data)
+      (map (lambda (i)
+                  (step
+                    (def-var e (convb i 2))
+                    (if (= (string-length e) 8)
+                        e
+                        (while (< (string-length e) 8)
+                                (set e (string-concat "0" e))))))
+          data))
 
-  (set from "abcdefghijklmnopqrstuvwxyz")
-  (set dst (base64encode (map (lambda (e) (char-to-number e)) (string-split from))))
-  (println "from - " from)
-  (println "dst - " dst)
-  (println "valid? - " (if (= "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo=" dst) "yes" "no")))
+(def-var table (createTable))
+
+(def base64encode (data)
+      (step
+        (def makePrepared (binaries)
+            (step
+              (def-var bLen (string-length binaries))
+              (def-var quotients
+                        (map (lambda (i) (string-slice binaries (* i 6) (* (+ i 1) 6)))
+                            (seq (float-to-integer (/ bLen 6)))))
+              (if (= (% bLen 6) 0)
+                  quotients
+                  (array-append quotients
+                                (step
+                                  (def-var $ (string-length binaries))
+                                  (def-var remainds (string-slice binaries (- $ (% bLen 6)) $))
+                                  (while (< (string-length remainds) 6)
+                                          (set remainds (string-concat remainds "0")))
+                                  remainds)))))
+
+        (def makeQuotients (prepared)
+            (step
+              (def-var pLen (array-length prepared))
+              (map (lambda (i)
+                            (as-iv (step
+                                    (def-var j (* i 4))
+                                    (map (lambda (k) (hash-get-value table (array-get-n prepared (+ j k))))
+                                          (seq 4)))))
+                    (seq (float-to-integer (/ pLen 4))))))
+
+        (def finallize (prepared quotients)
+            (step
+              (def-var pLen (array-length prepared))
+              (if (= (% (array-length prepared) 4) 0)
+                  quotients
+                  (array-append quotients (step
+                                            (def-var $ (array-length prepared))
+                                            (def-var remainds (array-slice prepared (- $ (% pLen 4)) $))
+                                            (def-var fst (map (lambda (remaind) (hash-get-value table remaind)) remainds))
+                                            (def-var fstlen (array-length fst))
+                                            (def-var snd "")
+                                            (while (< (+ (string-length snd) fstlen) 4)
+                                                    (set snd (string-concat snd "=")))
+                                            (as-iv (array-append fst snd)))))))
+
+        (def-var binaries (string-join (convertDataInto8Bits data)))
+        (def-var prepared (makePrepared binaries))
+        (def-var quotients (makeQuotients prepared))
+        (string-concat (array-flatten (map (lambda (x) x) (finallize prepared quotients))))))
+
+(def string-into-numbers (str)
+  (map (lambda (e) (char-to-number e)) (string-split str)))
+
+(def str2b64 (str)
+  (base64encode (string-into-numbers str)))
+
+
+(def-var from "abcdefghijklmnopqrstuvwxyz")
+(def-var dst (str2b64 from))
+(println "from - " from)
+(println "dst - " dst)
+(println "valid? - " (if (= "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXo=" dst) "yes" "no"))
