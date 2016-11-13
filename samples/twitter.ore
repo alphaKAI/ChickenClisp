@@ -1,0 +1,176 @@
+(def zip (arr1 arr2)
+      (map (lambda (i) (as-iv (cons (array-get-n arr1 i) (array-get-n arr2 i))))
+          (seq (length arr1))))
+
+(def assocArray (zipped)
+      (step
+        (make-hash hashmap)
+        (def-var idx 0)
+        (while (< idx (length zipped))
+              (step
+                (def-var tuple (array-get-n zipped idx))
+                (def-var key   (array-get-n tuple 0))
+                (def-var value (array-get-n tuple 1))
+                (hash-set-value hashmap key value)
+                (set idx (+ idx 1))))
+        hashmap))
+
+(def convb (N base)
+      (step
+        (def _convb (N tmp stack base)
+            (if (not (= tmp 0))
+                (_convb N (float-to-integer (/ tmp base)) (array-append stack (% tmp base)) base)
+                (string-join (map (lambda (n) (number-to-string n)) (array-reverse stack)))))
+        (_convb N N '() base)))
+
+(def createTable ()
+      (step
+        (def-var charset (string-split "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"))
+        (def-var ziparg (map (lambda (i)
+                                    (step
+                                      (def-var e (convb i 2))
+                                      (if (= (string-length e) 6)
+                                          e
+                                          (while (< (string-length e) 6)
+                                                  (set e (string-concat "0" e))))))
+                        (seq (length charset))))
+        (assocArray (zip ziparg charset))))
+
+(def convertDataInto8Bits (data)
+      (map (lambda (i)
+                  (step
+                    (def-var e (convb i 2))
+                    (if (= (string-length e) 8)
+                        e
+                        (while (< (string-length e) 8)
+                                (set e (string-concat "0" e))))))
+          data))
+
+(def-var table (createTable))
+
+(def base64encode (data)
+      (step
+        (def makePrepared (binaries)
+            (step
+              (def-var bLen (string-length binaries))
+              (def-var quotients
+                        (map (lambda (i) (string-slice binaries (* i 6) (* (+ i 1) 6)))
+                            (seq (float-to-integer (/ bLen 6)))))
+              (if (= (% bLen 6) 0)
+                  quotients
+                  (array-append quotients
+                                (step
+                                  (def-var $ (string-length binaries))
+                                  (def-var remainds (string-slice binaries (- $ (% bLen 6)) $))
+                                  (while (< (string-length remainds) 6)
+                                          (set remainds (string-concat remainds "0")))
+                                  remainds)))))
+
+        (def makeQuotients (prepared)
+            (step
+              (def-var pLen (array-length prepared))
+              (map (lambda (i)
+                            (as-iv (step
+                                    (def-var j (* i 4))
+                                    (map (lambda (k) (hash-get-value table (array-get-n prepared (+ j k))))
+                                          (seq 4)))))
+                    (seq (float-to-integer (/ pLen 4))))))
+
+        (def finallize (prepared quotients)
+            (step
+              (def-var pLen (array-length prepared))
+              (if (= (% (array-length prepared) 4) 0)
+                  quotients
+                  (array-append quotients (step
+                                            (def-var $ (array-length prepared))
+                                            (def-var remainds (array-slice prepared (- $ (% pLen 4)) $))
+                                            (def-var fst (map (lambda (remaind) (hash-get-value table remaind)) remainds))
+                                            (def-var fstlen (array-length fst))
+                                            (def-var snd "")
+                                            (while (< (+ (string-length snd) fstlen) 4)
+                                                    (set snd (string-concat snd "=")))
+                                            (as-iv (array-append fst snd)))))))
+
+        (def-var binaries (string-join (convertDataInto8Bits data)))
+        (def-var prepared (makePrepared binaries))
+        (def-var quotients (makeQuotients prepared))
+        (string-concat (array-flatten (map (lambda (x) x) (finallize prepared quotients))))))
+
+(def-var authorizeKeys '("oauth_consumer_key" "oauth_nonce" "oauth_signature_method" "oauth_timestamp" "oauth_token" "oauth_version"))
+(def-var baseUrl "https://api.twitter.com/1.1/")
+
+(def buildParams (additionalParam)
+  (begin
+    (def-var now (get-current-unixtime))
+    (make-hash params)
+    (for-each (lambda (pair)
+                      (begin
+                        (def-var key   (car pair))
+                        (def-var value (car (cdr pair)))
+                        (hash-set-value params key value)))
+      '((cons "oauth_consumer_key"     consumerKey)
+        (cons "oauth_nonce"            (random-uuid))
+        (cons "oauth_signature_method" "HMAC-SHA1")
+        (cons "oauth_timestamp"        now)
+        (cons "oauth_token"            accessToken)
+        (cons "oauth_version"          "1.0")))
+
+    (def-var adp-is-null
+      (if (is-hash? additionalParam)
+        false
+        (= "null" additionalParam)))
+
+    (set params (if adp-is-null
+                    params
+                    (begin
+                      (for-each (lambda (key)
+                                        (hash-set-value params key (hash-get-value additionalParam key)))
+                              (hash-get-keys additionalParam))
+                      params)))
+
+    (for-each (lambda (key)
+                (hash-set-value params key (url-encode-component (hash-get-value params key))))
+              (hash-get-keys params))
+
+    params))
+
+(def signature (method url params)
+  (begin
+    (def-var query (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) (sort (hash-get-keys params))) "&"))
+    (def-var key (string-join (map (lambda (x) (url-encode-component x)) '(consumerSecret accessTokenSecret)) "&"))
+    (def-var base (string-join (map (lambda (x) (url-encode-component x)) '(method url query)) "&"))
+    (def-var oauthSignature (url-encode-component (base64encode (ubytes-to-integers (hmac-sha1 key base)))))
+    oauthSignature))
+
+(def request (type endPoint paramsArgument)
+  (begin
+    (def-var method
+      (if (|| (= type "GET") (= type "get"))
+        "GET"
+        "POST"))
+    (def-var params (buildParams paramsArgument))
+    (def-var url (string-concat baseUrl endPoint))
+    (def-var oauthSignature (signature method url params))
+    (hash-set-value params "oauth_signature" oauthSignature)
+    (def-var authorize (string-concat "OAuth " (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) authorizeKeys) ",")))
+    (def-var path (string-join (map (lambda (k) (string-concat k "=" (hash-get-value params k))) (hash-get-keys params)) "&"))
+
+    (def-var header (new-hash))
+    (hash-set-value header "Authorization" authorize)
+
+    (println "url - " url)
+    (println "path - " path)
+    (println "header - " header)
+
+    (if (= method "GET")
+      (curl-get-string (string-concat url "?" path) header)
+      (curl-post-string url path header))))
+
+(def-var consumerKey       "")
+(def-var consumerSecret    "")
+(def-var accessToken       "")
+(def-var accessTokenSecret "")
+
+(make-hash args)
+(hash-set-value args "status" "test")
+(request "POST" "statuses/update.json" args)
