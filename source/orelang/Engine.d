@@ -17,6 +17,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.IsHashMapOperator,
        orelang.operator.TranspileOperator,
        orelang.operator.HashMapOperators,
+       orelang.operator.DigestOperators,
        orelang.operator.DynamicOperator,
        orelang.operator.ForeachOperator,
        orelang.operator.StringOperators,
@@ -304,6 +305,9 @@ class Engine {
 
     // Datetime Operators
     this.variables.insert!("get-current-unixtime", q{new Value(cast(IOperator)(new GetCurrentUNIXTime))});
+
+    // Digest Operators
+    this.variables.insert!("hmac-sha1", q{new Value(cast(IOperator)(new HMACSHA1Operator))});
 
     // Aliases
     this.variables.link("not", "!");
