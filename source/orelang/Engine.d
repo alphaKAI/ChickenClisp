@@ -467,6 +467,9 @@ class Engine {
             return new ImmediateValue(tmp.getClosure.eval(scriptList[1..$]));
           } else if (tmp.type == ValueType.IOperator) {
             return new ImmediateValue(tmp.getIOperator.call(this, scriptList[1..$]));
+          } else if (tmp.type == ValueType.ClassType) {
+            ClassType cls = tmp.getClassType;
+            return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
           }
         } else {
           throw new Error("Invalid Operator was given!");
