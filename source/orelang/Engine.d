@@ -203,6 +203,7 @@ class Engine {
     // Varibale/Function operators
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
+    this.variables.insert!("set-p",      q{new Value(cast(IOperator)(new SetPOperator))});
     this.variables.set("get",          new Value(cast(IOperator)(new GetOperator)));
     this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
     this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
@@ -336,7 +337,11 @@ class Engine {
    * Super Class for a cloned object
    */
   private Engine _super;
-  
+
+  Engine peekSuper() {
+    return this._super;
+  }
+
   /**
    * Clone this object
    */
