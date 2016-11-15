@@ -69,6 +69,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.SeqOperator,
        orelang.operator.SubOperator,
        orelang.operator.IfOperator;
+import orelang.operator.FileClass;
 
 import std.exception;
 
@@ -348,6 +349,9 @@ class Engine {
     this.variables.link("and", "&&");
     this.variables.link("or",  "||");
     this.variables.link("begin", "step");
+
+    // Classes
+    this.variables.set("FileClass", new Value(cast(ClassType)new FileClass(this)));
   }
 
   /**
