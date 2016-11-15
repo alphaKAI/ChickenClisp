@@ -9,7 +9,6 @@ class ClassType {
   this(string className, Engine _engine) {
     this.className = className;
     this._engine   = _engine;
-    _engine.sync_storage = true;
   }
 
   public Value call(Engine engine, Value[] args) {
