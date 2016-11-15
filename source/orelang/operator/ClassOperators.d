@@ -1,6 +1,6 @@
 module orelang.operator.ClassOperators;
 import orelang.operator.DynamicOperator,
-       orelang.operator.ClassType,
+       orelang.expression.ClassType,
        orelang.operator.IOperator,
        orelang.Closure,
        orelang.Engine,

@@ -6,6 +6,7 @@ module orelang.Engine;
 import orelang.expression.ImmediateValue,
        orelang.expression.CallOperator,
        orelang.expression.IExpression,
+       orelang.expression.ClassType,
        orelang.operator.IOperator,
        orelang.Closure,
        orelang.Value;
@@ -482,7 +483,6 @@ class Engine {
       } else if (tmp.type == ValueType.ClassType) {
         //import std.stdio; writeln("ClassType!");
         //writeln("scriptList -> ", scriptList);
-        import orelang.operator.ClassType;
         ClassType cls = tmp.getClassType;
         return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
       } else {

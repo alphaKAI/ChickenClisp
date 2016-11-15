@@ -1,4 +1,4 @@
-module orelang.operator.ClassType;
+module orelang.expression.ClassType;
 import orelang.Engine,
        orelang.Value;
 

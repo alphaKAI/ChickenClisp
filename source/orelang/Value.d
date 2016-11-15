@@ -3,7 +3,7 @@ import orelang.expression.ImmediateValue,
        orelang.expression.SymbolValue,
        orelang.operator.DynamicOperator,
        orelang.expression.IExpression,
-       orelang.operator.ClassType,
+       orelang.expression.ClassType,
        orelang.operator.IOperator,
        orelang.Closure;
 import std.algorithm,
