@@ -5,7 +5,7 @@ import std.stdio,
        std.file;
 
 void main(string[] args) {
-  if (args.length == 2) {
+  if (args.length >= 2) {
     string fpath = args[1];
 
     if (!exists(fpath)) {
@@ -14,6 +14,9 @@ void main(string[] args) {
       //Engine engine = new Engine();
       //engine.eval(Transpiler.transpile(readText(fpath)));
       Interpreter itpr = new Interpreter();
+      if (args.length > 2) {
+        itpr.defineARGS(args[2..$]);
+      }
       itpr.executer(readText(fpath));
     }
   } else if (args.length == 1) {

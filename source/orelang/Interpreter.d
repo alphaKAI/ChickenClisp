@@ -1,6 +1,7 @@
 module orelang.Interpreter;
 import orelang.Transpiler,
-       orelang.Engine;
+       orelang.Engine,
+       orelang.Value;
 import std.string,
        std.stdio,
        std.conv;
@@ -22,6 +23,16 @@ class Interpreter {
   this(Engine engine) {
     this.engine       = engine;
     this.bracketState = 0;
+  }
+
+  void defineARGS(string[] args) {
+    Value[] vargs;
+
+    foreach (arg; args) {
+      vargs ~= new Value(arg);
+    }
+
+    this.engine.defineVariable("ARGS", new Value(vargs));
   }
 
   bool checkBracket(string code) {
