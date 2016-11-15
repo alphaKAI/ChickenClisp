@@ -114,5 +114,16 @@ class FileClass : ClassType {
         public Value call(Engine engine, Value[] args) {
           return new Value(fp.readln);
         }})));
+
+    _engine.defineVariable("readall", new Value(cast(IOperator)(
+      new class () IOperator {
+        public Value call(Engine engine, Value[] args) {
+          import std.string;
+          string[] buf;
+          foreach (line; fp.byLine) {
+            buf ~= line.to!string;
+          }
+          return new Value(buf.join("\n"));
+        }})));
   }
 }
