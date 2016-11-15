@@ -112,6 +112,27 @@ class LazedAssocArray(T) {
     called[key]       = false;
   }
 
+  void insert(string key, T delegate() value)() {
+    constructors[key] = value;
+    called[key]       = false;
+  }
+
+  void insert(string key, T function() value)() {
+    constructors[key] = () => value();
+    called[key]       = false;
+  }
+
+  void insert(string key, T delegate() value) {
+    constructors[key] = value;
+    called[key]       = false;
+  }
+
+  void insert(string key, T function() value) {
+    constructors[key] = () => value();
+    called[key]       = false;
+  }
+
+
   /**
    * Set the value with the key.
    * This function works like:
