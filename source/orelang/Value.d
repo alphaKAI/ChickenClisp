@@ -39,12 +39,12 @@ class Value {
     ubyte   ubyte_value;
     Value[] array_value;
     ImmediateValue imv_value;
-    SymbolValue sym_value;
-    IExpression ie_value;
-    ClassType class_value;
-    IOperator io_value;
-    Closure closure_value;
-    Value[string] hashmap_value;
+    SymbolValue    sym_value;
+    IExpression    ie_value;
+    ClassType      class_value;
+    IOperator      io_value;
+    Closure        closure_value;
+    Value[string]  hashmap_value;
   }
 
   this()               { this.type = ValueType.Null; }
@@ -78,7 +78,7 @@ class Value {
                          return this.type == ValueType.String ? this.string_value : this.sym_value.value; }
   bool    getBool()    { enforce(this.type == ValueType.Bool);
                          return this.bool_value; }
-  ubyte   getUbyte()  { enforce(this.type == ValueType.Ubyte);
+  ubyte   getUbyte()   { enforce(this.type == ValueType.Ubyte);
                          return this.ubyte_value; }
   auto    getNull()    { throw new Error("Can't get from NULL value"); }
   Value[] getArray()   { enforce(this.type == ValueType.Array);
@@ -95,7 +95,7 @@ class Value {
                                        return this.io_value; }
   Closure        getClosure()        { enforce(this.type == ValueType.Closure);
                                        return this.closure_value; }
-  Value[string]   getHashMap()        { enforce(this.type == ValueType.HashMap);
+  Value[string]  getHashMap()        { enforce(this.type == ValueType.HashMap);
                                        return this.hashmap_value; }
 
   void opAssign(T)(T value) if (isNumeric!T) {
@@ -240,8 +240,8 @@ class Value {
       if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
       if (this.type == ValueType.SymbolValue)    { this.sym_value = null; }
       if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
-      if (this.type == ValueType.ClassType)      { this.class_value  = null; }
-      if (this.type == ValueType.IOperator)      { this.io_value  = null; }
+      if (this.type == ValueType.ClassType)      { this.class_value   = null; }
+      if (this.type == ValueType.IOperator)      { this.io_value      = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
       if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
 
@@ -304,11 +304,11 @@ class Value {
       case Numeric:
         return this.numeric_value == value.numeric_value;
       case String:
-        return this.string_value == value.string_value;
+        return this.string_value  == value.string_value;
       case Bool:
-        return this.bool_value == value.bool_value;
+        return this.bool_value    == value.bool_value;
       case Ubyte:
-        return this.ubyte_value == value.ubyte_value;
+        return this.ubyte_value   == value.ubyte_value;
       case Null:
         throw new Error("Can't compare with Null");
       case Array:
