@@ -111,7 +111,7 @@ More sample codes are wrote in `sample.d`.
 $ git clone https://github.com/alphaKAI/ChickenClisp
 $ cd ChickenClisp
 $ dub build
-$ ./ChickenClisp
+$ ./chickenclisp
 ```
 
 # License
