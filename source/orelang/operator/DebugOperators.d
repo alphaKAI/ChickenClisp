@@ -55,3 +55,11 @@ class LookupSymbolOperator : IOperator {
     return new Value;
   }
 }
+
+class ToggleGEDebugOperator : IOperator {
+  public Value call(Engine engine, Value[] args) {
+    engine.debug_get_expression ^= 1;
+
+    return new Value;
+  }
+}

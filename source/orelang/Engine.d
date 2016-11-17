@@ -134,7 +134,6 @@ class LazedAssocArray(T) {
     called[key]       = false;
   }
 
-
   /**
    * Set the value with the key.
    * This function works like:
@@ -196,6 +195,9 @@ class Engine {
     CLONE
   }
 
+  // Debug flags for Engine
+  bool debug_get_expression = false;
+
   /**
    * This holds variables and operators.
    * You can distinguish A VALUE of the child of this from whether a varibale or an operator.
@@ -227,7 +229,7 @@ class Engine {
     // Varibale/Function operators
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
-    this.variables.insert!("set-p",      q{new Value(cast(IOperator)(new SetPOperator))});
+    this.variables.insert!("set-p",    q{new Value(cast(IOperator)(new SetPOperator))});
     this.variables.set("get",          new Value(cast(IOperator)(new GetOperator)));
     this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
     this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
@@ -340,6 +342,7 @@ class Engine {
     this.variables.insert!("dump-variables", q{new Value(cast(IOperator)(new DumpVaribalesOperator))});
     this.variables.insert!("peek-closure",   q{new Value(cast(IOperator)(new PeekClosureOperator))});
     this.variables.insert!("call-closure",   q{new Value(cast(IOperator)(new CallClosureOperator))});
+    this.variables.insert!("toggle-ge-dbg",  q{new Value(cast(IOperator)(new ToggleGEDebugOperator))});
 
     // Class Operators
     this.variables.insert!("class", q{new Value(cast(IOperator)(new ClassOperator))});
@@ -467,6 +470,11 @@ class Engine {
    * Build Script Tree
    */
   public IExpression getExpression(Value script) {
+    if (debug_get_expression) {
+      import std.stdio;
+      writeln("[getExpression] script -> ", script);
+    }
+
     if (script.type == ValueType.ImmediateValue) {
       return script.getImmediateValue;
     }
