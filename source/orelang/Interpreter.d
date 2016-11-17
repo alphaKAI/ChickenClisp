@@ -87,13 +87,14 @@ class Interpreter {
     }
   }
 
-  void executer(string code) {
+  Value executer(string code) {
     string buf;
+    Value ret;
 
     void e(char val) {
       if (checkBracket(val.to!string) && (buf.length != 0)) {
         auto transpiled = Transpiler.transpile(buf);
-        engine.eval(transpiled);
+        ret = engine.eval(transpiled);
         buf = [];
       }
     }
@@ -112,5 +113,7 @@ class Interpreter {
         }
       }
     }
+
+    return ret;
   }
 }
