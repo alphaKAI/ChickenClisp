@@ -1,9 +1,9 @@
 {
-	"name": "ChickenClisp",
+	"name": "chickenclisp",
 	"authors": [
 		"Akihiro Shoji"
 	],
-	"description": "An implementation of Orelang",
+	"description": "A scheme like programming language and interpreter",
 	"copyright": "Copyright (C) 2016, Akihiro Shoji",
 	"license": "MIT"
 }
