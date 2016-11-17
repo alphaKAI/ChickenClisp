@@ -40,6 +40,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.CurlOperators,
        orelang.operator.EqualOperator,
        orelang.operator.LogicOperator,
+       orelang.operator.PathOperators,
        orelang.operator.PrintOperator,
        orelang.operator.TimesOperator,
        orelang.operator.UntilOperator,
@@ -272,12 +273,12 @@ class Engine {
     this.variables.insert!("length",   q{new Value(cast(IOperator)(new LengthOperator))});
 
     // HashMap operators
-    this.variables.insert!("new-hash",        q{new Value(cast(IOperator)(new NewHashOperator))});
+    this.variables.insert!("new-hash",         q{new Value(cast(IOperator)(new NewHashOperator))});
     this.variables.insert!("make-hash",        q{new Value(cast(IOperator)(new MakeHashOperator))});
     this.variables.insert!("hash-set-value",   q{new Value(cast(IOperator)(new HashSetValueOperator))});
     this.variables.insert!("hash-get-value",   q{new Value(cast(IOperator)(new HashGetValueOperator))});
     this.variables.insert!("hash-get-keys",    q{new Value(cast(IOperator)(new HashGetKeysOperator))});
-    this.variables.insert!("hash-get-values",    q{new Value(cast(IOperator)(new HashGetValuesOperator))});
+    this.variables.insert!("hash-get-values",  q{new Value(cast(IOperator)(new HashGetValuesOperator))});
 
     // String operators
     this.variables.insert!("string-concat",    q{new Value(cast(IOperator)(new StringConcatOperator))});
@@ -337,12 +338,17 @@ class Engine {
 
     // Debug Operators
     this.variables.insert!("dump-variables", q{new Value(cast(IOperator)(new DumpVaribalesOperator))});
-    this.variables.insert!("peek-closure", q{new Value(cast(IOperator)(new PeekClosureOperator))});
-    this.variables.insert!("call-closure", q{new Value(cast(IOperator)(new CallClosureOperator))});
+    this.variables.insert!("peek-closure",   q{new Value(cast(IOperator)(new PeekClosureOperator))});
+    this.variables.insert!("call-closure",   q{new Value(cast(IOperator)(new CallClosureOperator))});
 
     // Class Operators
-    this.variables.insert!("class",     q{new Value(cast(IOperator)(new ClassOperator))});
-    this.variables.insert!("new",     q{new Value(cast(IOperator)(new NewOperator))});
+    this.variables.insert!("class", q{new Value(cast(IOperator)(new ClassOperator))});
+    this.variables.insert!("new",   q{new Value(cast(IOperator)(new NewOperator))});
+
+    // Path Operators
+    this.variables.insert!("path-exists",  q{new Value(cast(IOperator)(new PathExistsOperator))});
+    this.variables.insert!("path-is-dir",  q{new Value(cast(IOperator)(new PathIsDirOperator))});
+    this.variables.insert!("path-is-file", q{new Value(cast(IOperator)(new PathIsFileOperator))});
 
     // Aliases
     this.variables.link("not", "!");
