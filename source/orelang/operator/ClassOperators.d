@@ -43,10 +43,13 @@ class NewOperator : IOperator {
     ClassType cls = new ClassType(_cls.className, _cls._engine.clone);
 
     Value[] cArgs;
+
     if (args.length > 0) {
-      cArgs = args[1..$];
+      foreach (arg; args[1..$]) {
+        cArgs ~= engine.eval(arg);
+      }
     }
-    //cls.eval(cArgs);
+
     cls._engine.variables["constructor"].getIOperator.call(cls._engine, cArgs);
 
     return new Value(cls);
