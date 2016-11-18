@@ -25,6 +25,10 @@ class Interpreter {
     this.bracketState = 0;
   }
 
+  Engine peekEngine() {
+    return this.engine;
+  }
+
   void defineARGS(string[] args) {
     Value[] vargs;
 

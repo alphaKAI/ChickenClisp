@@ -547,4 +547,8 @@ class Engine {
       return new ImmediateValue(script);
     }
   }
+
+  public bool variableDefined(string name) {
+    return this.getVariable(name).type != ValueType.Null;
+  }
 }
