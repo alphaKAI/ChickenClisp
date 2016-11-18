@@ -39,6 +39,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.ConvOperators,
        orelang.operator.CurlOperators,
        orelang.operator.EqualOperator,
+       orelang.operator.FileOperators,
        orelang.operator.LogicOperator,
        orelang.operator.PathOperators,
        orelang.operator.PrintOperator,
@@ -352,6 +353,12 @@ class Engine {
     this.variables.insert!("path-exists",  q{new Value(cast(IOperator)(new PathExistsOperator))});
     this.variables.insert!("path-is-dir",  q{new Value(cast(IOperator)(new PathIsDirOperator))});
     this.variables.insert!("path-is-file", q{new Value(cast(IOperator)(new PathIsFileOperator))});
+
+    // File Operators
+    this.variables.insert!("remove-file",  q{new Value(cast(IOperator)(new RemoveFileOperator))});
+    this.variables.insert!("remove-dir",  q{new Value(cast(IOperator)(new RemoveDirOperator))});
+    this.variables.insert!("get-cwd",  q{new Value(cast(IOperator)(new GetcwdOperator))});
+    this.variables.insert!("get-size",  q{new Value(cast(IOperator)(new GetsizeOperator))});
 
     // Aliases
     this.variables.link("not", "!");
