@@ -35,6 +35,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.LengthOperator,
        orelang.operator.RemoveOperator,
        orelang.operator.SetIdxOperator,
+       orelang.operator.StdioOperators,
        orelang.operator.AliasOperator,
        orelang.operator.ConvOperators,
        orelang.operator.CurlOperators,
@@ -359,6 +360,9 @@ class Engine {
     this.variables.insert!("remove-dir",  q{new Value(cast(IOperator)(new RemoveDirOperator))});
     this.variables.insert!("get-cwd",  q{new Value(cast(IOperator)(new GetcwdOperator))});
     this.variables.insert!("get-size",  q{new Value(cast(IOperator)(new GetsizeOperator))});
+
+    // STDIO Operators
+    this.variables.insert!("readln",  q{new Value(cast(IOperator)(new ReadlnOperator))});
 
     // Aliases
     this.variables.link("not", "!");
