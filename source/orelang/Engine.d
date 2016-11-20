@@ -257,7 +257,7 @@ class Engine {
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
     this.variables.insert!("set-p",    q{new Value(cast(IOperator)(new SetPOperator))});
-    this.variables.set("get",          new Value(cast(IOperator)(new GetOperator)));
+    this.variables.insert!("get",      q{new Value(cast(IOperator)(new GetOperator))});
     this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
     this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
     this.variables.insert!("define",   q{new Value(cast(IOperator)(new DefineOperator))});
