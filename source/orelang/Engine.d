@@ -358,13 +358,13 @@ class Engine {
     this.variables.insert!("url-encode-component", q{new Value(cast(IOperator)(new UrlEncodeComponentOperator))});
 
     // UUID Operators
-    this.variables.insert!("random-uuid", q{new Value(cast(IOperator)(new RandomUUIDOperator))});
+    this.variables.insert!("random-uuid",          q{new Value(cast(IOperator)(new RandomUUIDOperator))});
 
     // Datetime Operators
     this.variables.insert!("get-current-unixtime", q{new Value(cast(IOperator)(new GetCurrentUNIXTime))});
 
     // Digest Operators
-    this.variables.insert!("hmac-sha1", q{new Value(cast(IOperator)(new HMACSHA1Operator))});
+    this.variables.insert!("hmac-sha1",            q{new Value(cast(IOperator)(new HMACSHA1Operator))});
 
     // Debug Operators
     this.variables.insert!("dump-variables", q{new Value(cast(IOperator)(new DumpVaribalesOperator))});
@@ -373,22 +373,22 @@ class Engine {
     this.variables.insert!("toggle-ge-dbg",  q{new Value(cast(IOperator)(new ToggleGEDebugOperator))});
 
     // Class Operators
-    this.variables.insert!("class", q{new Value(cast(IOperator)(new ClassOperator))});
-    this.variables.insert!("new",   q{new Value(cast(IOperator)(new NewOperator))});
+    this.variables.insert!("class",          q{new Value(cast(IOperator)(new ClassOperator))});
+    this.variables.insert!("new",            q{new Value(cast(IOperator)(new NewOperator))});
 
     // Path Operators
-    this.variables.insert!("path-exists",  q{new Value(cast(IOperator)(new PathExistsOperator))});
-    this.variables.insert!("path-is-dir",  q{new Value(cast(IOperator)(new PathIsDirOperator))});
-    this.variables.insert!("path-is-file", q{new Value(cast(IOperator)(new PathIsFileOperator))});
+    this.variables.insert!("path-exists",    q{new Value(cast(IOperator)(new PathExistsOperator))});
+    this.variables.insert!("path-is-dir",    q{new Value(cast(IOperator)(new PathIsDirOperator))});
+    this.variables.insert!("path-is-file",   q{new Value(cast(IOperator)(new PathIsFileOperator))});
 
     // File Operators
-    this.variables.insert!("remove-file",  q{new Value(cast(IOperator)(new RemoveFileOperator))});
-    this.variables.insert!("remove-dir",  q{new Value(cast(IOperator)(new RemoveDirOperator))});
-    this.variables.insert!("get-cwd",  q{new Value(cast(IOperator)(new GetcwdOperator))});
-    this.variables.insert!("get-size",  q{new Value(cast(IOperator)(new GetsizeOperator))});
+    this.variables.insert!("remove-file",    q{new Value(cast(IOperator)(new RemoveFileOperator))});
+    this.variables.insert!("remove-dir",     q{new Value(cast(IOperator)(new RemoveDirOperator))});
+    this.variables.insert!("get-cwd",        q{new Value(cast(IOperator)(new GetcwdOperator))});
+    this.variables.insert!("get-size",       q{new Value(cast(IOperator)(new GetsizeOperator))});
 
     // STDIO Operators
-    this.variables.insert!("readln",  q{new Value(cast(IOperator)(new ReadlnOperator))});
+    this.variables.insert!("readln",         q{new Value(cast(IOperator)(new ReadlnOperator))});
 
     // Aliases
     this.variables.link("not", "!");
