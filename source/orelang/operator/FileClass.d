@@ -119,7 +119,7 @@ class FileClass : ClassType {
       new class () IOperator {
         public Value call(Engine engine, Value[] args) {
           import std.string;
-          string[] buf;
+          static string[] buf;
           foreach (line; fp.byLine) {
             buf ~= line.to!string;
           }
