@@ -292,6 +292,7 @@ class Engine {
     this.variables.insert!("string-slice",     q{new Value(cast(IOperator)(new StringSliceOperator))});
     this.variables.insert!("as-string",        q{new Value(cast(IOperator)(new AsStringOperator))});
     this.variables.insert!("string-repeat",    q{new Value(cast(IOperator)(new StringRepeatOperator))});
+    this.variables.insert!("string-chomp",     q{new Value(cast(IOperator)(new StringChompOperator))});
 
     // Conversion operators
     this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new numberToStringOperator))});

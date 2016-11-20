@@ -183,3 +183,14 @@ class StringRepeatOperator : IOperator {
     return new Value(n.iota.map!(i => pattern).array.join);
   }
 }
+
+class StringChompOperator : IOperator {
+  /**
+   * call
+   */
+  import std.string;
+
+  public Value call(Engine engine, Value[] args) {
+    return new Value(engine.eval(args[0]).getString.chomp);
+  }
+}
