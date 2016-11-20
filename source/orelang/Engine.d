@@ -99,6 +99,7 @@ class LazedAssocArray(T) {
    * This variable holds the constructor calling delegate to make the instance which will be called when the isntance become needed.
    */
   T delegate()[string] constructors;
+  bool[string] alwaysNew;
 
   alias storage this;
 
@@ -111,29 +112,49 @@ class LazedAssocArray(T) {
    *
    * This function uses string-mixin for handling "new T", becase D can't allow make an alias of the expr liek `new T`
    */
-  void insert(string key, string value)() {
+  void insert(string key, string value, bool always = false)() {
     constructors[key] = mixin("delegate T () { return " ~ value ~ ";}");
     called[key]       = false;
+
+    if (always) {
+      alwaysNew[key] = true;
+    }
   }
 
-  void insert(string key, T delegate() value)() {
+  void insert(string key, T delegate() value, bool always = false)() {
     constructors[key] = value;
     called[key]       = false;
+
+    if (always) {
+      alwaysNew[key] = true;
+    }
   }
 
-  void insert(string key, T function() value)() {
+  void insert(string key, T function() value, bool always = false)() {
     constructors[key] = () => value();
     called[key]       = false;
+
+    if (always) {
+      alwaysNew[key] = true;
+    }
   }
 
-  void insert(string key, T delegate() value) {
+  void insert(string key, T delegate() value, bool always = false) {
     constructors[key] = value;
     called[key]       = false;
+
+    if (always) {
+      alwaysNew[key] = true;
+    }
   }
 
-  void insert(string key, T function() value) {
+  void insert(string key, T function() value, bool always = false) {
     constructors[key] = () => value();
     called[key]       = false;
+
+    if (always) {
+      alwaysNew[key] = true;
+    }
   }
 
   /**
@@ -176,6 +197,10 @@ class LazedAssocArray(T) {
    * This function hooks: laa["key"] event.
    */ 
   T opIndex(string key) {
+    if (key in called && key in alwaysNew) {
+      return constructors[key]();
+    }
+
     if (!called[key]) {
       T newT = constructors[key]();
 
@@ -372,7 +397,7 @@ class Engine {
     this.variables.link("begin", "step");
 
     // Classes
-    this.variables.set("FileClass", new Value(cast(ClassType)new FileClass(this)));
+    this.variables.insert("FileClass", () => new Value(cast(ClassType)new FileClass(this)), true);
   }
 
   /**
@@ -428,7 +453,7 @@ class Engine {
     Engine engine = this;
 
     while (true) {
-      if (name in engine.variables) {
+      if (name in engine.variables.called) {
         engine.variables.set(name, value.dup);
         return value;
       } else if (engine._super !is null) {
@@ -446,7 +471,7 @@ class Engine {
     Engine engine = this;
 
     while (true) {
-      if (name in engine.variables) {
+      if (name in engine.variables.called) {
         return engine.variables[name];
       } else if (engine._super !is null) {
         engine = engine._super;

@@ -22,7 +22,7 @@ class ClassOperator : IOperator {
     }
 
     ClassType clst = new ClassType(className, cEngine);
-    Value cls      = new Value(clst);
+    Value     cls  = new Value(clst);
     engine.defineVariable(className, cls);
 
     return cls;
