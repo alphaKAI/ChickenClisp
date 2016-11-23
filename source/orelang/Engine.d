@@ -28,6 +28,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.DeffunOperator,
        orelang.operator.DefineOperator,
        orelang.operator.DefvarOperator,
+       orelang.operator.FilterOperator,
        orelang.operator.GetfunOperator,
        orelang.operator.IsListOperator,
        orelang.operator.IsNullOperator,
@@ -292,6 +293,7 @@ class Engine {
     this.variables.insert!("map",      q{new Value(cast(IOperator)(new MapOperator))});
     this.variables.insert!("for-each", q{new Value(cast(IOperator)(new ForeachOperator))});
     this.variables.insert!("fold",     q{new Value(cast(IOperator)(new FoldOperator))});
+    this.variables.insert!("filter",   q{new Value(cast(IOperator)(new FilterOperator))});
 
     // List operators
     this.variables.insert!("car",      q{new Value(cast(IOperator)(new CarOperator))});
