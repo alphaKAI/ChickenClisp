@@ -26,7 +26,7 @@ class Parser {
     Value[] _out;
 
     for (size_t i; i < code.length; ++i) {
-      char ch = code[i];
+      dchar ch = code[i];
 
       if (ch == ' ') {
         continue;
