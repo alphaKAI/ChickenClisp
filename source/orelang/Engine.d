@@ -72,7 +72,8 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.SeqOperator,
        orelang.operator.SubOperator,
        orelang.operator.IfOperator;
-import orelang.operator.FileClass;
+import orelang.operator.RegexClass,
+       orelang.operator.FileClass;
 
 import std.exception;
 
@@ -257,6 +258,7 @@ class Engine {
     this.variables.insert!("def",      q{new Value(cast(IOperator)(new DeffunOperator))});
     this.variables.insert!("set",      q{new Value(cast(IOperator)(new SetOperator))});
     this.variables.insert!("set-p",    q{new Value(cast(IOperator)(new SetPOperator))});
+    this.variables.insert!("set-c",    q{new Value(cast(IOperator)(new SetCOperator))});
     this.variables.insert!("get",      q{new Value(cast(IOperator)(new GetOperator))});
     this.variables.insert!("let",      q{new Value(cast(IOperator)(new LetOperator))});
     this.variables.insert!("as-iv",    q{new Value(cast(IOperator)(new AsIVOperator))});
@@ -397,7 +399,8 @@ class Engine {
     this.variables.link("begin", "step");
 
     // Classes
-    this.variables.insert("FileClass", () => new Value(cast(ClassType)new FileClass(this)), true);
+    this.variables.insert("FileClass",  () => new Value(cast(ClassType)(new FileClass(this))), true);
+    this.variables.insert("Regex", () => new Value(cast(ClassType)(new RegexClass(this))), true);
   }
 
   /**
