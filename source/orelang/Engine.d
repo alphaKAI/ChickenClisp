@@ -394,6 +394,7 @@ class Engine {
 
     // STDIO Operators
     this.variables.insert!("readln",         q{new Value(cast(IOperator)(new ReadlnOperator))});
+    this.variables.insert!("stdin-by-line",  q{new Value(cast(IOperator)(new StdinByLINEOperator))});
 
     // Aliases
     this.variables.link("not", "!");
