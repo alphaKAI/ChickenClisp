@@ -23,8 +23,8 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.ForeachOperator,
        orelang.operator.StringOperators,
        orelang.operator.ArrayOperators,
-       orelang.operator.DebugOperators,
        orelang.operator.ClassOperators,
+       orelang.operator.DebugOperators,
        orelang.operator.DeffunOperator,
        orelang.operator.DefineOperator,
        orelang.operator.DefvarOperator,
@@ -323,6 +323,7 @@ class Engine {
 
     // Conversion operators
     this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new numberToStringOperator))});
+    this.variables.insert!("number-to-char",   q{new Value(cast(IOperator)(new numberToCharOperator))});
     this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new charToNumberOperator))});
     this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new floatToIntegerOperator))});
     this.variables.insert!("ubytes-to-string", q{new Value(cast(IOperator)(new ubytesToStringOperator))});

@@ -20,6 +20,18 @@ class numberToStringOperator : IOperator {
 }
 
 /**
+ * convert number into char
+ */
+class numberToCharOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    return new Value(engine.eval(args[0]).getNumeric.to!char.to!string);
+  }
+}
+
+/**
  * convert char into number 
  */
 class charToNumberOperator : IOperator {
