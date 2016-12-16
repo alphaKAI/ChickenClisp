@@ -11,8 +11,6 @@ void main(string[] args) {
     if (!exists(fpath)) {
       writeln("No such file - ", fpath);
     } else {
-      //Engine engine = new Engine();
-      //engine.eval(Transpiler.transpile(readText(fpath)));
       Interpreter itpr = new Interpreter();
       if (args.length > 2) {
         itpr.defineARGS(args[2..$]);
