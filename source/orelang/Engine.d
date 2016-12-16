@@ -23,6 +23,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.ForeachOperator,
        orelang.operator.StringOperators,
        orelang.operator.ArrayOperators,
+       orelang.operator.AssertOperator,
        orelang.operator.ClassOperators,
        orelang.operator.DebugOperators,
        orelang.operator.DeffunOperator,
@@ -347,6 +348,7 @@ class Engine {
     this.variables.insert!("load",      q{new Value(cast(IOperator)(new LoadOperator))});
     this.variables.insert!("type",      q{new Value(cast(IOperator)(new TypeOperator))});
     this.variables.insert!("alias",     q{new Value(cast(IOperator)(new AliasOperator))});
+    this.variables.insert!("assert",    q{new Value(cast(IOperator)(new AssertOperator))});
     this.variables.insert!("is-null?",  q{new Value(cast(IOperator)(new IsNullOperator))});
     this.variables.insert!("is-hash?",  q{new Value(cast(IOperator)(new IsHashMapOperator))});
     this.variables.insert!("transpile", q{new Value(cast(IOperator)(new TranspileOperator))});
@@ -404,7 +406,7 @@ class Engine {
 
     // Classes
     this.variables.insert("FileClass",  () => new Value(cast(ClassType)(new FileClass(this))), true);
-    this.variables.insert("Regex", () => new Value(cast(ClassType)(new RegexClass(this))), true);
+    this.variables.insert("Regex",      () => new Value(cast(ClassType)(new RegexClass(this))), true);
   }
 
   /**
@@ -567,8 +569,6 @@ class Engine {
       } else if (tmp.type == ValueType.Closure) {
         return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
       } else if (tmp.type == ValueType.ClassType) {
-        //import std.stdio; writeln("ClassType!");
-        //writeln("scriptList -> ", scriptList);
         ClassType cls = tmp.getClassType;
         return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
       } else {
