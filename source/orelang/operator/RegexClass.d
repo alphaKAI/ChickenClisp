@@ -12,7 +12,7 @@ class RegexClass : ClassType {
 
   this (Engine _engine) {
     _engine = _engine.clone;
-    super("Regex", _engine);
+    super(_engine);
 
     _engine.defineVariable("constructor", new Value(cast(IOperator)(
       new class () IOperator {
@@ -45,6 +45,14 @@ class RegexClass : ClassType {
       new class () IOperator {
         public Value call(Engine engine, Value[] args) {
           writeln(engine.eval(args[0]).getString.matchAll(rgx));
+          return new Value;
+        }})));
+
+    _engine.defineVariable("show-ptn", new Value(cast(IOperator)(
+      new class () IOperator {
+        public Value call(Engine engine, Value[] args) {
+          import std.stdio;
+          writeln(rgx);
           return new Value;
         }})));
   }

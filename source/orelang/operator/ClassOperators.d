@@ -21,8 +21,9 @@ class ClassOperator : IOperator {
       cEngine.defineVariable("constructor", new Value(cast(IOperator)(new DynamicOperator((string[]).init, new Value)))); 
     }
 
-    ClassType clst = new ClassType(className, cEngine);
+    ClassType clst = new ClassType(cEngine);
     Value     cls  = new Value(clst);
+
     engine.defineVariable(className, cls);
 
     return cls;
@@ -40,7 +41,7 @@ class NewOperator : IOperator {
     }
 
     ClassType _cls = engine.getVariable(className).getClassType;
-    ClassType cls = new ClassType(_cls.className, _cls._engine.clone);
+    ClassType cls = new ClassType(_cls._engine.clone);
 
     Value[] cArgs;
 

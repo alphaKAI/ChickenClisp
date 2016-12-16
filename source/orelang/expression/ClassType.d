@@ -3,11 +3,9 @@ import orelang.Engine,
        orelang.Value;
 
 class ClassType {
-  string className;
   Engine _engine;
 
-  this(string className, Engine _engine) {
-    this.className = className;
+  this(Engine _engine) {
     this._engine   = _engine;
   }
 

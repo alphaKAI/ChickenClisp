@@ -12,7 +12,7 @@ class FileClass : ClassType {
 
   this (Engine _engine) {
     _engine = _engine.clone;
-    super("FileClass", _engine);
+    super(_engine);
 
     _engine.defineVariable("constructor", new Value(cast(IOperator)(
       new class () IOperator {
