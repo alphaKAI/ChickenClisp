@@ -13,6 +13,8 @@ class FilterOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
+    engine.sync_storage = true;
+    scope(exit) engine.sync_storage = false;
 
     Value efunc  = engine.eval(args[0]);
     Value eargs1 = engine.eval(args[1]);
