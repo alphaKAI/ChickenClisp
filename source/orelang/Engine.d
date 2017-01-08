@@ -17,6 +17,7 @@ import orelang.expression.ImmediateValue,
 import orelang.operator.DatetimeOperators,
        orelang.operator.IsHashMapOperator,
        orelang.operator.TranspileOperator,
+       orelang.operator.DefmacroOperator,
        orelang.operator.HashMapOperators,
        orelang.operator.DigestOperators,
        orelang.operator.DynamicOperator,
@@ -215,6 +216,10 @@ class LazedAssocArray(T) {
 
     return storage[key];
   }
+
+  bool has(string key) {
+    return key in called ? true : false;
+  }
 }
 
 /**
@@ -268,6 +273,8 @@ class Engine {
     this.variables.insert!("def-var",  q{new Value(cast(IOperator)(new DefvarOperator))});
     this.variables.insert!("get-fun",  q{new Value(cast(IOperator)(new GetfunOperator))});
     this.variables.insert!("set-idx",  q{new Value(cast(IOperator)(new SetIdxOperator))});
+
+    this.variables.insert!("def-macro",      q{new Value(cast(IOperator)(new DefmacroOperator))});
 
     // Loop operators
     this.variables.insert!("step",     q{new Value(cast(IOperator)(new StepOperator))});
@@ -405,7 +412,7 @@ class Engine {
     this.variables.link("begin", "step");
 
     // Classes
-    this.variables.insert("FileClass",  () => new Value(cast(ClassType)(new FileClass(this))), true);
+    this.variables.insert("FileClass",  () => new Value(cast(ClassType)(new FileClass(this))),  true);
     this.variables.insert("Regex",      () => new Value(cast(ClassType)(new RegexClass(this))), true);
   }
 
@@ -515,7 +522,7 @@ class Engine {
    * getExpression
    * Build Script Tree
    */
-  public IExpression getExpression(Value script) {
+  public IExpression getExpression(ref Value script) {
     if (debug_get_expression) {
       import std.stdio;
       writeln("[getExpression] script -> ", script);
@@ -527,6 +534,10 @@ class Engine {
 
     if (script.type == ValueType.Array) {
       Value[] scriptList = script.getArray;
+
+      if (scriptList.length == 0) {
+        return new ImmediateValue(new Value(ValueType.Null));
+      }
 
       if (scriptList[0].type == ValueType.Array) {
         Value op = this.variables[scriptList[0][0].getString];
@@ -555,24 +566,32 @@ class Engine {
           } else if (tmp.type == ValueType.ClassType) {
             ClassType cls = tmp.getClassType;
             return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+          } else {
+            throw new Error("Invalid type was given as a first argument - " ~ op.toString);
           }
         } else {
           throw new Error("Invalid Operator was given!");
         }
-      }
+      } else if (this.variables.has(scriptList[0].getString)) {
+        Value tmp = this.variables[scriptList[0].getString];
 
-      Value tmp = this.variables[scriptList[0].getString];
-
-      if (tmp.type == ValueType.IOperator) {
-        IOperator op = tmp.getIOperator;
-        return new CallOperator(op, scriptList[1..$]);
-      } else if (tmp.type == ValueType.Closure) {
-        return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
-      } else if (tmp.type == ValueType.ClassType) {
-        ClassType cls = tmp.getClassType;
-        return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+        if (tmp.type == ValueType.IOperator) {
+          IOperator op = tmp.getIOperator;
+          return new CallOperator(op, scriptList[1..$]);
+        } else if (tmp.type == ValueType.Closure) {
+          return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
+        } else if (tmp.type == ValueType.ClassType) {
+          ClassType cls = tmp.getClassType;
+          return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+        } else if (tmp.type == ValueType.Macro) {
+          import orelang.expression.Macro;
+          Macro mcr = tmp.getMacro;
+          return new ImmediateValue(mcr.call(this, scriptList[1..$]));
+        } else {
+          throw new Error("Invalid Operator was given!");
+        }
       } else {
-        throw new Error("Invalid Operator was given!");
+        throw new Error("Invalid function or macro was given, no such a operator of ChickenClisp - " ~ scriptList[0].getString);
       }
     } else {
       if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {

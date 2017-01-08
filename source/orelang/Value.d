@@ -5,6 +5,7 @@ import orelang.expression.ImmediateValue,
        orelang.expression.SymbolValue,
        orelang.expression.ClassType,
        orelang.operator.IOperator,
+       orelang.expression.Macro,
        orelang.Closure;
 import std.algorithm,
        std.exception,
@@ -26,7 +27,8 @@ enum ValueType {
   Ubyte,
   Bool,
   Null,
-  Array
+  Array,
+  Macro
 }
 
 class Value {
@@ -45,6 +47,7 @@ class Value {
     IOperator      io_value;
     Closure        closure_value;
     Value[string]  hashmap_value;
+    Macro          macro_value;
   }
 
   this()               { this.type = ValueType.Null; }
@@ -71,6 +74,11 @@ class Value {
   this(IOperator value)      { this.opAssign(value); }
   this(Closure value)        { this.opAssign(value); }
   this(Value[string] value)  { this.opAssign(value); }
+  this(Macro value)          {
+    this.init;
+    this.macro_value = value;
+    this.type        = ValueType.Macro;
+  }
 
   double  getNumeric() { enforce(this.type == ValueType.Numeric);
                          return this.numeric_value; }
@@ -97,6 +105,8 @@ class Value {
                                        return this.closure_value; }
   Value[string]  getHashMap()        { enforce(this.type == ValueType.HashMap);
                                        return this.hashmap_value; }
+  Macro          getMacro()          { enforce(this.type == ValueType.Macro);
+                                       return this.macro_value; }
 
   void opAssign(T)(T value) if (isNumeric!T) {
     this.init;
@@ -176,6 +186,7 @@ class Value {
       case ClassType:      return this.class_value.stringof;
       case IOperator:      return this.io_value.stringof;
       case Closure:        return this.closure_value.stringof;
+      case Macro:          return this.macro_value.stringof;
     }
   }
 
@@ -244,6 +255,7 @@ class Value {
       if (this.type == ValueType.IOperator)      { this.io_value      = null; }
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
       if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
+      if (this.type == ValueType.Macro)          { this.macro_value   = null; }
 
       this.type = ValueType.Null;
     }
@@ -301,6 +313,8 @@ class Value {
         throw new Error("Can't compare with Closure");
       case HashMap:
         throw new Error("Can't compare with HashMap");
+      case Macro:
+        throw new Error("Can't compare with Macro");
       case Numeric:
         return this.numeric_value == value.numeric_value;
       case String:
@@ -357,6 +371,8 @@ class Value {
         throw new Error("Can't compare with Closure");
       case HashMap:
         throw new Error("Can't compare with HashMap");
+      case Macro:
+        throw new Error("Can't compare with Macro");
       case Numeric:
         auto c = this.numeric_value,
              d = value.numeric_value;
@@ -426,6 +442,8 @@ class Value {
         return new Value;
       case Array:
         return new Value(this.array_value.dup);
+      case Macro:
+        return new Value(this.macro_value);
     }
   }
 }
