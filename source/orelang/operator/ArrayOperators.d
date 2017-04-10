@@ -55,7 +55,7 @@ class ArraySetNOperator : IOperator {
     long  idx   = engine.eval(args[1]).getNumeric.to!long;
     Value value = args[2];
 
-    if (0 < idx && idx < arr.length) {
+    if (0 <= idx && idx < arr.length) {
       arr[idx] = value;
 
       return new Value(new ImmediateValue(new Value(arr)));
