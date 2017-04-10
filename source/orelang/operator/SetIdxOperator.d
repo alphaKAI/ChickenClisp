@@ -22,7 +22,7 @@ class SetIdxOperator : IOperator {
     if (0 < idx && idx < arr.length) {
       arr[idx] = value;
 
-      return new Value(new ImmediateValue(new Value(arr)));
+      return new Value(arr);
     } else {
       throw new Error("Invalid");
     }

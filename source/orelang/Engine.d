@@ -522,7 +522,7 @@ class Engine {
    * getExpression
    * Build Script Tree
    */
-  public IExpression getExpression(ref Value script) {
+  public IExpression getExpression(Value script) {
     if (debug_get_expression) {
       import std.stdio;
       writeln("[getExpression] script -> ", script);
