@@ -22,6 +22,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.DigestOperators,
        orelang.operator.DynamicOperator,
        orelang.operator.ForeachOperator,
+       orelang.operator.RandomOperators,
        orelang.operator.StringOperators,
        orelang.operator.ArrayOperators,
        orelang.operator.AssertOperator,
@@ -414,6 +415,9 @@ class Engine {
     // Classes
     this.variables.insert("FileClass",  () => new Value(cast(ClassType)(new FileClass(this))),  true);
     this.variables.insert("Regex",      () => new Value(cast(ClassType)(new RegexClass(this))), true);
+
+    // Random Operators
+    this.variables.insert!("random-uniform", q{new Value(cast(IOperator)(new RandomUniformOperator))});
   }
 
   /**
