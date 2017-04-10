@@ -72,6 +72,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.MapOperator,
        orelang.operator.MulOperator,
        orelang.operator.ModOperator,
+       orelang.operator.NopOperator,
        orelang.operator.SetOperator,
        orelang.operator.SeqOperator,
        orelang.operator.SubOperator,
@@ -418,6 +419,9 @@ class Engine {
 
     // Random Operators
     this.variables.insert!("random-uniform", q{new Value(cast(IOperator)(new RandomUniformOperator))});
+
+    // Nop Operator
+    this.variables.insert!("nop", q{new Value(cast(IOperator)(new NopOperator))});
   }
 
   /**
