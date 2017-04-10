@@ -1,0 +1,185 @@
+(class SourceStream
+  (def-var UP 0)
+  (def-var DOWN 1)
+  (def-var RIGHT 2)
+  (def-var LEFT 3)
+
+  (def-var dir RIGHT)
+  (def-var source null)
+  (def-var pcx 0)
+  (def-var pcy 0)
+
+  (def constructor (code)
+    (begin
+      (set-p source (map (lambda (line) (string-split line "")) (string-split code "\n")))))
+
+  (def change-direction (_dir)
+    (set-p dir _dir))
+
+  (def forward-pc ()
+    (cond
+      ((= dir UP) (begin
+                    (if (= pcy 0)
+                        (set-p pcy (- (array-length source) 1))
+                        (set-p pcy (- pcy 1)))))
+      ((= dir DOWN) (begin
+                    (if (= pcy (- (array-length source) 1))
+                        (set-p pcy 0)
+                        (set-p pcy (+ pcy 1)))))
+      ((= dir RIGHT) (begin
+                    (if (= pcx (- (array-length (array-get-n source pcy)) 1))
+                        (set-p pcx 0)
+                        (set-p pcx (+ pcx 1)))))
+      ((= dir LEFT) (begin
+                    (if (= pcx 0)
+                        (set-p pcx (- (array-length (array-get-n source pcy)) 1))
+                        (set-p pcx (- pcx 1)))))))
+
+  (def peek-front ()
+    (array-get-n (array-get-n source pcy) pcx))
+
+  (def get-char (x y)
+    (array-get-n (array-get-n source y) x))
+
+  (def change-char (x y z)
+    (begin
+      (def-var line (array-get-n source y))
+      (set line (array-set-n line x z))
+      (set-p source (array-set-n source y line)))))
+
+(class Stack
+  (def-var stack (array-new))
+
+  (def push (elem)
+      (set-p stack (array-append stack elem)))
+
+  (def pop ()
+    (begin
+      (def-var ret (array-get-n stack (- (array-length stack) 1)))
+      (set-p stack (array-slice stack 0 (- (array-length stack) 1)))
+      ret)))
+
+(class Interpreter
+  (def-var ss null)
+  (def-var stack (new Stack))
+  (def-var nrgx (new Regex "[0-9]"))
+
+  (def constructor (code)
+    (set-p ss (new SourceStream code)))
+
+  (def execute ()
+    (begin
+      (def-var exit-flag false)
+      (def-var read-string false)
+      (def-var skip-flag false)
+  
+      (while (! exit-flag)
+        (begin
+          (def-var ch (ss peek-front))
+
+          (if skip-flag
+              (set skip-flag false)
+              (begin
+                (if (&& (! (= ch '"')) read-string)
+                    (stack push (char-to-number ch))
+                    (begin
+                      (cond
+                        ((= ch '<') (ss change-direction (ss LEFT)))
+                        ((= ch '>') (ss change-direction (ss RIGHT)))
+                        ((= ch '^') (ss change-direction (ss UP)))
+                        ((= ch 'v') (ss change-direction (ss DOWN)))
+                        ((= ch '_') (begin
+                                      (def-var x (stack pop))
+                                      (def-var tdir (if (= x 0) (ss RIGHT) (ss LEFT)))
+                                      (ss change-direction tdir)))
+                        ((= ch '|') (begin
+                                      (def-var x (stack pop))
+                                      (def-var tdir (if (= x 0) (ss DOWN) (ss UP)))
+                                      (ss change-direction tdir)))
+                        ((= ch '?') (begin
+                                      (def-var tdir (random-uniform 0 5))
+                                      (ss change-direction tdir)))
+                        ((= ch ' ') (nop))
+                        ((= ch '#') (set skip-flag true))
+                        ((= ch '@') (set exit-flag true))
+                        ((= ch '"') (set read-string (! read-string)))
+                        ((= ch '&') (begin
+                                      (def-var x (string-to-number (string-chomp (readln))))
+                                      (stack push x)))
+                        ((= ch '~') (begin
+                                      (def-var x (char-to-number (string-chomp (readln))))
+                                      (stack push x)))
+                        ((= ch '.') (begin
+                                      (def-var x (stack pop))
+                                      (print x " ")))
+                        ((= ch ',') (begin
+                                      (def-var x (stack pop))
+                                      (print (number-to-char x))))
+                        ((= ch '+') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (+ x y))
+                                      (stack push z)))
+                        ((= ch '-') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (- x y))
+                                      (stack push z)))
+                        ((= ch '*') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (* x y))
+                                      (stack push z)))
+                        ((= ch '/') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (%/ x y))
+                                      (stack push z)))
+                        ((= ch '%') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (% x y))
+                                      (stack push z)))
+                        ((= ch '`') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var z (if (> x y) 1 0))
+                                      (stack push z)))
+                        ((= ch '!') (begin
+                                      (def-var x (stack pop))
+                                      (def-var y (if (= x 0) 1 0))
+                                      (stack push y)))
+                        ((= ch ':') (begin
+                                      (def-var x (stack pop))
+                                      (stack push x)
+                                      (stack push x)))
+                        ((= ch '\') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (for-each (lambda (e) (stack push e)) '(y x))))
+                        ((= ch '$') (begin
+                                      (stack pop)))
+                        ((= ch 'g') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var c (ss get-char x y))
+                                      (stack push (char-to-number c))))
+                        ((= ch 'p') (begin
+                                      (def-var y (stack pop))
+                                      (def-var x (stack pop))
+                                      (def-var v (stack pop))
+                                      (ss change-char x y (number-to-char v))))
+                        (else (begin
+                                (if (nrgx match ch)
+                                      (stack push (string-to-number ch))))))))))
+
+          (ss forward-pc))))))
+
+(begin
+  (def-var itpr (new Interpreter 'v @_       v\n
+>0"!dlroW"v \n
+v  :#     < \n
+>" ,olleH" v\n
+   ^       <'))
+
+  (itpr execute))
