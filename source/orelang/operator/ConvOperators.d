@@ -8,9 +8,9 @@ import std.algorithm,
        std.conv;
 
 /**
- * convert number into string 
+ * convert number into string
  */
-class numberToStringOperator : IOperator {
+class NumberToStringOperator : IOperator {
   /**
    * call
    */
@@ -20,9 +20,22 @@ class numberToStringOperator : IOperator {
 }
 
 /**
+ * convert string into number
+ */
+class StringToNumberOperator : IOperator {
+  /**
+   * call
+   */
+  public Value call(Engine engine, Value[] args) {
+    return new Value(engine.eval(args[0]).getString.to!ulong);
+  }
+}
+
+
+/**
  * convert number into char
  */
-class numberToCharOperator : IOperator {
+class NumberToCharOperator : IOperator {
   /**
    * call
    */
@@ -34,7 +47,7 @@ class numberToCharOperator : IOperator {
 /**
  * convert char into number 
  */
-class charToNumberOperator : IOperator {
+class CharToNumberOperator : IOperator {
   /**
    * call
    */
@@ -46,7 +59,7 @@ class charToNumberOperator : IOperator {
 /**
  * convert float into integer 
  */
-class floatToIntegerOperator : IOperator {
+class FloatToIntegerOperator : IOperator {
   /**
    * call
    */
@@ -58,7 +71,7 @@ class floatToIntegerOperator : IOperator {
 /**
  * convert ubytes into string 
  */
-class ubytesToStringOperator : IOperator {
+class UbytesToStringOperator : IOperator {
   /**
    * call
    */
@@ -77,7 +90,7 @@ class ubytesToStringOperator : IOperator {
 /**
  * convert ubytes into string 
  */
-class ubytesToIntegersOperator : IOperator {
+class UbytesToIntegersOperator : IOperator {
   /**
    * call
    */

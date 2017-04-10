@@ -334,12 +334,13 @@ class Engine {
     this.variables.insert!("string-chomp",     q{new Value(cast(IOperator)(new StringChompOperator))});
 
     // Conversion operators
-    this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new numberToStringOperator))});
-    this.variables.insert!("number-to-char",   q{new Value(cast(IOperator)(new numberToCharOperator))});
-    this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new charToNumberOperator))});
-    this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new floatToIntegerOperator))});
-    this.variables.insert!("ubytes-to-string", q{new Value(cast(IOperator)(new ubytesToStringOperator))});
-    this.variables.insert!("ubytes-to-integers", q{new Value(cast(IOperator)(new ubytesToIntegersOperator))});
+    this.variables.insert!("number-to-string", q{new Value(cast(IOperator)(new NumberToStringOperator))});
+    this.variables.insert!("string-to-number", q{new Value(cast(IOperator)(new StringToNumberOperator))});
+    this.variables.insert!("number-to-char",   q{new Value(cast(IOperator)(new NumberToCharOperator))});
+    this.variables.insert!("char-to-number",   q{new Value(cast(IOperator)(new CharToNumberOperator))});
+    this.variables.insert!("float-to-integer", q{new Value(cast(IOperator)(new FloatToIntegerOperator))});
+    this.variables.insert!("ubytes-to-string", q{new Value(cast(IOperator)(new UbytesToStringOperator))});
+    this.variables.insert!("ubytes-to-integers", q{new Value(cast(IOperator)(new UbytesToIntegersOperator))});
     
     // Array Operators
     this.variables.insert!("array-new",        q{new Value(cast(IOperator)(new ArrayNewOperator))});
