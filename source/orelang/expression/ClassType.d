@@ -6,7 +6,7 @@ class ClassType {
   Engine _engine;
 
   this(Engine _engine) {
-    this._engine   = _engine;
+    this._engine = _engine;
   }
 
   public Value call(Engine engine, Value[] args) {

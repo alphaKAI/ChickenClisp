@@ -34,6 +34,7 @@ class ClassOperator : IOperator {
 class NewOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     string className;
+
     if (args[0].type == ValueType.SymbolValue) {
       className = args[0].getString;
     } else {

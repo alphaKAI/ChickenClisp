@@ -506,6 +506,20 @@ class Engine {
     }
   }
 
+  public bool hasVariable(string name) {
+    Engine engine = this;
+
+    while (true) {
+      if (engine.variables.has(name)) {
+        return true;
+      } else if (engine._super !is null) {
+        engine = engine._super;
+      } else {
+        return false;
+      }
+    }
+  }
+
   /**
    * Evalute Object
    */
@@ -549,7 +563,8 @@ class Engine {
       }
 
       if (scriptList[0].type == ValueType.Array) {
-        Value op = this.variables[scriptList[0][0].getString];
+        Value op = this.getVariable(scriptList[0][0].getString);
+
         if (op.type == ValueType.Closure) {
           Closure   closure  = op.getClosure;
           Engine    engine   = closure.engine;
@@ -574,15 +589,23 @@ class Engine {
             return new ImmediateValue(tmp.getIOperator.call(this, scriptList[1..$]));
           } else if (tmp.type == ValueType.ClassType) {
             ClassType cls = tmp.getClassType;
-            return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+
+            Engine tmp_super = cls._engine._super;
+            cls._engine._super = this;
+
+            auto _ret = new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+
+            cls._engine._super = tmp_super;
+
+            return _ret;
           } else {
             throw new Error("Invalid type was given as a first argument - " ~ op.toString);
           }
         } else {
           throw new Error("Invalid Operator was given!");
         }
-      } else if (this.variables.has(scriptList[0].getString)) {
-        Value tmp = this.variables[scriptList[0].getString];
+      } else if (this.hasVariable(scriptList[0].getString)) {
+        Value tmp = this.getVariable(scriptList[0].getString);
 
         if (tmp.type == ValueType.IOperator) {
           IOperator op = tmp.getIOperator;
@@ -591,7 +614,15 @@ class Engine {
           return new CallOperator(tmp.getClosure.operator, scriptList[1..$]);
         } else if (tmp.type == ValueType.ClassType) {
           ClassType cls = tmp.getClassType;
-          return new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+
+          Engine tmp_super = cls._engine._super;
+          cls._engine._super = this;
+
+          auto ret = new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
+
+          cls._engine._super = tmp_super;
+
+          return ret;
         } else if (tmp.type == ValueType.Macro) {
           import orelang.expression.Macro;
           Macro mcr = tmp.getMacro;
