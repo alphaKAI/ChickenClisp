@@ -590,7 +590,7 @@ class Engine {
           } else if (tmp.type == ValueType.ClassType) {
             ClassType cls = tmp.getClassType;
 
-            Engine tmp_super = cls._engine._super;
+            Engine tmp_super   = cls._engine._super;
             cls._engine._super = this;
 
             auto _ret = new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
@@ -615,7 +615,7 @@ class Engine {
         } else if (tmp.type == ValueType.ClassType) {
           ClassType cls = tmp.getClassType;
 
-          Engine tmp_super = cls._engine._super;
+          Engine tmp_super   = cls._engine._super;
           cls._engine._super = this;
 
           auto ret = new ImmediateValue(cls.call(cls._engine, scriptList[1..$]));
