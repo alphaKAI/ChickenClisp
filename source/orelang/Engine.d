@@ -604,7 +604,7 @@ class Engine {
         } else {
           throw new Error("Invalid Operator was given!");
         }
-      } else if (this.hasVariable(scriptList[0].getString)) {
+      } else if (scriptList[0].type == ValueType.SymbolValue && this.hasVariable(scriptList[0].getString)) {
         Value tmp = this.getVariable(scriptList[0].getString);
 
         if (tmp.type == ValueType.IOperator) {
@@ -631,7 +631,7 @@ class Engine {
           throw new Error("Invalid Operator was given!");
         }
       } else {
-        throw new Error("Invalid function or macro was given, no such a operator of ChickenClisp - " ~ scriptList[0].getString);
+        return new ImmediateValue(new Value(scriptList));
       }
     } else {
       if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {
