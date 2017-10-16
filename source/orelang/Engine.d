@@ -40,6 +40,7 @@ import orelang.operator.DatetimeOperators,
        orelang.operator.RemoveOperator,
        orelang.operator.SetIdxOperator,
        orelang.operator.StdioOperators,
+       orelang.operator.SystemOperator,
        orelang.operator.AliasOperator,
        orelang.operator.ConvOperators,
        orelang.operator.CurlOperators,
@@ -80,7 +81,8 @@ import orelang.operator.DatetimeOperators,
 import orelang.operator.RegexClass,
        orelang.operator.FileClass;
 
-import std.exception;
+import std.exception,
+       std.format;
 
 /**
  * Lazed Associative Array
@@ -193,9 +195,11 @@ class LazedAssocArray(T) {
    * An overloaded function of opIndexAssing
    * This function hooks: laa["key"] = value; event but this function might be no use
    */
-  void opIndexAssing(T value, string key) {
+  T opIndexAssing(T value, string key) {
     storage[key] = value;
     called[key] = true;
+
+    return value;
   }
 
   /**
@@ -221,6 +225,21 @@ class LazedAssocArray(T) {
 
   bool has(string key) {
     return key in called ? true : false;
+  }
+
+  void setupWith(string name) {
+    if (!called[name]) {
+      T newT = constructors[name]();
+
+      storage[name] = newT;
+      called[name]  = true;
+    }
+  }
+
+  void setupAll() {
+    foreach (key; this.constructors.keys) {
+      this.setupWith(key);
+    }
   }
 }
 
@@ -423,6 +442,9 @@ class Engine {
 
     // Nop Operator
     this.variables.insert!("nop", q{new Value(cast(IOperator)(new NopOperator))});
+
+    // SystemOperator
+    this.variables.insert!("system", q{new Value(cast(IOperator)(new SystemOperator))});
   }
 
   /**
@@ -466,7 +488,7 @@ class Engine {
    * Define new variable
    */
   public Value defineVariable(string name, Value value) {
-    this.variables.set(name, value.dup);
+    this.variables.set(name, value);
 
     return value;
   }
@@ -479,7 +501,7 @@ class Engine {
 
     while (true) {
       if (name in engine.variables.called) {
-        engine.variables.set(name, value.dup);
+        engine.variables.set(name, value);
         return value;
       } else if (engine._super !is null) {
         engine = engine._super;
@@ -599,10 +621,10 @@ class Engine {
 
             return _ret;
           } else {
-            throw new Error("Invalid type was given as a first argument - " ~ op.toString);
+            throw new Exception("Invalid type was given as a first argument - " ~ op.toString);
           }
         } else {
-          throw new Error("Invalid Operator was given!");
+          throw new Exception("Invalid Operator was given!");
         }
       } else if (scriptList[0].type == ValueType.SymbolValue && this.hasVariable(scriptList[0].getString)) {
         Value tmp = this.getVariable(scriptList[0].getString);
@@ -628,10 +650,10 @@ class Engine {
           Macro mcr = tmp.getMacro;
           return new ImmediateValue(mcr.call(this, scriptList[1..$]));
         } else {
-          throw new Error("Invalid Operator was given!");
+          throw new Exception("Invalid Operator was given!");
         }
       } else {
-        return new ImmediateValue(new Value(scriptList));
+        throw new Exception("The function or variable %s is undefined".format(scriptList[0]));
       }
     } else {
       if (script.type == ValueType.SymbolValue || script.type == ValueType.String) {
