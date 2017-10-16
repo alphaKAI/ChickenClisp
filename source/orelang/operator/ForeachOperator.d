@@ -41,7 +41,7 @@ class ForeachOperator : IOperator {
       }
     } else {
         if (!(eargs1.type == ValueType.ImmediateValue) && !(eargs1.getImmediateValue.value.type == ValueType.Array)) {
-          throw new Error("for-each requires array and function as a Operator");
+          throw new Exception("for-each requires array and function as a Operator");
         }
 
         Value[] array = eargs1.getImmediateValue.value.getArray;
