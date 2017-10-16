@@ -47,7 +47,7 @@ class FilterOperator : IOperator {
       }
     } else {
         if (!(eargs1.type == ValueType.ImmediateValue) && !(eargs1.getImmediateValue.value.type == ValueType.Array)) {
-          throw new Error("map requires array and function as a Operator");
+          throw new Exception("map requires array and function as a Operator");
         }
 
         Value[] array = eargs1.getImmediateValue.value.getArray;
