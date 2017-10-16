@@ -20,10 +20,10 @@ class CdrOperator : IOperator {
       } else if (obx.length > 1) {
         return new Value(obx[1..$]);
       } else {
-        throw new Error("pair required, but got ()");
+        throw new Exception("pair required, but got ()");
       }
     } else {
-      throw new Error("pair required, but got invalid data, the type of which is " ~ obj.type.to!string);
+      throw new Exception("pair required, but got invalid data, the type of which is " ~ obj.type.to!string);
     }
   }
 }
