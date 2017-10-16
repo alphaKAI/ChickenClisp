@@ -24,7 +24,7 @@ class SetIdxOperator : IOperator {
 
       return new Value(arr);
     } else {
-      throw new Error("Invalid");
+      throw new Exception("Invalid");
     }
   }
 }
