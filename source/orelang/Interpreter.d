@@ -91,33 +91,40 @@ class Interpreter {
     }
   }
 
-  Value executer(string code) {
+  Value executer(string code, bool showMsg = true) {
     string buf;
     Value ret;
 
-    void e(char val) {
-      if (checkBracket(val.to!string) && (buf.length != 0)) {
-        auto transpiled = Transpiler.transpile(buf);
-        ret = engine.eval(transpiled);
-        buf = [];
-      }
-    }
-
-    foreach(input; code.split("\n")) {
-      if (input == "exit" || input == "(exit)") {
-        break;
-      }
-
-      foreach (char val; input) {
-        if ('\n' == val) {
-          e(val);
-        } else {
-          buf ~= val;
-          e(val);
+    try {
+      void e(char val) {
+        if (checkBracket(val.to!string) && (buf.length != 0)) {
+          auto transpiled = Transpiler.transpile(buf);
+          ret = engine.eval(transpiled);
+          buf = [];
         }
       }
-    }
 
-    return ret;
+      foreach(input; code.split("\n")) {
+        if (input == "exit" || input == "(exit)") {
+          break;
+        }
+
+        foreach (char val; input) {
+          if ('\n' == val) {
+            e(val);
+          } else {
+            buf ~= val;
+            e(val);
+          }
+        }
+      }
+
+      return ret;
+    } catch (Exception e) {
+      if (showMsg) {
+        writeln("[Exception] - ", e.msg);
+      }
+      return new Value(new CCException(e.msg));
+    }
   }
 }
