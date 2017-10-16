@@ -57,7 +57,7 @@ class HashSetValueOperator : IOperator {
       
         engine.setVariable(args[0].getString, ret);
       } else {
-        throw new Error("No such a HashMap - " ~ args[0].getString);
+        throw new Exception("No such a HashMap - " ~ args[0].getString);
       }
     } else if (args[0].type == ValueType.HashMap) {
       Value[string] hash = args[0].getHashMap;
@@ -67,7 +67,7 @@ class HashSetValueOperator : IOperator {
 
       engine.setVariable(args[0].getString, ret);
     } else {
-      throw new Error("set-value accepts (HashName Key Value) or (HashValue Key Value) only");
+      throw new Exception("set-value accepts (HashName Key Value) or (HashValue Key Value) only");
     }
 
     return ret;
@@ -89,14 +89,14 @@ class HashGetValueOperator : IOperator {
         Value[string] hash = obj.getHashMap;
         return hash[engine.eval(args[1]).getString];
       } else {
-        throw new Error("No such a HashMap - " ~ args[0].getString);
+        throw new Exception("No such a HashMap - " ~ args[0].getString);
       }
     } else if (engine.eval(args[0]).type == ValueType.HashMap) {
       Value[string] hash = engine.eval(args[0]).getHashMap;
 
       return hash[engine.eval(args[1]).getString];
     } else {
-      throw new Error("hash-get-value accepts (HashName Key Value) or (HashValue Key Value) only");
+      throw new Exception("hash-get-value accepts (HashName Key Value) or (HashValue Key Value) only");
     }
   }
 }
@@ -122,7 +122,7 @@ class HashGetKeysOperator : IOperator {
 
         return new Value(keys);
       } else {
-        throw new Error("No such a HashMap - " ~ args[0].getString);
+        throw new Exception("No such a HashMap - " ~ args[0].getString);
       }
     } else if (engine.eval(args[0]).type == ValueType.HashMap) {
       Value[string] hash = engine.eval(args[0]).getHashMap;
@@ -134,7 +134,7 @@ class HashGetKeysOperator : IOperator {
 
       return new Value(keys);
     } else {
-      throw new Error("hash-get-keys accepts (HashName Key Value) or (HashValue Key Value) only");
+      throw new Exception("hash-get-keys accepts (HashName Key Value) or (HashValue Key Value) only");
     }
   }
 }
@@ -160,7 +160,7 @@ class HashGetValuesOperator : IOperator {
 
         return new Value(values);
       } else {
-        throw new Error("No such a HashMap - " ~ args[0].getString);
+        throw new Exception("No such a HashMap - " ~ args[0].getString);
       }
     } else if (engine.eval(args[0]).type == ValueType.HashMap) {
       Value[string] hash = engine.eval(args[0]).getHashMap;
@@ -172,7 +172,7 @@ class HashGetValuesOperator : IOperator {
 
       return new Value(values);
     } else {
-      throw new Error("hash-get-values accepts (HashName Key Value) or (HashValue Key Value) only");
+      throw new Exception("hash-get-values accepts (HashName Key Value) or (HashValue Key Value) only");
     }
   }
 }
