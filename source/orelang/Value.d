@@ -28,7 +28,16 @@ enum ValueType {
   Bool,
   Null,
   Array,
-  Macro
+  Macro,
+  CCException
+}
+
+class CCException {
+  string msg;
+
+  this (string msg) {
+    this.msg = msg;
+  }
 }
 
 class Value {
@@ -48,6 +57,7 @@ class Value {
     Closure        closure_value;
     Value[string]  hashmap_value;
     Macro          macro_value;
+    CCException    excep_value;
   }
 
   this()               { this.type = ValueType.Null; }
@@ -79,6 +89,11 @@ class Value {
     this.macro_value = value;
     this.type        = ValueType.Macro;
   }
+  this(CCException excep) {
+    this.init;
+    this.excep_value = excep;
+    this.type        = ValueType.CCException;
+  }
 
   double  getNumeric() { enforce(this.type == ValueType.Numeric);
                          return this.numeric_value; }
@@ -88,7 +103,7 @@ class Value {
                          return this.bool_value; }
   ubyte   getUbyte()   { enforce(this.type == ValueType.Ubyte);
                          return this.ubyte_value; }
-  auto    getNull()    { throw new Error("Can't get from NULL value"); }
+  auto    getNull()    { throw new Exception("Can't get from NULL value"); }
   Value[] getArray()   { enforce(this.type == ValueType.Array);
                          return this.array_value; }
   ImmediateValue getImmediateValue() { enforce(this.type == ValueType.ImmediateValue);
@@ -107,6 +122,8 @@ class Value {
                                        return this.hashmap_value; }
   Macro          getMacro()          { enforce(this.type == ValueType.Macro);
                                        return this.macro_value; }
+  CCException    getCCException()    { enforce(this.type == ValueType.CCException);
+                                       return this.excep_value; }
 
   void opAssign(T)(T value) if (isNumeric!T) {
     this.init;
@@ -187,6 +204,7 @@ class Value {
       case IOperator:      return this.io_value.stringof;
       case Closure:        return this.closure_value.stringof;
       case Macro:          return this.macro_value.stringof;
+      case CCException:    return this.excep_value.msg;
     }
   }
 
@@ -256,6 +274,7 @@ class Value {
       if (this.type == ValueType.Closure)        { this.closure_value = null; }
       if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
       if (this.type == ValueType.Macro)          { this.macro_value   = null; }
+      if (this.type == ValueType.CCException)    { this.excep_value   = null; }
 
       this.type = ValueType.Null;
     }
@@ -271,7 +290,7 @@ class Value {
     enforce(this.type == ValueType.Array);
 
     if (!(idx < this.array_value.length)) {
-      throw new Error("Out of index of the Array, orded - " ~ idx.to!string ~ " but length of the array is " ~ this.array_value.length.to!string);
+      throw new Exception("Out of index of the Array, orded - " ~ idx.to!string ~ " but length of the array is " ~ this.array_value.length.to!string);
     }
 
     return this.array_value[idx];
@@ -281,7 +300,7 @@ class Value {
     enforce(this.type == ValueType.HashMap);
 
     if (value.getString !in this.hashmap_value) {
-      throw new Error("No such a key in the hash, key - " ~ value.toString ~ ", hash - " ~ this.hashmap_value.stringof);
+      throw new Exception("No such a key in the hash, key - " ~ value.toString ~ ", hash - " ~ this.hashmap_value.stringof);
     }
 
     return this.hashmap_value[value.getString];
@@ -289,32 +308,34 @@ class Value {
 
   override bool opEquals(Object _value) {
     if ((cast(Value)_value) is null) {
-      throw new Error("Can not compare between incompatibility");
+      throw new Exception("Can not compare between incompatibility");
     }
 
     Value value = cast(Value)_value;
 
     if (this.type != value.type) {
-      throw new Error("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
+      throw new Exception("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
     }
 
     final switch(this.type) with (ValueType) {
       case ImmediateValue:
-        throw new Error("Can't compare with ImmediateValue");
+        throw new Exception("Can't compare with ImmediateValue");
       case SymbolValue:
         return this.sym_value.value == value.getSymbolValue.value;
       case IExpression:
-        throw new Error("Can't compare with IExpression");
+        throw new Exception("Can't compare with IExpression");
       case ClassType:
-        throw new Error("Can't compare with ClassType");
+        throw new Exception("Can't compare with ClassType");
       case IOperator:
-        throw new Error("Can't compare with IOperator");
+        throw new Exception("Can't compare with IOperator");
       case Closure:
-        throw new Error("Can't compare with Closure");
+        throw new Exception("Can't compare with Closure");
       case HashMap:
-        throw new Error("Can't compare with HashMap");
+        throw new Exception("Can't compare with HashMap");
       case Macro:
-        throw new Error("Can't compare with Macro");
+        throw new Exception("Can't compare with Macro");
+      case CCException:
+        throw new Exception("Can't compare with CCException");
       case Numeric:
         return this.numeric_value == value.numeric_value;
       case String:
@@ -324,7 +345,7 @@ class Value {
       case Ubyte:
         return this.ubyte_value   == value.ubyte_value;
       case Null:
-        throw new Error("Can't compare with Null");
+        throw new Exception("Can't compare with Null");
       case Array:
         Value[] a = this.getArray,
                 b = value.getArray;
@@ -343,18 +364,18 @@ class Value {
 
   override int opCmp(Object _value) {
     if ((cast(Value)_value) is null) {
-      throw new Error("Can not compare between incompatibility");
+      throw new Exception("Can not compare between incompatibility");
     }
 
     Value value = cast(Value)_value;
 
     if (this.type != value.type) {
-      throw new Error("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
+      throw new Exception("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
     }
 
     final switch(this.type) with (ValueType) {
       case ImmediateValue:
-        throw new Error("Can't compare with ImmediateValue");
+        throw new Exception("Can't compare with ImmediateValue");
       case SymbolValue:
         auto c = this.sym_value.value,
              d = value.getSymbolValue.value;
@@ -362,17 +383,19 @@ class Value {
         if (c < d)  { return -1; }
         return 1;
       case IExpression:
-        throw new Error("Can't compare with IExpression");
+        throw new Exception("Can't compare with IExpression");
       case ClassType:
-        throw new Error("Can't compare with ClassType");
+        throw new Exception("Can't compare with ClassType");
       case IOperator:
-        throw new Error("Can't compare with IOperator");
+        throw new Exception("Can't compare with IOperator");
       case Closure:
-        throw new Error("Can't compare with Closure");
+        throw new Exception("Can't compare with Closure");
       case HashMap:
-        throw new Error("Can't compare with HashMap");
+        throw new Exception("Can't compare with HashMap");
       case Macro:
-        throw new Error("Can't compare with Macro");
+        throw new Exception("Can't compare with Macro");
+      case CCException:
+        throw new Exception("Can't compare with CCException");
       case Numeric:
         auto c = this.numeric_value,
              d = value.numeric_value;
@@ -395,15 +418,15 @@ class Value {
         if (c < d)  { return -1; }
         return 1;
       case Bool:
-        throw new Error("Can't compare with Bool");
+        throw new Exception("Can't compare with Bool");
       case Null:
-        throw new Error("Can't compare with Null");
+        throw new Exception("Can't compare with Null");
       case Array:
         Value[] a = this.getArray,
                 b = value.getArray;
 
         if (a.length != b.length) {
-          throw new Error("Can't compare between different size array");
+          throw new Exception("Can't compare between different size array");
         }
 
         foreach (idx; 0..(a.length)) {
@@ -444,6 +467,8 @@ class Value {
         return new Value(this.array_value.dup);
       case Macro:
         return new Value(this.macro_value);
+      case CCException:
+        return new Value(this.excep_value);
     }
   }
 }
