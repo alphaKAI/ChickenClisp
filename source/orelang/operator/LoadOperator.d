@@ -25,7 +25,7 @@ class LoadOperator : IOperator {
 
     foreach (fpath; fpaths) {
       if (!exists(fpath)) {
-        throw new Error("No such file - " ~ fpath);
+        throw new Exception("No such file - " ~ fpath);
       } else {
         itpr.executer(readText(fpath));
         loaded ~= fpath;
