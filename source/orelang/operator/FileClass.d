@@ -57,7 +57,7 @@ class FileClass : ClassType {
                 buf ~= e.getString.to!(ubyte[]);
                 break;
               default:
-                throw new Error("[raw-write] can't write non numeric/ubyte/string value"); 
+                throw new Exception("[raw-write] can't write non numeric/ubyte/string value"); 
             }
           }
 
@@ -81,7 +81,7 @@ class FileClass : ClassType {
               fp.write(data.getString);
               break;
             default:
-              throw new Error("[raw-write] can't write non numeric/ubyte/string value"); 
+              throw new Exception("[raw-write] can't write non numeric/ubyte/string value"); 
           }
 
           return data;
@@ -103,7 +103,7 @@ class FileClass : ClassType {
               fp.writeln(data.getString);
               break;
             default:
-              throw new Error("[raw-writeln] can't write non numeric/ubyte/string value"); 
+              throw new Exception("[raw-writeln] can't write non numeric/ubyte/string value"); 
           }
 
           return new Value;
