@@ -32,7 +32,7 @@ class FoldOperator : IOperator {
     return tmp;
   } else {
       if (!(eargs.type == ValueType.ImmediateValue) && !(eargs.getImmediateValue.value.type == ValueType.Array)) {
-        throw new Error("Fold requires array and function as a Operator");
+        throw new Exception("Fold requires array and function as a Operator");
       }
 
       Value[] array = eargs.getImmediateValue.value.getArray;
