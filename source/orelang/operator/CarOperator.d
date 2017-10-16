@@ -17,10 +17,10 @@ class CarOperator : IOperator {
       if (obx.length >= 1) {
         return obx[0];
       } else {
-        throw new Error("pair required, but got ()");
+        throw new Exception("pair required, but got ()");
       }
     } else {
-      throw new Error("pair required, but got invalid data, the type of which is " ~ obj.type.to!string);
+      throw new Exception("pair required, but got invalid data, the type of which is " ~ obj.type.to!string);
     }
   }
 }
