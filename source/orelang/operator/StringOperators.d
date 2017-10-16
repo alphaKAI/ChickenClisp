@@ -115,7 +115,7 @@ class StringLengthOperator : IOperator {
       if (eargs0.type == ValueType.String) {
         return new Value(eargs0.getString.length.to!double);
       } else {
-        throw new Error("[string-length] Invalid argument was given");
+        throw new Exception("[string-length] Invalid argument was given");
       }
     }
   }
@@ -140,7 +140,7 @@ class StringSliceOperator : IOperator {
     if ((0 <= slice1 && 0 <= slice2) && (slice1 <= str.length && slice2 <= str.length)) {
       return new Value(str[slice1..slice2]);
     } else {
-      throw new Error("[string-slice] Invalid");
+      throw new Exception("[string-slice] Invalid");
     }
   }
 }
