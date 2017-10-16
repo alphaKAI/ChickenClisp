@@ -88,7 +88,7 @@ class CurlGetStringOperator : IOperator {
       if (e.type == ValueType.Ubyte) {
         data ~= e.getUbyte;
       } else {
-        throw new Error("Fatal internal error - Invalid typed data was given to curl-get-string");
+        throw new Exception("Fatal internal error - Invalid typed data was given to curl-get-string");
       }
     }
 
@@ -223,7 +223,7 @@ class CurlPostStringOperator : IOperator {
       if (e.type == ValueType.Ubyte) {
         data ~= e.getUbyte;
       } else {
-        throw new Error("Fatal internal error - Invalid typed data was given to curl-post-string");
+        throw new Exception("Fatal internal error - Invalid typed data was given to curl-post-string");
       }
     }
 
