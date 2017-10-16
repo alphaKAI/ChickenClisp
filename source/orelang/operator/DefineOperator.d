@@ -26,7 +26,7 @@ class DefineOperator : IOperator {
 
       return engine.defineVariable(funcName, new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody))));
     } else {
-      throw new Error("Invalid");
+      throw new Exception("Invalid");
     }
   }
 }
