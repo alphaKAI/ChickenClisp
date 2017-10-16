@@ -13,10 +13,10 @@ class RemoveFileOperator {
       if (isFile(path)) {
         remove(path);
       } else {
-        throw new Error("[remove-file]" ~ path ~ " is not a file, it is a directory, use remove-dir function instead.");
+        throw new Exception("[remove-file]" ~ path ~ " is not a file, it is a directory, use remove-dir function instead.");
       }
     } else {
-      throw new Error("[remove-file] No such a file or directory: " ~ path);
+      throw new Exception("[remove-file] No such a file or directory: " ~ path);
     }
 
     return new Value;
@@ -31,10 +31,10 @@ class RemoveDirOperator {
       if (isDir(path)) {
         rmdir(path);
       } else {
-        throw new Error("[remove-dir]" ~ path ~ " is not a directory, it is a file, use remove-file function instead.");
+        throw new Exception("[remove-dir]" ~ path ~ " is not a directory, it is a file, use remove-file function instead.");
       }
     } else {
-      throw new Error("[remove-dir] No such a file or directory: " ~ path);
+      throw new Exception("[remove-dir] No such a file or directory: " ~ path);
     }
 
     return new Value;
@@ -56,10 +56,10 @@ class GetsizeOperator : IOperator {
       if (isFile(path)) {
         ret = getSize(path).to!float;
       } else {
-        throw new Error("[get-size]" ~ path ~ " is not a file, it is a directory");
+        throw new Exception("[get-size]" ~ path ~ " is not a file, it is a directory");
       }
     } else {
-      throw new Error("[get-size] No such a file or directory: " ~ path);
+      throw new Exception("[get-size] No such a file or directory: " ~ path);
     }
 
 
