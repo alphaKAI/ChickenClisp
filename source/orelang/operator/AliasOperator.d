@@ -18,7 +18,7 @@ class AliasOperator : IOperator {
 
       return v;
     } else {
-      throw new Error("No such variable or operator - " ~ base);
+      throw new Exception("No such variable or operator - " ~ base);
     }
   }
 }
