@@ -28,7 +28,7 @@ class ArrayReverseOperator : IOperator {
         ret ~= elem;
       }
     } else {
-      throw new Error("[number-to-string] Invalid argument was given.");
+      throw new Exception("[number-to-string] Invalid argument was given.");
     }
 
     return new Value(ret);
@@ -60,7 +60,7 @@ class ArraySetNOperator : IOperator {
 
       return new Value(arr);
     } else {
-      throw new Error("Invalid");
+      throw new Exception("Invalid");
     }
   }
 }
@@ -87,7 +87,7 @@ class ArrayGetNOperator : IOperator {
     if (0 <= idx && idx < arr.length) {
       return arr[idx];
     } else {
-      throw new Error("[get] Invalid");
+      throw new Exception("[get] Invalid");
     }
   }
 }
@@ -140,7 +140,7 @@ class ArraySliceOperator : IOperator {
     if ((0 <= slice1 && 0 <= slice2) && (slice1 <= arr.length && slice2 <= arr.length)) {
       return new Value(arr[slice1..slice2]);
     } else {
-      throw new Error("[get] Invalid");
+      throw new Exception("[get] Invalid");
     }
   }
 }
