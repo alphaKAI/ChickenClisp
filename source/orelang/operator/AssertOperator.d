@@ -24,7 +24,7 @@ class AssertOperator : IOperator {
     }
 
     if (!flag) {
-      throw new Error("Assertion failed: " ~ args[0].toString);
+      throw new Exception("Assertion failed: " ~ args[0].toString);
     }
 
     return new Value(true);
