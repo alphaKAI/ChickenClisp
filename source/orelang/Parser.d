@@ -71,7 +71,7 @@ class Parser {
                 if (j < code.length) {
                   tmp ~= code[j];
                 } else {
-                  throw new Error("Syntax Error");
+                  throw new Exception("Syntax Error");
                 }
 
                 ++j;
