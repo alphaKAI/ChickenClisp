@@ -16,7 +16,7 @@ class SortOperator : IOperator {
     } else if (eargs0.type == ValueType.ImmediateValue && eargs0.getImmediateValue.value.type == ValueType.Array) {
       array = eargs0.getImmediateValue.value.getArray;
     } else {
-      throw new Error("[SortOperator] Invaild argument was given. SortOperator accepts list or array only.");
+      throw new Exception("[SortOperator] Invaild argument was given. SortOperator accepts list or array only.");
     }
 
     switch (array[0].type) with (ValueType) {
@@ -37,7 +37,7 @@ class SortOperator : IOperator {
         }
         break;
       default:
-        throw new Error("[SortOperator] Can't sort given array, all element of the array must be typed Numeric or String and the types are unified");
+        throw new Exception("[SortOperator] Can't sort given array, all element of the array must be typed Numeric or String and the types are unified");
     }
 
     return new Value(ret);
