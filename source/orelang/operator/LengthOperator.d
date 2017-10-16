@@ -14,7 +14,7 @@ class LengthOperator : IOperator {
     if (obj.type == ValueType.Array) {
       return new Value(obj.getArray.length.to!double);
     } else {
-      throw new Error("Given object is not an Array or List");
+      throw new Exception("Given object is not an Array or List");
     }
   }
 }
