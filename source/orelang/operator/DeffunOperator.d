@@ -5,6 +5,7 @@ import orelang.operator.DynamicOperator,
        orelang.Value;
 import std.algorithm,
        std.array;
+import kontainer.orderedAssocArray;
 
 class DeffunOperator : IOperator {
   /**
@@ -12,9 +13,24 @@ class DeffunOperator : IOperator {
    */
   public Value call(Engine engine, Value[] args) {
     string funcName   = args[0].getString;
-    string[] funcArgs = args[1].getArray.map!(value => value.getString).array;
-    Value funcBody    = args[2];
+    string[] funcArgs;
+    OrderedAssocArray!(string, Value) opArgs = new OrderedAssocArray!(string, Value)();
+    
+    foreach (maybeArg; args[1].getArray) {
+      if (maybeArg.type == ValueType.String || maybeArg.type == ValueType.SymbolValue) {
+        funcArgs ~= maybeArg.getString;
+      } else if (maybeArg.type == ValueType.Array) {
+        auto pair = maybeArg.getArray;
+        string name = pair[0].getString;
+        Value value = pair[1];
+        opArgs[name] = value;
+      } else {
+        throw new Error("Invalid argument list");
+      }
+    }
 
-    return engine.defineVariable(funcName, new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody))));
+    Value funcBody = args[2];
+
+    return engine.defineVariable(funcName, new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody, opArgs))));
   }
 }
