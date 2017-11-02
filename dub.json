@@ -3,6 +3,9 @@
 	"authors": [
 		"Akihiro Shoji"
 	],
+  "dependencies": {
+    "kontainer" : "*"
+  },
 	"description": "A scheme like programming language and interpreter",
 	"copyright": "Copyright (C) 2016, Akihiro Shoji",
 	"license": "MIT"
