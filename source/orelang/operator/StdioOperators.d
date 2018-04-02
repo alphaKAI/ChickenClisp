@@ -22,3 +22,9 @@ class StdinByLINEOperator : IOperator {
     return new Value(ret);
   }
 }
+
+class StdinEofOperator : IOperator {
+   public Value call(Engine engine, Value[] args) {
+    return new Value(stdin.eof);
+  }
+}
