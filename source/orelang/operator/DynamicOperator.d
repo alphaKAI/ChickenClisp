@@ -17,6 +17,7 @@ class DynamicOperator : IOperator {
   this (string[] funcArgs, Value funcBody) {
     this.funcArgs = funcArgs;
     this.funcBody = funcBody;
+    this.opArgs = new OrderedAssocArray!(string, Value);
   }
 
   this (string[] funcArgs, Value funcBody, OrderedAssocArray!(string, Value) opArgs) {
