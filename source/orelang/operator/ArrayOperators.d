@@ -232,7 +232,6 @@ class ArrayFlattenOperator : IOperator {
         }
       } else {
         Value earg = engine.eval(arg);
-        import std.stdio; writeln("EARG!!!!!!!");
         ret ~= earg;
       }
     }
