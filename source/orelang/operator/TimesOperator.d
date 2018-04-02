@@ -12,8 +12,7 @@ class TimesOperator : IOperator {
   public Value call(Engine engine, Value[] args) {
     Value ret = null;
     long n = engine.eval(args[0]).getNumeric.to!long;
-    import std.stdio;
-    writeln("[TIMES] n -> ", n);
+
     foreach (_; n.iota) {
       ret = engine.eval(args[1]);
     }
