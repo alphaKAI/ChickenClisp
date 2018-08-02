@@ -1,0 +1,10 @@
+(dll
+  (dll-path "libptr.so")
+  (dll-functions
+    ("newS" pointer (string int))
+    ("showS" void (pointer))))
+
+(println "newS")
+(def-var s (newS "alphaKAI" 20))
+(println "showS")
+(showS s)

@@ -1,0 +1,6 @@
+(dll
+  (dll-path "libstr.so")
+  (dll-functions
+  ("dub" string (string))))
+
+(println "dub abc: " (dub "abc"))

@@ -1,18 +1,10 @@
 module orelang.Value;
-import orelang.expression.ImmediateValue,
-       orelang.operator.DynamicOperator,
-       orelang.expression.IExpression,
-       orelang.expression.SymbolValue,
-       orelang.expression.ClassType,
-       orelang.operator.IOperator,
-       orelang.expression.Macro,
-       orelang.Closure;
-import std.algorithm,
-       std.exception,
-       std.array,
-       std.traits,
-       std.regex,
-       std.conv;
+import orelang.expression.ImmediateValue, orelang.operator.DynamicOperator,
+  orelang.expression.IExpression, orelang.expression.SymbolValue,
+  orelang.expression.ClassType, orelang.operator.IOperator,
+  orelang.expression.Macro, orelang.Closure;
+import std.algorithm, std.exception, std.stdio, std.array, std.format,
+  std.traits, std.regex, std.conv;
 
 enum ValueType {
   ImmediateValue,
@@ -29,13 +21,14 @@ enum ValueType {
   Null,
   Array,
   Macro,
-  CCException
+  CCException,
+  RAWPointer
 }
 
 class CCException {
   string msg;
 
-  this (string msg) {
+  this(string msg) {
     this.msg = msg;
   }
 }
@@ -44,86 +37,181 @@ class Value {
   ValueType type;
 
   private {
-    double  numeric_value;
-    string  string_value;
-    bool    bool_value;
-    ubyte   ubyte_value;
+    double numeric_value;
+    string string_value;
+    bool bool_value;
+    ubyte ubyte_value;
     Value[] array_value;
     ImmediateValue imv_value;
-    SymbolValue    sym_value;
-    IExpression    ie_value;
-    ClassType      class_value;
-    IOperator      io_value;
-    Closure        closure_value;
-    Value[string]  hashmap_value;
-    Macro          macro_value;
-    CCException    excep_value;
+    SymbolValue sym_value;
+    IExpression ie_value;
+    ClassType class_value;
+    IOperator io_value;
+    Closure closure_value;
+    Value[string] hashmap_value;
+    Macro macro_value;
+    CCException excep_value;
+    void* raw_pointer;
   }
 
-  this()               { this.type = ValueType.Null; }
-  this(ValueType type) { this.type = type; }
-  this(T)(T value) if (isNumeric!T) { this.opAssign(value); }
-  this(string value)  { this.opAssign(value); }
-  this(bool value)    { this.opAssign(value); }
-  this(ubyte value)   {
+  this() {
+    this.type = ValueType.Null;
+  }
+
+  this(ValueType type) {
+    this.type = type;
+  }
+
+  this(T)(T value) if (isNumeric!T) {
+    this.opAssign(value);
+  }
+
+  this(string value) {
+    this.opAssign(value);
+  }
+
+  this(bool value) {
+    this.opAssign(value);
+  }
+
+  this(ubyte value) {
     this.init;
     this.ubyte_value = value;
-    this.type        = ValueType.Ubyte;
+    this.type = ValueType.Ubyte;
   }
-  this(Value[] value) { this.opAssign(value); }
+
+  this(Value[] value) {
+    this.opAssign(value);
+  }
+
   this(ImmediateValue value) {
     this.init;
     this.imv_value = value;
-    this.type      = ValueType.ImmediateValue; }
+    this.type = ValueType.ImmediateValue;
+  }
+
   this(SymbolValue value) {
     this.init;
     this.sym_value = value;
-    this.type      = ValueType.SymbolValue; }
-  this(IExpression value)    { this.opAssign(value); }
-  this(ClassType value)      { this.opAssign(value); }
-  this(IOperator value)      { this.opAssign(value); }
-  this(Closure value)        { this.opAssign(value); }
-  this(Value[string] value)  { this.opAssign(value); }
-  this(Macro value)          {
+    this.type = ValueType.SymbolValue;
+  }
+
+  this(IExpression value) {
+    this.opAssign(value);
+  }
+
+  this(ClassType value) {
+    this.opAssign(value);
+  }
+
+  this(IOperator value) {
+    this.opAssign(value);
+  }
+
+  this(Closure value) {
+    this.opAssign(value);
+  }
+
+  this(Value[string] value) {
+    this.opAssign(value);
+  }
+
+  this(Macro value) {
     this.init;
     this.macro_value = value;
-    this.type        = ValueType.Macro;
+    this.type = ValueType.Macro;
   }
+
   this(CCException excep) {
     this.init;
     this.excep_value = excep;
-    this.type        = ValueType.CCException;
+    this.type = ValueType.CCException;
   }
 
-  double  getNumeric() { enforce(this.type == ValueType.Numeric);
-                         return this.numeric_value; }
-  string  getString()  { enforce(this.type == ValueType.String || this.type == ValueType.SymbolValue);
-                         return this.type == ValueType.String ? this.string_value : this.sym_value.value; }
-  bool    getBool()    { enforce(this.type == ValueType.Bool);
-                         return this.bool_value; }
-  ubyte   getUbyte()   { enforce(this.type == ValueType.Ubyte);
-                         return this.ubyte_value; }
-  auto    getNull()    { throw new Exception("Can't get from NULL value"); }
-  Value[] getArray()   { enforce(this.type == ValueType.Array);
-                         return this.array_value; }
-  ImmediateValue getImmediateValue() { enforce(this.type == ValueType.ImmediateValue);
-                                       return this.imv_value; }
-  SymbolValue    getSymbolValue()    { enforce(this.type == ValueType.SymbolValue);
-                                       return this.sym_value; }
-  IExpression    getIExpression()    { enforce(this.type == ValueType.IExpression);
-                                       return this.ie_value; }
-  ClassType      getClassType()      { enforce(this.type == ValueType.ClassType);
-                                       return this.class_value; }
-  IOperator      getIOperator()      { enforce(this.type == ValueType.IOperator);
-                                       return this.io_value; }
-  Closure        getClosure()        { enforce(this.type == ValueType.Closure);
-                                       return this.closure_value; }
-  Value[string]  getHashMap()        { enforce(this.type == ValueType.HashMap);
-                                       return this.hashmap_value; }
-  Macro          getMacro()          { enforce(this.type == ValueType.Macro);
-                                       return this.macro_value; }
-  CCException    getCCException()    { enforce(this.type == ValueType.CCException);
-                                       return this.excep_value; }
+  this(void* ptr) {
+    this.init;
+    this.raw_pointer = ptr;
+    this.type = ValueType.RAWPointer;
+  }
+
+  double getNumeric() {
+    enforce(this.type == ValueType.Numeric);
+    return this.numeric_value;
+  }
+
+  string getString() {
+    enforce(this.type == ValueType.String || this.type == ValueType.SymbolValue);
+    return this.type == ValueType.String ? this.string_value : this.sym_value.value;
+  }
+
+  bool getBool() {
+    enforce(this.type == ValueType.Bool);
+    return this.bool_value;
+  }
+
+  ubyte getUbyte() {
+    enforce(this.type == ValueType.Ubyte);
+    return this.ubyte_value;
+  }
+
+  auto getNull() {
+    throw new Exception("Can't get from NULL value");
+  }
+
+  Value[] getArray() {
+    enforce(this.type == ValueType.Array);
+    return this.array_value;
+  }
+
+  ImmediateValue getImmediateValue() {
+    enforce(this.type == ValueType.ImmediateValue);
+    return this.imv_value;
+  }
+
+  SymbolValue getSymbolValue() {
+    enforce(this.type == ValueType.SymbolValue);
+    return this.sym_value;
+  }
+
+  IExpression getIExpression() {
+    enforce(this.type == ValueType.IExpression);
+    return this.ie_value;
+  }
+
+  ClassType getClassType() {
+    enforce(this.type == ValueType.ClassType);
+    return this.class_value;
+  }
+
+  IOperator getIOperator() {
+    enforce(this.type == ValueType.IOperator);
+    return this.io_value;
+  }
+
+  Closure getClosure() {
+    enforce(this.type == ValueType.Closure);
+    return this.closure_value;
+  }
+
+  Value[string] getHashMap() {
+    enforce(this.type == ValueType.HashMap);
+    return this.hashmap_value;
+  }
+
+  Macro getMacro() {
+    enforce(this.type == ValueType.Macro);
+    return this.macro_value;
+  }
+
+  CCException getCCException() {
+    enforce(this.type == ValueType.CCException);
+    return this.excep_value;
+  }
+
+  void* getRAWPointer() {
+    enforce(this.type == ValueType.RAWPointer);
+    return this.raw_pointer;
+  }
 
   void opAssign(T)(T value) if (isNumeric!T) {
     this.init;
@@ -134,77 +222,95 @@ class Value {
   void opAssign(T)(T value) if (is(T == string)) {
     this.init;
     this.string_value = value;
-    this.type         = ValueType.String;
+    this.type = ValueType.String;
   }
 
   void opAssign(bool value) {
     this.init;
     this.bool_value = value;
-    this.type       = ValueType.Bool;
+    this.type = ValueType.Bool;
   }
 
   void opAssign(T)(T[] value) if (is(T == Value)) {
     this.init;
     this.array_value = value;
-    this.type        = ValueType.Array;
+    this.type = ValueType.Array;
   }
 
   void opAssign(T)(T[] value) if (!is(T == Value) && !is(T == immutable(char))) {
     this.init;
     this.array_value = [];
 
-    foreach (e; value) this.array_value ~= new Value(e);
+    foreach (e; value)
+      this.array_value ~= new Value(e);
 
-    this.type        = ValueType.Array;
+    this.type = ValueType.Array;
   }
 
   void opAssign(IExpression value) {
     this.init;
     this.ie_value = value;
-    this.type     = ValueType.IExpression;
+    this.type = ValueType.IExpression;
   }
 
   void opAssign(ClassType value) {
     this.init;
     this.class_value = value;
-    this.type        = ValueType.ClassType;
+    this.type = ValueType.ClassType;
   }
 
   void opAssign(IOperator value) {
     this.init;
     this.io_value = value;
-    this.type     = ValueType.IOperator;
+    this.type = ValueType.IOperator;
   }
 
   void opAssign(Closure value) {
     this.init;
     this.closure_value = value;
-    this.type          = ValueType.Closure;
+    this.type = ValueType.Closure;
   }
 
   void opAssign(Value[string] value) {
     this.init;
     this.hashmap_value = value;
-    this.type          = ValueType.HashMap; 
+    this.type = ValueType.HashMap;
   }
 
   override string toString() {
-    final switch(this.type) with (ValueType) {
-      case Numeric: return this.numeric_value.to!string;
-      case String:  return this.string_value;
-      case Bool:    return this.bool_value.to!string;
-      case Ubyte:   return this.ubyte_value.to!string;
-      case Null:    return "null";
-      case Array:   return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
-      case HashMap: return this.hashmap_value.to!string;
-      case ImmediateValue: return this.imv_value.toString;
-      case SymbolValue:    return this.sym_value.value;
-      case IExpression:    return this.ie_value.stringof;
-      case ClassType:      return this.class_value.stringof;
-      case IOperator:      return this.io_value.stringof;
-      case Closure:        return this.closure_value.stringof;
-      case Macro:          return this.macro_value.stringof;
-      case CCException:    return this.excep_value.msg;
+    final switch (this.type) with (ValueType) {
+    case Numeric:
+      return this.numeric_value.to!string;
+    case String:
+      return this.string_value;
+    case Bool:
+      return this.bool_value.to!string;
+    case Ubyte:
+      return this.ubyte_value.to!string;
+    case Null:
+      return "null";
+    case Array:
+      return "[" ~ this.array_value.map!(value => value.toString).array.join(", ") ~ "]";
+    case HashMap:
+      return this.hashmap_value.to!string;
+    case ImmediateValue:
+      return this.imv_value.toString;
+    case SymbolValue:
+      return this.sym_value.value;
+    case IExpression:
+      return this.ie_value.stringof;
+    case ClassType:
+      return this.class_value.stringof;
+    case IOperator:
+      return this.io_value.stringof;
+    case Closure:
+      return this.closure_value.stringof;
+    case Macro:
+      return this.macro_value.stringof;
+    case CCException:
+      return this.excep_value.msg;
+    case RAWPointer:
+      return "Pointer<%x>".format(this.raw_pointer);
     }
   }
 
@@ -261,20 +367,51 @@ class Value {
 
   void init() {
     if (this.type != ValueType.Null) {
-      if (this.type == ValueType.Numeric) { this.numeric_value = 0;  }
-      if (this.type == ValueType.String)  { this.string_value  = ""; }
-      if (this.type == ValueType.Array)   { this.array_value   = []; }
-      if (this.type == ValueType.Bool)    { this.bool_value    = false; }
-      if (this.type == ValueType.Ubyte)   { this.ubyte_value   = 0;  }
-      if (this.type == ValueType.ImmediateValue) { this.imv_value = null; }
-      if (this.type == ValueType.SymbolValue)    { this.sym_value = null; }
-      if (this.type == ValueType.IExpression)    { this.ie_value  = null; }
-      if (this.type == ValueType.ClassType)      { this.class_value   = null; }
-      if (this.type == ValueType.IOperator)      { this.io_value      = null; }
-      if (this.type == ValueType.Closure)        { this.closure_value = null; }
-      if (this.type == ValueType.HashMap)        { this.hashmap_value = null; }
-      if (this.type == ValueType.Macro)          { this.macro_value   = null; }
-      if (this.type == ValueType.CCException)    { this.excep_value   = null; }
+      if (this.type == ValueType.Numeric) {
+        this.numeric_value = 0;
+      }
+      if (this.type == ValueType.String) {
+        this.string_value = "";
+      }
+      if (this.type == ValueType.Array) {
+        this.array_value = [];
+      }
+      if (this.type == ValueType.Bool) {
+        this.bool_value = false;
+      }
+      if (this.type == ValueType.Ubyte) {
+        this.ubyte_value = 0;
+      }
+      if (this.type == ValueType.ImmediateValue) {
+        this.imv_value = null;
+      }
+      if (this.type == ValueType.SymbolValue) {
+        this.sym_value = null;
+      }
+      if (this.type == ValueType.IExpression) {
+        this.ie_value = null;
+      }
+      if (this.type == ValueType.ClassType) {
+        this.class_value = null;
+      }
+      if (this.type == ValueType.IOperator) {
+        this.io_value = null;
+      }
+      if (this.type == ValueType.Closure) {
+        this.closure_value = null;
+      }
+      if (this.type == ValueType.HashMap) {
+        this.hashmap_value = null;
+      }
+      if (this.type == ValueType.Macro) {
+        this.macro_value = null;
+      }
+      if (this.type == ValueType.CCException) {
+        this.excep_value = null;
+      }
+      if (this.type == ValueType.RAWPointer) {
+        this.raw_pointer = null;
+      }
 
       this.type = ValueType.Null;
     }
@@ -290,7 +427,8 @@ class Value {
     enforce(this.type == ValueType.Array);
 
     if (!(idx < this.array_value.length)) {
-      throw new Exception("Out of index of the Array, orded - " ~ idx.to!string ~ " but length of the array is " ~ this.array_value.length.to!string);
+      throw new Exception("Out of index of the Array, orded - " ~ idx.to!string
+          ~ " but length of the array is " ~ this.array_value.length.to!string);
     }
 
     return this.array_value[idx];
@@ -300,7 +438,9 @@ class Value {
     enforce(this.type == ValueType.HashMap);
 
     if (value.getString !in this.hashmap_value) {
-      throw new Exception("No such a key in the hash, key - " ~ value.toString ~ ", hash - " ~ this.hashmap_value.stringof);
+      throw new Exception(
+          "No such a key in the hash, key - " ~ value.toString ~ ", hash - "
+          ~ this.hashmap_value.stringof);
     }
 
     return this.hashmap_value[value.getString];
@@ -314,51 +454,56 @@ class Value {
     Value value = cast(Value)_value;
 
     if (this.type != value.type) {
-      throw new Exception("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
+      throw new Exception(
+          "Can not compare between incompatibility type "
+          ~ this.type.to!string ~ " and " ~ value.type.to!string);
     }
 
-    final switch(this.type) with (ValueType) {
-      case ImmediateValue:
-        throw new Exception("Can't compare with ImmediateValue");
-      case SymbolValue:
-        return this.sym_value.value == value.getSymbolValue.value;
-      case IExpression:
-        throw new Exception("Can't compare with IExpression");
-      case ClassType:
-        throw new Exception("Can't compare with ClassType");
-      case IOperator:
-        throw new Exception("Can't compare with IOperator");
-      case Closure:
-        throw new Exception("Can't compare with Closure");
-      case HashMap:
-        throw new Exception("Can't compare with HashMap");
-      case Macro:
-        throw new Exception("Can't compare with Macro");
-      case CCException:
-        throw new Exception("Can't compare with CCException");
-      case Numeric:
-        return this.numeric_value == value.numeric_value;
-      case String:
-        return this.string_value  == value.string_value;
-      case Bool:
-        return this.bool_value    == value.bool_value;
-      case Ubyte:
-        return this.ubyte_value   == value.ubyte_value;
-      case Null:
-        throw new Exception("Can't compare with Null");
-      case Array:
-        Value[] a = this.getArray,
-                b = value.getArray;
+    final switch (this.type) with (ValueType) {
+    case ImmediateValue:
+      throw new Exception("Can't compare with ImmediateValue");
+    case SymbolValue:
+      return this.sym_value.value == value.getSymbolValue.value;
+    case IExpression:
+      throw new Exception("Can't compare with IExpression");
+    case ClassType:
+      throw new Exception("Can't compare with ClassType");
+    case IOperator:
+      throw new Exception("Can't compare with IOperator");
+    case Closure:
+      throw new Exception("Can't compare with Closure");
+    case HashMap:
+      throw new Exception("Can't compare with HashMap");
+    case Macro:
+      throw new Exception("Can't compare with Macro");
+    case CCException:
+      throw new Exception("Can't compare with CCException");
+    case Numeric:
+      return this.numeric_value == value.numeric_value;
+    case String:
+      return this.string_value == value.string_value;
+    case Bool:
+      return this.bool_value == value.bool_value;
+    case Ubyte:
+      return this.ubyte_value == value.ubyte_value;
+    case Null:
+      throw new Exception("Can't compare with Null");
+    case Array:
+      Value[] a = this.getArray, b = value.getArray;
 
-        if (a.length != b.length) {
+      if (a.length != b.length) {
+        return false;
+      }
+
+      foreach (idx; 0 .. (a.length)) {
+        if (a[idx].opCmp(b[idx]) != 0) {
           return false;
         }
+      }
 
-        foreach (idx; 0..(a.length)) {
-          if (a[idx].opCmp(b[idx]) != 0) { return false; }
-        }
-
-        return true;
+      return true;
+    case RAWPointer:
+      return this.raw_pointer == value.raw_pointer;
     }
   }
 
@@ -370,105 +515,132 @@ class Value {
     Value value = cast(Value)_value;
 
     if (this.type != value.type) {
-      throw new Exception("Can not compare between incompatibility type " ~ this.type.to!string ~ " and " ~ value.type.to!string);
+      throw new Exception(
+          "Can not compare between incompatibility type "
+          ~ this.type.to!string ~ " and " ~ value.type.to!string);
     }
 
-    final switch(this.type) with (ValueType) {
-      case ImmediateValue:
-        throw new Exception("Can't compare with ImmediateValue");
-      case SymbolValue:
-        auto c = this.sym_value.value,
-             d = value.getSymbolValue.value;
-        if (c == d) { return 0; }
-        if (c < d)  { return -1; }
-        return 1;
-      case IExpression:
-        throw new Exception("Can't compare with IExpression");
-      case ClassType:
-        throw new Exception("Can't compare with ClassType");
-      case IOperator:
-        throw new Exception("Can't compare with IOperator");
-      case Closure:
-        throw new Exception("Can't compare with Closure");
-      case HashMap:
-        throw new Exception("Can't compare with HashMap");
-      case Macro:
-        throw new Exception("Can't compare with Macro");
-      case CCException:
-        throw new Exception("Can't compare with CCException");
-      case Numeric:
-        auto c = this.numeric_value,
-             d = value.numeric_value;
-
-        if (c == d) { return 0;  }
-        if (c < d)  { return -1; }
-        return 1;
-      case String:
-        auto c = this.string_value,
-             d = value.string_value;
-
-        if (c == d) { return 0;  }
-        if (c < d)  { return -1; }
-        return 1;
-      case Ubyte:
-        auto c = this.ubyte_value,
-             d = value.ubyte_value;
-
-        if (c == d) { return 0;  }
-        if (c < d)  { return -1; }
-        return 1;
-      case Bool:
-        throw new Exception("Can't compare with Bool");
-      case Null:
-        throw new Exception("Can't compare with Null");
-      case Array:
-        Value[] a = this.getArray,
-                b = value.getArray;
-
-        if (a.length != b.length) {
-          throw new Exception("Can't compare between different size array");
-        }
-
-        foreach (idx; 0..(a.length)) {
-          if (a[idx].opCmp(b[idx]) != 0) { return 1; }
-        }
-
+    final switch (this.type) with (ValueType) {
+    case ImmediateValue:
+      throw new Exception("Can't compare with ImmediateValue");
+    case SymbolValue:
+      auto c = this.sym_value.value, d = value.getSymbolValue.value;
+      if (c == d) {
         return 0;
+      }
+      if (c < d) {
+        return -1;
+      }
+      return 1;
+    case IExpression:
+      throw new Exception("Can't compare with IExpression");
+    case ClassType:
+      throw new Exception("Can't compare with ClassType");
+    case IOperator:
+      throw new Exception("Can't compare with IOperator");
+    case Closure:
+      throw new Exception("Can't compare with Closure");
+    case HashMap:
+      throw new Exception("Can't compare with HashMap");
+    case Macro:
+      throw new Exception("Can't compare with Macro");
+    case CCException:
+      throw new Exception("Can't compare with CCException");
+    case Numeric:
+      auto c = this.numeric_value, d = value.numeric_value;
+
+      if (c == d) {
+        return 0;
+      }
+      if (c < d) {
+        return -1;
+      }
+      return 1;
+    case String:
+      auto c = this.string_value, d = value.string_value;
+
+      if (c == d) {
+        return 0;
+      }
+      if (c < d) {
+        return -1;
+      }
+      return 1;
+    case Ubyte:
+      auto c = this.ubyte_value, d = value.ubyte_value;
+
+      if (c == d) {
+        return 0;
+      }
+      if (c < d) {
+        return -1;
+      }
+      return 1;
+    case Bool:
+      throw new Exception("Can't compare with Bool");
+    case Null:
+      throw new Exception("Can't compare with Null");
+    case Array:
+      Value[] a = this.getArray, b = value.getArray;
+
+      if (a.length != b.length) {
+        throw new Exception("Can't compare between different size array");
+      }
+
+      foreach (idx; 0 .. (a.length)) {
+        if (a[idx].opCmp(b[idx]) != 0) {
+          return 1;
+        }
+      }
+
+      return 0;
+    case RAWPointer:
+      auto c = this.raw_pointer, d = value.raw_pointer;
+
+      if (c == d) {
+        return 0;
+      }
+      if (c < d) {
+        return -1;
+      }
+      return 1;
     }
   }
 
   Value dup() {
     final switch (this.type) with (ValueType) {
-      case ImmediateValue:
-        return new Value(this.imv_value);
-      case SymbolValue:
-        return new Value(this.sym_value);
-      case IExpression:
-        return new Value(this.ie_value);
-      case ClassType:
-        return new Value(this.class_value);
-      case IOperator:
-        return new Value(this.io_value);
-      case Closure:
-        return new Value(this.closure_value);
-      case HashMap:
-        return new Value(this.hashmap_value);
-      case Numeric:
-        return new Value(this.numeric_value);
-      case String:
-        return new Value(this.string_value);
-      case Bool:
-        return new Value(this.bool_value);
-      case Ubyte:
-        return new Value(this.ubyte_value);
-      case Null:
-        return new Value;
-      case Array:
-        return new Value(this.array_value.dup);
-      case Macro:
-        return new Value(this.macro_value);
-      case CCException:
-        return new Value(this.excep_value);
+    case ImmediateValue:
+      return new Value(this.imv_value);
+    case SymbolValue:
+      return new Value(this.sym_value);
+    case IExpression:
+      return new Value(this.ie_value);
+    case ClassType:
+      return new Value(this.class_value);
+    case IOperator:
+      return new Value(this.io_value);
+    case Closure:
+      return new Value(this.closure_value);
+    case HashMap:
+      return new Value(this.hashmap_value);
+    case Numeric:
+      return new Value(this.numeric_value);
+    case String:
+      return new Value(this.string_value);
+    case Bool:
+      return new Value(this.bool_value);
+    case Ubyte:
+      return new Value(this.ubyte_value);
+    case Null:
+      return new Value;
+    case Array:
+      return new Value(this.array_value.dup);
+    case Macro:
+      return new Value(this.macro_value);
+    case CCException:
+      return new Value(this.excep_value);
+    case RAWPointer:
+      return new Value(this.raw_pointer);
     }
   }
 }

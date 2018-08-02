@@ -105,12 +105,69 @@ version (WithFFI) {
 
   Value invokeFunc(Func func, void*[] args) {
     foreach (i, type; func.arg_types) {
-      if (type == D_TYPE.INT) {
+      final switch (type) with (D_TYPE) {
+      case VOID:
+        break;
+      case UBYTE:
+        if (!checkCastable!(ubyte)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case BYTE:
+        if (!checkCastable!(byte)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case USHORT:
+        if (!checkCastable!(ushort)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case SHORT:
+        if (!checkCastable!(short)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case UINT:
+        if (!checkCastable!(uint)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case INT:
         if (!checkCastable!(int)(args[i])) {
           throw new Error("Invalid argument<type error>");
         }
-      } else {
-        throw new Error("Not Impl!");
+        break;
+      case ULONG:
+        if (!checkCastable!(ulong)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case LONG:
+        if (!checkCastable!(long)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case FLOAT:
+        if (!checkCastable!(float)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case DOUBLE:
+        if (!checkCastable!(double)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case POINTER:
+        if (!checkCastable!(void)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
+      case STRING:
+        if (!checkCastable!(char)(args[i])) {
+          throw new Error("Invalid argument<type error>");
+        }
+        break;
       }
     }
 
@@ -118,10 +175,45 @@ version (WithFFI) {
 
     ffi_call(&func.cif, func.ptr, &result, cast(void**)args);
 
-    if (func.r_type == D_TYPE.INT) {
-      return new Value(result.to!int);
-    } else {
-      throw new Error("Not Impl!");
+    final switch (func.r_type) with (D_TYPE) {
+    case VOID:
+      return new Value;
+    case UBYTE:
+      auto v = cast(ubyte)result;
+      return new Value(v);
+    case BYTE:
+      auto v = cast(byte)result;
+      return new Value(v);
+    case USHORT:
+      auto v = cast(ushort)result;
+      return new Value(v);
+    case SHORT:
+      auto v = cast(short)result;
+      return new Value(v);
+    case UINT:
+      auto v = cast(uint)result;
+      return new Value(v);
+    case INT:
+      auto v = cast(int)result;
+      return new Value(v);
+    case ULONG:
+      auto v = cast(ulong)result;
+      return new Value(v);
+    case LONG:
+      auto v = cast(long)result;
+      return new Value(v);
+    case FLOAT:
+      auto v = cast(float)result;
+      return new Value(v);
+    case DOUBLE:
+      auto v = cast(double)result;
+      return new Value(v);
+    case POINTER:
+      void* ptr = cast(void*)result;
+      return new Value(ptr);
+    case STRING:
+      auto v = cast(char*)result;
+      return new Value(cast(string)v.fromStringz);
     }
   }
 
@@ -200,7 +292,7 @@ version (WithFFI) {
             }
           }
         } else {
-          throw new Error("Invalid argument");
+          throw new Error("<dll_op call>Invalid argument");
         }
       }
 
@@ -225,96 +317,104 @@ version (WithFFI) {
           public Value call(Engine engine, Value[] args) {
             void*[] f_args;
             foreach (i, arg_type; func.arg_types) {
+              Value eargs = engine.eval(args[i]);
+
               final switch (arg_type) with (D_TYPE) {
               case VOID:
                 break;
               case UBYTE:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<ubyte>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(ubyte);
+                auto arg = eargs.getNumeric.to!(ubyte);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case BYTE:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<byte>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(byte);
+                auto arg = eargs.getNumeric.to!(byte);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case USHORT:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<ushort>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(ushort);
+                auto arg = eargs.getNumeric.to!(ushort);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case SHORT:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<short>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(short);
+                auto arg = eargs.getNumeric.to!(short);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case UINT:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<uint>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(uint);
+                auto arg = eargs.getNumeric.to!(uint);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case INT:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<int>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(int);
+                auto arg = eargs.getNumeric.to!(int);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case ULONG:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<ulong>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(ulong);
+                auto arg = eargs.getNumeric.to!(ulong);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case LONG:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<long>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(long);
+                auto arg = eargs.getNumeric.to!(long);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case FLOAT:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<float>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(float);
+                auto arg = eargs.getNumeric.to!(float);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case DOUBLE:
-                if (args[i].type != ValueType.Numeric) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.Numeric) {
+                  throw new Error("<double>Invalid Argument");
                 }
-                auto arg = args[i].getNumeric.to!(double);
+                auto arg = eargs.getNumeric.to!(double);
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
               case POINTER:
-                throw new Error("Not impl!");
-              case STRING:
-                if (args[i].type != ValueType.String) {
-                  throw new Error("Invalid Argument");
+                if (eargs.type != ValueType.RAWPointer) {
+                  throw new Error("<ptr>Invalid Argument");
                 }
-                string arg = args[i].getString;
+                auto arg = eargs.getRAWPointer;
+                void* ptr = &arg;
+                f_args ~= ptr;
+                break;
+              case STRING:
+                if (eargs.type != ValueType.String) {
+                  throw new Error("<string>Invalid Argument");
+                }
+                auto arg = eargs.getString.toStringz;
                 auto ptr = &arg;
                 f_args ~= ptr;
                 break;
