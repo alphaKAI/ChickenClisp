@@ -5,7 +5,23 @@
 	],
   "dependencies": {
     "kontainer" : "*"
-  },
+	},
+	"configurations": [
+		{
+			"name": "default",
+			"targetType": "executable"
+		},
+		{
+			"name": "withffi",
+			"targetType": "executable",
+			"versions": [
+				"WithFFI"
+			],
+			"libs": [
+				"ffi"
+			]
+		}
+	],
 	"description": "A scheme like programming language and interpreter",
 	"copyright": "Copyright (C) 2016, Akihiro Shoji",
 	"license": "MIT"

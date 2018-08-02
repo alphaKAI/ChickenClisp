@@ -37,13 +37,17 @@ import orelang.operator.DatetimeOperators, orelang.operator.IsHashMapOperator,
   orelang.operator.TypeOperator, orelang.operator.UriOperators,
   orelang.operator.WhenOperator, orelang.operator.AddOperator,
   orelang.operator.CarOperator, orelang.operator.CdrOperator,
-  orelang.operator.DivOperator, orelang.operator.DllOperator,
+  orelang.operator.DivOperator,
   orelang.operator.GetOperator, orelang.operator.LetOperator,
   orelang.operator.MapOperator, orelang.operator.MulOperator,
   orelang.operator.ModOperator, orelang.operator.NopOperator,
   orelang.operator.SetOperator, orelang.operator.SeqOperator,
   orelang.operator.SubOperator, orelang.operator.IfOperator;
 import orelang.operator.RegexClass, orelang.operator.FileClass;
+
+version (WithFFI) {
+import orelang.operator.DllOperator;
+}
 
 import std.exception, std.format;
 
@@ -435,7 +439,9 @@ class Engine {
     // SystemOperator
     this.variables.insert!("system", q{new Value(cast(IOperator)(new SystemOperator))});
 
-    this.variables.insert!("dll", q{new Value(cast(IOperator)(new DllOperator))});
+    version (WithFFI) {
+      this.variables.insert!("dll", q{new Value(cast(IOperator)(new DllOperator))});
+    }
   }
 
   /**

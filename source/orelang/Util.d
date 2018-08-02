@@ -1,5 +1,6 @@
 module orelang.Util;
 
+version (WithFFI) {
 extern (C) {
   struct ffi_type {
     size_t size;
@@ -64,4 +65,5 @@ extern (C) {
 
   void ffi_call(ffi_cif* cif, //void (*fn)(void),
       void* fn, void* rvalue, void** avalue);
+}
 }
