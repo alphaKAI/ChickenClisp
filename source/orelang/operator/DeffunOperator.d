@@ -1,10 +1,7 @@
 module orelang.operator.DeffunOperator;
-import orelang.operator.DynamicOperator,
-       orelang.operator.IOperator,
-       orelang.Engine,
-       orelang.Value;
-import std.algorithm,
-       std.array;
+import orelang.operator.DynamicOperator, orelang.operator.IOperator,
+  orelang.Engine, orelang.Value;
+import std.algorithm, std.array;
 import kontainer.orderedAssocArray;
 
 class DeffunOperator : IOperator {
@@ -12,10 +9,10 @@ class DeffunOperator : IOperator {
    * call
    */
   public Value call(Engine engine, Value[] args) {
-    string funcName   = args[0].getString;
+    string funcName = args[0].getString;
     string[] funcArgs;
-    OrderedAssocArray!(string, Value) opArgs = new OrderedAssocArray!(string, Value)();
-    
+    OrderedAssocArray!(string, Value) optionArgs = new OrderedAssocArray!(string, Value)();
+
     foreach (maybeArg; args[1].getArray) {
       if (maybeArg.type == ValueType.String || maybeArg.type == ValueType.SymbolValue) {
         funcArgs ~= maybeArg.getString;
@@ -23,7 +20,7 @@ class DeffunOperator : IOperator {
         auto pair = maybeArg.getArray;
         string name = pair[0].getString;
         Value value = pair[1];
-        opArgs[name] = value;
+        optionArgs[name] = value;
       } else {
         throw new Error("Invalid argument list");
       }
@@ -31,6 +28,7 @@ class DeffunOperator : IOperator {
 
     Value funcBody = args[2];
 
-    return engine.defineVariable(funcName, new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody, opArgs))));
+    return engine.defineVariable(funcName,
+        new Value(cast(IOperator)(new DynamicOperator(funcArgs, funcBody, optionArgs))));
   }
 }

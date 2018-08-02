@@ -1,0 +1,6 @@
+(dll
+  (dll-path "libsq.so")
+  (dll-functions
+  ("sq" int (int))))
+
+(println "sq 4 : " (sq 4))
