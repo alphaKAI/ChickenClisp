@@ -21,7 +21,7 @@ class SystemOperator : IOperator {
       auto pid = spawnProcess(args_strs);//execute(args_strs.join(" "));
 
       return new Value(wait(pid));
-    } catch {
+    } catch (Throwable) {
       return new Value(-1);
     }
   }
