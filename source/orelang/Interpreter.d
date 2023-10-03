@@ -71,7 +71,8 @@ class Interpreter {
     while (true) {
       string input = readln.chomp;
 
-      if (input == "exit" || input == "(exit)") {
+      if (stdin.eof() || input == "exit" || input == "(exit)") {  // stdin.eof() for Ctrl-D
+        writeln("bye!");  // print newline, so do not mess up the screen
         break;
       }
 
